@@ -1,0 +1,171 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Proyecto;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class ProyectoController extends Controller
+{
+    public function exportPdf(Request $request)
+    {
+        try {
+            $proyecto = null;
+            
+            if ($request->has('id')) {
+                $proyecto = Proyecto::findOrFail($request->id);
+                $pdf = Pdf::loadView('proyectos.exports.pdf-single', ['proyecto' => $proyecto]);
+                $nombreArchivo = 'Proyecto_' . $proyecto->id . '_' . date('Y-m-d') . '.pdf';
+                return $pdf->download($nombreArchivo)->header('Content-Type', 'application/pdf');
+            }
+            
+            $proyectos = Proyecto::all();
+            $pdf = Pdf::loadView('proyectos.exports.pdf', ['proyectos' => $proyectos]);
+            return $pdf->download('proyectos.pdf')->header('Content-Type', 'application/pdf');
+        } catch (\Exception $e) {
+            Log::error('Error al exportar a PDF', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Error al exportar a PDF: ' . $e->getMessage()], 500);
+            }
+            return redirect()->back()->withErrors(['error' => 'Error al exportar a PDF: ' . $e->getMessage()]);
+        }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Configurar el título
+            $sheet->mergeCells('C3:I3');
+            $sheet->setCellValue('C3', 'DIRECCIÓN DE EXTENSIÓN');
+            $sheet->getStyle('C3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            
+            $sheet->mergeCells('C4:I4');
+            $sheet->setCellValue('C4', 'CONSOLIDADO DE PROYECTOS');
+            $sheet->getStyle('C4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            
+            // Establecer encabezados
+            $headers = [
+                'LINEAS DE ACCIÓN',
+                'COBERTURA',
+                'ENTIDAD CONTRATANTE',
+                'FECHA DE EJECUCIÓN',
+                'PLAZO',
+                'VALOR TOTAL ()',
+                'CARGAR ARCHIVO (PROYECTO)',
+                'CARGAR CONTRATO O CONVENIO',
+                'CARGAR EVIDENCIAS (FOTOGRAFIAS, VIDEOS, PIEZAS PUBLICITARIAS...)'
+            ];
+            
+            // Establecer el estilo para los encabezados
+            $headerStyle = [
+                'font' => [
+                    'bold' => true,
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '90EE90']
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'wrapText' => true
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+                    ]
+                ]
+            ];
+            
+            // Aplicar encabezados y estilos
+            foreach ($headers as $key => $header) {
+                $col = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($key + 1);
+                $sheet->setCellValue($col . '5', $header);
+                $sheet->getColumnDimension($col)->setWidth(25);
+            }
+            
+            // Aplicar estilo a toda la fila de encabezados
+            $lastCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(count($headers));
+            $sheet->getStyle('A5:' . $lastCol . '5')->applyFromArray($headerStyle);
+            
+            // Ajustar altura de la fila de encabezados
+            $sheet->getRowDimension(5)->setRowHeight(60);
+
+            // Comenzar desde la fila 6 para los datos
+            $row = 6;
+            if ($request->has('id')) {
+                $proyecto = Proyecto::findOrFail($request->id);
+                $this->writeProyectoToExcel($sheet, $proyecto, $row);
+                $filename = 'Proyecto_' . $proyecto->id . '_' . date('Y-m-d') . '.xlsx';
+            } else {
+                $proyectos = Proyecto::all();
+                foreach ($proyectos as $proyecto) {
+                    $this->writeProyectoToExcel($sheet, $proyecto, $row);
+                    $row++;
+                }
+                $filename = 'proyectos_' . date('Y-m-d') . '.xlsx';
+            }
+
+            // Crear archivo Excel
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $tempFile = tempnam(sys_get_temp_dir(), 'excel_');
+            $writer->save($tempFile);
+
+            return response()->download($tempFile, $filename, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ])->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            Log::error('Error al exportar a Excel', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors(['error' => 'Error al exportar a Excel: ' . $e->getMessage()]);
+        }
+    }
+
+    private function writeProyectoToExcel($sheet, $proyecto, $row)
+    {
+        $datos = [
+            $proyecto->lineas_de_accion ?? '',
+            $proyecto->cobertura ?? '',
+            $proyecto->entidad_contratante ?? '',
+            $proyecto->fecha_de_ejecucion ? date('d/m/Y', strtotime($proyecto->fecha_de_ejecucion)) : '',
+            $proyecto->plazo ?? '',
+            number_format($proyecto->valor_total ?? 0, 2, ',', '.'),
+            $proyecto->cargar_archivo_proyecto ? 'Sí' : 'No',
+            $proyecto->cargar_contrato_o_convenio ? 'Sí' : 'No',
+            $proyecto->cargar_evidencias ? count($proyecto->cargar_evidencias) . ' archivo(s)' : 'No'
+        ];
+
+        foreach ($datos as $key => $valor) {
+            $colIndex = $key + 1;
+            $col = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
+            $sheet->setCellValue($col . $row, $valor);
+            
+            // Aplicar estilo a la celda
+            $cellStyle = $sheet->getStyle($col . $row);
+            $cellStyle->getAlignment()
+                ->setWrapText(true)
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+                ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+            
+            $cellStyle->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        }
+        
+        // Ajustar altura de la fila
+        $sheet->getRowDimension($row)->setRowHeight(30);
+    }
+
+    // ... resto del código del controlador ...
+}

@@ -1,0 +1,283 @@
+/* Ocultar iconos de ordenamiento por defecto de DataTables */
+.data-table thead th.sorting::before,
+.data-table thead th.sorting::after,
+.data-table thead th.sorting_asc::before,
+.data-table thead th.sorting_asc::after,
+.data-table thead th.sorting_desc::before,
+.data-table thead th.sorting_desc::after {
+    display: none !important;
+}
+
+/* Estilos personalizados para los iconos de ordenamiento */
+.data-table thead th {
+    position: relative;
+    padding-right: 25px !important;
+    cursor: pointer;
+}
+
+.data-table thead th::after {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: #cbd5e1;
+    opacity: 0.5;
+}
+
+.data-table thead th.sorting::after {
+    content: "\f0dc"; /* fa-sort */
+}
+
+.data-table thead th.sorting_asc::after {
+    content: "\f0de"; /* fa-sort-up */
+    color: var(--primary);
+    opacity: 1;
+}
+
+.data-table thead th.sorting_desc::after {
+    content: "\f0dd"; /* fa-sort-down */
+    color: var(--primary);
+    opacity: 1;
+}
+
+/* Estilos específicos para la página de proyectos */
+:root {
+    --primary: #4361ee;
+    --primary-light: #4895ef;
+    --secondary: #3f37c9;
+    --success: #4cc9f0;
+    --info: #560bad;
+    --warning: #f72585;
+    --danger: #e63946;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Grid de estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    border-left: 4px solid var(--primary);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.primary { border-left-color: var(--primary); }
+.stat-card.success { border-left-color: var(--success); }
+.stat-card.warning { border-left-color: var(--warning); }
+.stat-card.info { border-left-color: var(--info); }
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.stat-title {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-icon.primary { background: rgba(67, 97, 238, 0.1); color: var(--primary); }
+.stat-icon.success { background: rgba(76, 201, 240, 0.1); color: var(--success); }
+.stat-icon.warning { background: rgba(247, 37, 133, 0.1); color: var(--warning); }
+.stat-icon.info { background: rgba(86, 11, 173, 0.1); color: var(--info); }
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+/* Contenedor de la tabla */
+.table-container {
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+/* Estilos del scrollbar */
+.table-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Estilos de la tabla */
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.data-table th {
+    background-color: #f9fafb;
+    padding: 1rem 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--light);
+}
+
+.data-table td {
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid var(--light);
+    font-size: 0.9rem;
+    color: var(--dark);
+    vertical-align: middle;
+}
+
+/* Badges de estado */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge.activo { background-color: #10b98120; color: #10b981; }
+.badge.inactivo { background-color: #f3f4f6; color: #4b5563; }
+.badge.cerrado { background-color: #fee2e2; color: #991b1b; }
+
+/* Botones de acción */
+.btn-action {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    background: transparent;
+    border: 1px solid #dee2e6;
+    transition: var(--transition);
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-action:hover {
+    background: var(--light);
+    color: var(--primary);
+    border-color: #ced4da;
+}
+
+.btn-action i {
+    font-size: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* Dropdown de exportación */
+.dropdown-menu {
+    padding: 0.5rem;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item i {
+    width: 1.25rem;
+    text-align: center;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .action-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

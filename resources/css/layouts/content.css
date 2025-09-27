@@ -1,0 +1,86 @@
+@import "../variables.css";
+
+.content-wrapper {
+    width: 100%;
+    padding: 2rem;
+}
+
+.search-box {
+    max-width: 300px;
+}
+
+.search-box input {
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gray-200);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.table-responsive {
+    margin-top: 2rem;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th {
+    background-color: var(--gray-50);
+    color: var(--gray-700);
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.table tbody tr:hover {
+    background-color: var(--gray-50);
+}
+
+/* Estilos para los controles de la tabla */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.table-length select {
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+}
+
+/* Estilos para la paginación */
+.dataTables_paginate {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.paginate_button {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--gray-50);
+    border: none;
+    cursor: pointer;
+}
+
+.paginate_button.current {
+    background-color: var(--primary);
+    color: white;
+}

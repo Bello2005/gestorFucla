@@ -1,0 +1,115 @@
+/* Correcciones para la tabla de proyectos */
+.dataTables_wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table-responsive {
+    overflow-x: auto !important;
+    margin-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Forzar visibilidad de todas las columnas */
+.table {
+    width: 100% !important;
+    margin: 0 !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+.table th,
+.table td {
+    display: table-cell !important;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+}
+
+/* Ajustes específicos para cada columna */
+.table th:nth-child(1),
+.table td:nth-child(1) {
+    min-width: 200px !important;
+} /* Nombre del proyecto */
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    min-width: 200px !important;
+} /* Objeto contractual */
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    min-width: 180px !important;
+} /* Líneas de acción */
+.table th:nth-child(4),
+.table td:nth-child(4) {
+    min-width: 150px !important;
+} /* Cobertura */
+.table th:nth-child(5),
+.table td:nth-child(5) {
+    min-width: 180px !important;
+} /* Entidad contratante */
+.table th:nth-child(6),
+.table td:nth-child(6) {
+    min-width: 150px !important;
+} /* Fecha de ejecución */
+.table th:nth-child(7),
+.table td:nth-child(7) {
+    min-width: 100px !important;
+} /* Plazo */
+.table th:nth-child(8),
+.table td:nth-child(8) {
+    min-width: 150px !important;
+} /* Valor total */
+
+/* Ocultar comportamiento responsive por defecto de DataTables */
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control {
+    display: none !important;
+}
+
+/* Asegurar que el contenedor de la tabla tenga scroll */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 1rem;
+}
+
+/* Scrollbar personalizada */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+    background-color: #f5f5f5;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: #28a745;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+/* Asegurar que el contenido de las celdas sea visible */
+.table td > div {
+    max-width: none !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+}
+
+/* Estilos para las celdas de texto largo */
+.text-truncate {
+    max-width: none !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
+
+/* Ajustes para DataTables */
+.dataTables_wrapper .row {
+    margin: 0 !important;
+    padding: 1rem !important;
+    width: 100% !important;
+}

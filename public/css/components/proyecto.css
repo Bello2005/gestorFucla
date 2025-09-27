@@ -1,0 +1,105 @@
+@import "../variables.css";
+
+.proyecto-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.proyecto-card:hover {
+    box-shadow: var(--card-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.proyecto-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.proyecto-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.proyecto-estado {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.estado-pendiente {
+    background-color: var(--warning);
+    color: white;
+}
+
+.estado-en-proceso {
+    background-color: var(--info);
+    color: white;
+}
+
+.estado-completado {
+    background-color: var(--success);
+    color: white;
+}
+
+.proyecto-meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--gray-500);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.proyecto-descripcion {
+    color: var(--gray-600);
+    margin-bottom: 1rem;
+}
+
+.proyecto-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.proyecto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+/* Estilos para los formularios de proyectos */
+.proyecto-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
