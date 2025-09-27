@@ -22,3 +22,25 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Laravel / PHP
+/public/css/
+/public/js/
+/public/images/
+/storage/
+/bootstrap/cache/
+.env.*
+backup_critical_files/*.bak
+*.sql
+php.ini
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+*.log
+*.DS_Store
+*.idea/
+*.vscode/
+yarn-error.log
+npm-debug.log
