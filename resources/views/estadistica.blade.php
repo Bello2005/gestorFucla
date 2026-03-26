@@ -1,649 +1,534 @@
 @extends('layouts.main')
 
-@section('title', 'Panel de Analítica - UNICLARETIANA')
+@section('title', 'Estadisticas')
 
-@push('styles')
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    
-    <style>
-        * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-        
-        .gradient-bg {
-            background: #ffffff;
-        }
-        
-        .glass-effect {
-            backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .stat-number {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-        }
-        
-        .chart-container {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        }
-        
-        .progress-ring {
-            transform: rotate(-90deg);
-        }
-        
-        .floating-element {
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .floating-element:nth-child(1) { background: linear-gradient(45deg, #4f46e5, #7c3aed); }
-        .floating-element:nth-child(2) { background: linear-gradient(45deg, #06b6d4, #3b82f6); }
-        .floating-element:nth-child(3) { background: linear-gradient(45deg, #10b981, #059669); }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .metric-trend {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .metric-trend::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .metric-trend:hover::before {
-            left: 100%;
-        }
-        
-        .custom-selector {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .pulse-dot {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .5;
-            }
-        }
-    </style>
-</push>
+@section('breadcrumbs')
+    <a href="{{ route('dashboard') }}" class="breadcrumb-link">Dashboard</a>
+    <i class="fas fa-chevron-right breadcrumb-sep"></i>
+    <span class="breadcrumb-current">Estadisticas</span>
+@endsection
 
 @section('content')
-<div class="min-h-screen gradient-bg">
-    <!-- Hero Section -->
-    <div class="relative overflow-hidden bg-gray-50">
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/80 to-purple-50/80"></div>
-        
-        <!-- Floating geometric elements -->
-        <div class="absolute top-20 left-10 w-20 h-20 rounded-full floating-element opacity-20"></div>
-        <div class="absolute top-40 right-20 w-16 h-16 rounded-lg rotate-45 floating-element opacity-20" style="animation-delay: -2s;"></div>
-        <div class="absolute bottom-40 left-1/4 w-12 h-12 rounded-full floating-element opacity-20" style="animation-delay: -4s;"></div>
-        
-        <div class="relative px-6 py-12 max-w-7xl mx-auto">
-            <!-- Header -->
-            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-12">
-                <div class="mb-8 lg:mb-0">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-3 h-3 bg-green-500 rounded-full pulse-dot"></div>
-                        <span class="text-gray-600 text-sm font-medium uppercase tracking-wider">Panel en Vivo</span>
-                    </div>
-                    <h1 class="text-4xl lg:text-6xl font-bold text-gray-800 mb-4 leading-tight">
-                        Analítica de Proyectos
-                        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                            UNICLARETIANA
-                        </span>
-                    </h1>
-                    <p class="text-gray-600 text-lg max-w-2xl leading-relaxed">
-                        Información en tiempo real y analítica integral para la toma de decisiones estratégicas. Supervisa el desempeño de los proyectos, sigue métricas clave y visualiza patrones de éxito.
-                    </p>
-                </div>
-                
-                <!-- Chart Type Selector -->
-                <div class="custom-selector rounded-2xl p-6 shadow-2xl border border-white/20">
-                    <label class="block text-gray-700 text-sm font-semibold mb-3">Tipo de Gráfico</label>
-                    <div class="relative">
-                        <select id="chartTypeSelector" class="appearance-none w-full bg-transparent border-2 border-indigo-200 rounded-xl px-4 py-3 pr-8 text-gray-700 font-medium focus:outline-none focus:border-indigo-500 transition-colors">
-                            <option value="bar">📊 Gráfico de Barras</option>
-                            <option value="pie">🥧 Gráfico de Pastel</option>
-                            <option value="doughnut">🍩 Gráfico de Dona</option>
-                            <option value="line">📈 Gráfico de Líneas</option>
-                            <option value="radar">🎯 Gráfico de Radar</option>
-                            <option value="polarArea">⭕ Área Polar</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Analitica de Proyectos</h1>
+        <p class="page-subtitle">Informacion en tiempo real para la toma de decisiones estrategicas</p>
+    </div>
+    <div class="page-actions">
+        <div class="chart-type-selector">
+            <label class="ds-label chart-type-label" for="chartTypeSelector">Tipo de Grafico</label>
+            <select id="chartTypeSelector" class="ds-select chart-type-select">
+                <option value="bar">Barras</option>
+                <option value="pie">Pastel</option>
+                <option value="doughnut">Dona</option>
+                <option value="line">Lineas</option>
+                <option value="radar">Radar</option>
+                <option value="polarArea">Area Polar</option>
+            </select>
+        </div>
+    </div>
+</div>
 
-            <!-- KPI Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <!-- Total Projects -->
-                <div class="glass-effect rounded-2xl p-6 card-hover group">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="bg-indigo-500 p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-gray-600 text-xs uppercase tracking-wider font-medium">Portafolio</div>
-                            <div class="text-gray-700 text-sm">Total de Proyectos</div>
-                        </div>
-                    </div>
-                    <div class="stat-number text-4xl font-bold mb-2">{{ $totalProyectos }}</div>
-                    <div class="flex items-center text-green-600 text-sm">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                        <span>+{{ $crecimientoProyectos }}% vs mes anterior</span>
-                    </div>
-                </div>
+<!-- KPI Stats -->
+<div class="stat-cards-grid">
+    <div class="stat-card stat-card--primary">
+        <div class="stat-card-icon"><i class="fas fa-folder-open"></i></div>
+        <div class="stat-card-content">
+            <span class="stat-card-label">Total Proyectos</span>
+            <span class="stat-card-value stat-counter" data-target="{{ $totalProyectos }}">{{ $totalProyectos }}</span>
+            <span class="stat-card-trend stat-card-trend--up">
+                <i class="fas fa-arrow-up"></i> +{{ $crecimientoProyectos }}% vs mes anterior
+            </span>
+        </div>
+    </div>
+    <div class="stat-card stat-card--success">
+        <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-card-content">
+            <span class="stat-card-label">Proyectos Activos</span>
+            <span class="stat-card-value stat-counter" data-target="{{ $proyectosActivos }}">{{ $proyectosActivos }}</span>
+            <span class="stat-card-trend">{{ $porcentajeActivos }}% del total</span>
+        </div>
+    </div>
+    <div class="stat-card stat-card--warning">
+        <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
+        <div class="stat-card-content">
+            <span class="stat-card-label">Valor Total</span>
+            <span class="stat-card-value">${{ number_format($valorTotal / 1000000, 1) }}M</span>
+            <span class="stat-card-trend stat-card-trend--up">
+                <i class="fas fa-arrow-up"></i> +{{ $crecimiento }}% crecimiento
+            </span>
+        </div>
+    </div>
+    <div class="stat-card stat-card--info">
+        <div class="stat-card-icon"><i class="fas fa-chart-bar"></i></div>
+        <div class="stat-card-content">
+            <span class="stat-card-label">Tasa de Exito</span>
+            <span class="stat-card-value stat-counter" data-target="{{ $tasaExito }}">{{ $tasaExito }}%</span>
+            <span class="stat-card-trend">
+                @if($tasaExito >= 90) Lider en la industria
+                @elseif($tasaExito >= 70) Muy buen desempeno
+                @elseif($tasaExito >= 50) Desempeno aceptable
+                @else Mejorable
+                @endif
+            </span>
+        </div>
+    </div>
+</div>
 
-                <!-- Active Projects -->
-                <div class="glass-effect rounded-2xl p-6 card-hover group">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="bg-green-500 p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-gray-600 text-xs uppercase tracking-wider font-medium">Estado</div>
-                            <div class="text-gray-700 text-sm">Proyectos Activos</div>
-                        </div>
-                    </div>
-                    <div class="stat-number text-4xl font-bold mb-2">{{ $proyectosActivos }}</div>
-                    <div class="flex items-center text-green-600 text-sm">
-                        <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                        <span>{{ $porcentajeActivos }}% del total</span>
-                    </div>
-                </div>
+<!-- Main Chart -->
+<div class="ds-card analytics-main-card">
+    <div class="ds-card-header">
+        <div>
+            <h3 class="ds-card-title">Distribucion de Proyectos</h3>
+            <p class="chart-subtitle">Visualizacion del estado de los proyectos en la organizacion</p>
+        </div>
+        <div class="live-update-label">
+            <span class="live-dot"></span>
+            Ultima actualizacion: ahora mismo
+        </div>
+    </div>
+    <div class="ds-card-body">
+        <div class="main-chart-wrap">
+            <canvas id="mainChart"></canvas>
+        </div>
+    </div>
+</div>
 
-                <!-- Total Value -->
-                <div class="glass-effect rounded-2xl p-6 card-hover group">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="bg-yellow-500 p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-gray-600 text-xs uppercase tracking-wider font-medium">Inversión</div>
-                            <div class="text-gray-700 text-sm">Valor Total</div>
-                        </div>
-                    </div>
-                    <div class="stat-number text-4xl font-bold mb-2">${{ number_format($valorTotal / 1000000, 1) }}M</div>
-                    <div class="flex items-center text-yellow-600 text-sm">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                        <span>+{{ $crecimiento }}% crecimiento</span>
-                    </div>
-                </div>
+<!-- Detailed Metrics -->
+<div class="analytics-detail-grid">
+    <!-- Status Counts -->
+    <div class="ds-card">
+        <div class="ds-card-header">
+            <h3 class="ds-card-title">Resumen por Estado</h3>
+            <span class="section-meta">Numeros absolutos</span>
+        </div>
+        <div class="ds-card-body">
+            @php
+                $estados = [
+                    ['nombre' => 'Activo', 'key' => 'activo', 'color' => 'success', 'desc' => 'En ejecucion', 'icon' => 'fa-play-circle'],
+                    ['nombre' => 'Inactivo', 'key' => 'inactivo', 'color' => 'warning', 'desc' => 'En pausa', 'icon' => 'fa-pause-circle'],
+                    ['nombre' => 'Cerrado', 'key' => 'cerrado', 'color' => 'danger', 'desc' => 'Completados', 'icon' => 'fa-check-circle'],
+                ];
+                $proyectosPorEstadoMap = $proyectosPorEstado->keyBy(function($item) {
+                    return strtolower($item->estado);
+                });
+            @endphp
 
-                <!-- Success Rate -->
-                <div class="glass-effect rounded-2xl p-6 card-hover group">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="bg-purple-500 p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
+            <div class="status-metric-list">
+                @foreach($estados as $estado)
+                    @php
+                        $total = $proyectosPorEstadoMap->has($estado['key']) ? $proyectosPorEstadoMap[$estado['key']]->total : 0;
+                    @endphp
+                    <div class="status-metric-card status-metric-card--{{ $estado['color'] }}">
+                        <div class="status-metric-left">
+                            <div class="status-metric-icon status-metric-icon--{{ $estado['color'] }}">
+                                <i class="fas {{ $estado['icon'] }}"></i>
+                            </div>
+                            <div>
+                                <span class="status-metric-title">Proyectos {{ $estado['nombre'] }}</span>
+                                <span class="status-metric-desc">{{ $estado['desc'] }}</span>
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-gray-600 text-xs uppercase tracking-wider font-medium">Desempeño</div>
-                            <div class="text-gray-700 text-sm">Tasa de Éxito</div>
+                        <div class="status-metric-right">
+                            <span class="status-metric-value">{{ $total }}</span>
+                            <span class="status-metric-unit">proyectos</span>
                         </div>
                     </div>
-                    <div class="stat-number text-4xl font-bold mb-2">{{ $tasaExito }}%</div>
-                    <div class="flex items-center text-purple-600 text-sm">
-                        <div class="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
-                        <span>
-                            @if($tasaExito >= 90)
-                                Líder en la industria
-                            @elseif($tasaExito >= 70)
-                                Muy buen desempeño
-                            @elseif($tasaExito >= 50)
-                                Desempeño aceptable
-                            @else
-                                Mejorable
-                            @endif
-                        </span>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
 
-    <!-- Charts Section -->
-    <div class="px-6 pb-12">
-        <div class="max-w-7xl mx-auto">
-            <!-- Main Chart -->
-            <div class="chart-container rounded-3xl shadow-2xl p-8 mb-8 border border-white/20">
-                <div class="flex items-center justify-between mb-8">
+    <!-- Distribution Analysis -->
+    <div class="ds-card">
+        <div class="ds-card-header">
+            <h3 class="ds-card-title">Analisis de Distribucion</h3>
+            <span class="section-meta">Desglose porcentual</span>
+        </div>
+        <div class="ds-card-body">
+            <div class="distribution-list">
+                @foreach($estados as $estado)
+                    @php
+                        $total = $proyectosPorEstadoMap->has($estado['key']) ? $proyectosPorEstadoMap[$estado['key']]->total : 0;
+                        $porcentaje = $totalProyectos > 0 ? round(($total / $totalProyectos) * 100, 1) : 0;
+                    @endphp
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Análisis de Distribución de Proyectos</h2>
-                        <p class="text-gray-600">Visualización en tiempo real del estado de los proyectos en la organización</p>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center text-sm text-gray-600">
-                            <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                            <span>Última actualización: ahora mismo</span>
+                        <div class="distribution-row-head">
+                            <span class="distribution-row-label">{{ $estado['nombre'] }}</span>
+                            <span class="distribution-row-value distribution-row-value--{{ $estado['color'] }}">{{ $porcentaje }}%</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill progress-bar-fill--{{ $estado['color'] }}" style="width: {{ $porcentaje }}%"></div>
+                        </div>
+                        <div class="distribution-row-meta">
+                            <span>{{ $total }} proyectos</span>
+                            <span>de {{ $totalProyectos }} en total</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="relative">
-                    <canvas id="mainChart" class="max-w-full h-96"></canvas>
-                </div>
-            </div>
-
-            <!-- Detailed Metrics Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Project Status Counts -->
-                <div class="chart-container rounded-2xl shadow-xl p-6 border border-white/20">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-800">Resumen de Estado de Proyectos</h3>
-                        <div class="text-sm text-gray-500">Números absolutos</div>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        @php
-                            $estadosFijos = collect([
-                                (object)['estado' => 'Activo', 'total' => 0, 'color' => 'green', 'icon' => 'play'],
-                                (object)['estado' => 'Inactivo', 'total' => 0, 'color' => 'yellow', 'icon' => 'pause'],
-                                (object)['estado' => 'Cerrado', 'total' => 0, 'color' => 'red', 'icon' => 'check-circle'],
-                            ]);
-                            $proyectosPorEstadoMap = $proyectosPorEstado->keyBy(function($item) {
-                                return strtolower($item->estado);
-                            });
-                        @endphp
-                        
-                        @foreach($estadosFijos as $index => $estadoFijo)
-                            @php
-                                $key = strtolower($estadoFijo->estado);
-                                $total = $proyectosPorEstadoMap->has($key) ? $proyectosPorEstadoMap[$key]->total : 0;
-                                $colors = [
-                                    'green' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'accent' => 'bg-green-500'],
-                                    'yellow' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'accent' => 'bg-yellow-500'],
-                                    'red' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'accent' => 'bg-red-500']
-                                ];
-                                $currentColor = $colors[$estadoFijo->color];
-                            @endphp
-                            
-                            <div class="metric-trend {{ $currentColor['bg'] }} rounded-xl p-4 flex items-center justify-between group hover:shadow-lg transition-all">
-                                <div class="flex items-center space-x-4">
-                                    <div class="{{ $currentColor['accent'] }} p-3 rounded-lg shadow-sm">
-                                        @if($estadoFijo->icon === 'play')
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                        @elseif($estadoFijo->icon === 'pause')
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                        @else
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <p class="{{ $currentColor['text'] }} font-semibold">Proyectos {{ $estadoFijo->estado }}</p>
-                                        <p class="text-gray-600 text-sm">{{ $estadoFijo->estado === 'Activo' ? 'En ejecución' : ($estadoFijo->estado === 'Inactivo' ? 'En pausa' : 'Completados') }}</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="{{ $currentColor['text'] }} text-3xl font-bold">{{ $total }}</div>
-                                    <div class="text-gray-500 text-sm">proyectos</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <!-- Project Status Percentages -->
-                <div class="chart-container rounded-2xl shadow-xl p-6 border border-white/20">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-800">Análisis de Distribución</h3>
-                        <div class="text-sm text-gray-500">Desglose porcentual</div>
-                    </div>
-                    
-                    <div class="space-y-6">
-                        @foreach($estadosFijos as $index => $estadoFijo)
-                            @php
-                                $key = strtolower($estadoFijo->estado);
-                                $total = $proyectosPorEstadoMap->has($key) ? $proyectosPorEstadoMap[$key]->total : 0;
-                                $porcentaje = $totalProyectos > 0 ? round(($total / $totalProyectos) * 100, 1) : 0;
-                                $colors = [
-                                    'green' => ['progress' => 'bg-green-500', 'text' => 'text-green-600', 'bg' => 'bg-green-50'],
-                                    'yellow' => ['progress' => 'bg-yellow-500', 'text' => 'text-yellow-600', 'bg' => 'bg-yellow-50'],
-                                    'red' => ['progress' => 'bg-red-500', 'text' => 'text-red-600', 'bg' => 'bg-red-50']
-                                ];
-                                $currentColor = $colors[$estadoFijo->color];
-                            @endphp
-                            
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-medium text-gray-700">{{ $estadoFijo->estado }}</span>
-                                    <span class="{{ $currentColor['text'] }} font-bold text-lg">{{ $porcentaje }}%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                                    <div class="{{ $currentColor['progress'] }} h-3 rounded-full transition-all duration-1000 ease-out" 
-                                         style="width: {{ $porcentaje }}%"></div>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>{{ $total }} proyectos</span>
-                                    <span>de {{ $totalProyectos }} en total</span>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
 </div>
 @endsection
 
+@push('styles')
+<style>
+    .chart-type-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .chart-type-label {
+        margin-bottom: 0;
+    }
+    .chart-type-select {
+        width: auto;
+        min-width: 180px;
+    }
+    .analytics-main-card {
+        margin-top: 24px;
+    }
+    .chart-subtitle {
+        font-size: var(--text-sm);
+        color: var(--slate-500);
+        margin-top: 4px;
+    }
+    .live-update-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: var(--text-sm);
+        color: var(--slate-500);
+    }
+    .main-chart-wrap {
+        position: relative;
+        height: 380px;
+    }
+    .analytics-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 24px;
+    }
+    .section-meta {
+        font-size: var(--text-sm);
+        color: var(--slate-500);
+    }
+    .status-metric-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .status-metric-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .status-metric-right {
+        text-align: right;
+    }
+    .distribution-list {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .distribution-row-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .distribution-row-label {
+        font-size: var(--text-sm);
+        font-weight: 500;
+        color: var(--slate-700);
+    }
+    .distribution-row-value {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: var(--text-base);
+    }
+    .distribution-row-value--success { color: var(--success); }
+    .distribution-row-value--warning { color: var(--warning); }
+    .distribution-row-value--danger { color: var(--danger); }
+    .distribution-row-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 6px;
+        font-size: var(--text-xs);
+        color: var(--slate-500);
+    }
+
+    .stat-card-trend {
+        display: block;
+        font-size: var(--text-xs);
+        color: var(--slate-500);
+        margin-top: 4px;
+    }
+    .stat-card-trend--up {
+        color: var(--success);
+    }
+    .stat-card-trend--up i {
+        font-size: 10px;
+    }
+
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--success);
+        border-radius: 50%;
+        display: inline-block;
+        animation: livePulse 2s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
+    /* Status metric cards */
+    .status-metric-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-radius: var(--radius-lg);
+        transition: all var(--transition-fast) ease;
+    }
+    .status-metric-card--success { background: var(--success-50); }
+    .status-metric-card--warning { background: var(--warning-50); }
+    .status-metric-card--danger { background: var(--danger-50, #FEE2E2); }
+    .status-metric-card:hover { box-shadow: var(--shadow-md); }
+
+    .status-metric-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: white;
+    }
+    .status-metric-icon--success { background: var(--success); }
+    .status-metric-icon--warning { background: var(--warning); }
+    .status-metric-icon--danger { background: var(--danger); }
+
+    .status-metric-title {
+        display: block;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--slate-800);
+    }
+    .status-metric-desc {
+        display: block;
+        font-size: var(--text-xs);
+        color: var(--slate-500);
+    }
+    .status-metric-value {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--slate-900);
+    }
+    .status-metric-unit {
+        display: block;
+        font-size: var(--text-xs);
+        color: var(--slate-500);
+    }
+
+    /* Progress bars */
+    .progress-bar-track {
+        height: 8px;
+        background: var(--slate-100);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: var(--radius-full);
+        transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .progress-bar-fill--success { background: var(--success); }
+    .progress-bar-fill--warning { background: var(--warning); }
+    .progress-bar-fill--danger { background: var(--danger); }
+
+    @media (max-width: 768px) {
+        .chart-type-selector {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .analytics-detail-grid { grid-template-columns: 1fr; }
+    }
+</style>
+@endpush
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script id="chartData" type="application/json">@json($proyectosPorEstado->pluck('total'))</script>
     <script id="chartLabels" type="application/json">@json($proyectosPorEstado->pluck('estado'))</script>
-    
+
     <script>
-        // Chart.js configuration with modern styling
-        Chart.register(ChartDataLabels);
-        
-        const chartData = JSON.parse(document.getElementById('chartData').textContent);
-        const chartLabels = JSON.parse(document.getElementById('chartLabels').textContent);
-        
-        const colors = {
-            primary: '#4f46e5',
-            secondary: '#7c3aed',
-            success: '#10b981',
-            warning: '#f59e0b',
-            danger: '#ef4444',
-            info: '#3b82f6'
+        var chartData = JSON.parse(document.getElementById('chartData').textContent);
+        var chartLabels = JSON.parse(document.getElementById('chartLabels').textContent);
+        var mainChart;
+
+        function cssVar(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        var chartColors = {
+            base: [cssVar('--success'), cssVar('--warning'), cssVar('--danger'), cssVar('--info'), cssVar('--primary')],
+            soft: ['rgba(18, 183, 106, 0.24)', 'rgba(247, 144, 9, 0.24)', 'rgba(240, 68, 56, 0.24)', 'rgba(11, 165, 236, 0.24)', 'rgba(79, 70, 229, 0.24)'],
+            radial: ['rgba(18, 183, 106, 0.78)', 'rgba(247, 144, 9, 0.78)', 'rgba(240, 68, 56, 0.78)', 'rgba(11, 165, 236, 0.78)', 'rgba(79, 70, 229, 0.78)']
         };
-        
-        const gradientColors = [
-            {
-                start: 'rgba(16, 185, 129, 0.8)',
-                end: 'rgba(16, 185, 129, 0.2)'
-            },
-            {
-                start: 'rgba(245, 158, 11, 0.8)',
-                end: 'rgba(245, 158, 11, 0.2)'
-            },
-            {
-                start: 'rgba(239, 68, 68, 0.8)',
-                end: 'rgba(239, 68, 68, 0.2)'
+
+        function createChart(type) {
+            var ctx = document.getElementById('mainChart').getContext('2d');
+            if (mainChart) mainChart.destroy();
+
+            var isRadial = ['pie', 'doughnut', 'polarArea'].includes(type);
+            var maxValue = chartData.length ? Math.max.apply(null, chartData) : 0;
+            var gradient = ctx.createLinearGradient(0, 0, 0, 380);
+            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.35)');
+            gradient.addColorStop(1, 'rgba(79, 70, 229, 0.06)');
+
+            var dataset = {
+                label: 'Proyectos',
+                data: chartData,
+                borderWidth: type === 'line' ? 3 : 2,
+                borderRadius: type === 'bar' ? 10 : 0,
+                borderSkipped: false,
+                pointRadius: type === 'line' || type === 'radar' ? 4 : 0,
+                pointHoverRadius: type === 'line' || type === 'radar' ? 6 : 0,
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: chartColors.base[4],
+                pointBorderWidth: 2,
+                tension: type === 'line' || type === 'radar' ? 0.35 : 0
+            };
+
+            if (type === 'bar') {
+                dataset.backgroundColor = chartColors.soft;
+                dataset.borderColor = chartColors.base;
+            } else if (type === 'line') {
+                dataset.backgroundColor = gradient;
+                dataset.borderColor = chartColors.base[4];
+                dataset.fill = true;
+            } else if (type === 'radar') {
+                dataset.backgroundColor = 'rgba(79, 70, 229, 0.2)';
+                dataset.borderColor = chartColors.base[4];
+                dataset.fill = true;
+            } else if (type === 'doughnut') {
+                dataset.backgroundColor = chartColors.radial;
+                dataset.borderColor = '#ffffff';
+                dataset.borderWidth = 2;
+                dataset.spacing = 2;
+                dataset.hoverOffset = 8;
+            } else if (type === 'pie' || type === 'polarArea') {
+                dataset.backgroundColor = chartColors.radial;
+                dataset.borderColor = '#ffffff';
+                dataset.borderWidth = 2;
             }
-        ];
-        
-        let mainChart;
-        
-        function createChart(type = 'bar') {
-            const ctx = document.getElementById('mainChart').getContext('2d');
-            
-            if (mainChart) {
-                mainChart.destroy();
-            }
-            
-            const isRadialChart = ['pie', 'doughnut', 'polarArea'].includes(type);
-            
+
             mainChart = new Chart(ctx, {
                 type: type,
                 data: {
                     labels: chartLabels,
-                    datasets: [{
-                        label: 'Proyectos',
-                        data: chartData,
-                        backgroundColor: isRadialChart ? [
-                            'rgba(16, 185, 129, 0.8)',
-                            'rgba(245, 158, 11, 0.8)',
-                            'rgba(239, 68, 68, 0.8)',
-                            'rgba(59, 130, 246, 0.8)',
-                            'rgba(147, 51, 234, 0.8)'
-                        ] : chartData.map((_, index) => {
-                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                            const colorSet = gradientColors[index % gradientColors.length];
-                            gradient.addColorStop(0, colorSet.start);
-                            gradient.addColorStop(1, colorSet.end);
-                            return gradient;
-                        }),
-                        borderColor: isRadialChart ? [
-                            'rgba(16, 185, 129, 1)',
-                            'rgba(245, 158, 11, 1)',
-                            'rgba(239, 68, 68, 1)',
-                            'rgba(59, 130, 246, 1)',
-                            'rgba(147, 51, 234, 1)'
-                        ] : [
-                            'rgba(16, 185, 129, 1)',
-                            'rgba(245, 158, 11, 1)',
-                            'rgba(239, 68, 68, 1)'
-                        ],
-                        borderWidth: 2,
-                        borderRadius: type === 'bar' ? 8 : 0,
-                        borderSkipped: false,
-                    }]
+                    datasets: [dataset]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: isRadialChart,
-                            position: 'bottom',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: {
-                                    size: 14,
-                                    family: 'Inter'
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: 'white',
-                            bodyColor: 'white',
-                            cornerRadius: 12,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.label}: ${context.parsed} proyectos`;
-                                }
-                            }
-                        },
-                        datalabels: {
-                            display: isRadialChart,
-                            color: 'white',
-                            font: {
-                                weight: 'bold',
-                                size: 14
-                            },
-                            formatter: (value, context) => {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = ((value / total) * 100).toFixed(1);
-                                return `${percentage}%`;
+                    animation: {
+                        duration: 900,
+                        easing: 'easeOutCubic'
+                    },
+                    transitions: {
+                        active: {
+                            animation: {
+                                duration: 220
                             }
                         }
                     },
-                    scales: !isRadialChart ? {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                font: {
-                                    family: 'Inter'
-                                }
+                    plugins: {
+                        legend: {
+                            display: isRadial,
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 18,
+                                font: { size: 12, family: 'Inter' },
+                                color: '#475467'
                             }
                         },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                font: {
-                                    family: 'Inter'
+                        tooltip: {
+                            backgroundColor: 'rgba(12, 17, 29, 0.9)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            cornerRadius: 12,
+                            caretPadding: 8,
+                            boxPadding: 6,
+                            padding: 12,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(ctx) {
+                                    var value = typeof ctx.parsed === 'object' ? ctx.parsed.r : ctx.parsed;
+                                    return ctx.label + ': ' + value + ' proyectos';
                                 }
                             }
                         }
-                    } : {}
+                    },
+                    scales: !isRadial ? {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: maxValue + 1,
+                            grid: { color: 'rgba(16, 24, 40, 0.06)', drawBorder: false },
+                            ticks: { font: { family: 'Inter', size: 12 }, color: '#667085' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', size: 12 }, color: '#667085' }
+                        }
+                    } : {},
+                    elements: {
+                        arc: {
+                            borderWidth: type === 'doughnut' || type === 'pie' || type === 'polarArea' ? 2 : 0
+                        }
+                    },
+                    cutout: type === 'doughnut' ? '62%' : undefined
                 }
             });
         }
-        
-        // Initialize chart
+
         document.addEventListener('DOMContentLoaded', function() {
-            createChart();
-            
-            // Chart type selector
+            createChart('bar');
+
             document.getElementById('chartTypeSelector').addEventListener('change', function(e) {
                 createChart(e.target.value);
             });
-            
-            // Smooth scroll animations for progress bars
-            setTimeout(() => {
-                document.querySelectorAll('[style*="width:"]').forEach(bar => {
-                    bar.style.transition = 'width 2s ease-in-out';
-                });
-            }, 500);
-            
-            // Animate counters
-            function animateValue(element, start, end, duration) {
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const current = Math.floor(progress * (end - start) + start);
-                    element.textContent = current.toLocaleString();
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
+
+            // Counter animation (800ms)
+            document.querySelectorAll('.stat-counter').forEach(function(el, index) {
+                var text = el.textContent.replace(/[^0-9.]/g, '');
+                var target = parseFloat(text);
+                if (isNaN(target)) return;
+                var suffix = el.textContent.replace(/[0-9.,]/g, '');
+                el.textContent = '0' + suffix;
+
+                setTimeout(function() {
+                    var start = performance.now();
+                    function step(now) {
+                        var progress = Math.min((now - start) / 800, 1);
+                        var current = Math.floor(progress * target);
+                        el.textContent = current.toLocaleString() + suffix;
+                        if (progress < 1) requestAnimationFrame(step);
+                        else el.textContent = target.toLocaleString() + suffix;
                     }
-                };
-                window.requestAnimationFrame(step);
-            }
-            
-            // Start counter animations
-            setTimeout(() => {
-                const counters = document.querySelectorAll('.stat-number');
-                counters.forEach((counter, index) => {
-                    const finalValue = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
-                    if (!isNaN(finalValue)) {
-                        counter.textContent = '0';
-                        setTimeout(() => {
-                            animateValue(counter, 0, finalValue, 2000);
-                        }, index * 200);
-                    }
-                });
-            }, 800);
+                    requestAnimationFrame(step);
+                }, index * 150);
+            });
         });
-        
-        // Add sparkle effect on hover
-        document.addEventListener('mousemove', function(e) {
-            if (Math.random() < 0.1) {
-                createSparkle(e.clientX, e.clientY);
-            }
-        });
-        
-        function createSparkle(x, y) {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'fixed pointer-events-none z-50';
-            sparkle.style.left = x + 'px';
-            sparkle.style.top = y + 'px';
-            sparkle.style.width = '4px';
-            sparkle.style.height = '4px';
-            sparkle.style.backgroundColor = '#ffffff';
-            sparkle.style.borderRadius = '50%';
-            sparkle.style.opacity = '0.8';
-            sparkle.style.animation = 'sparkleAnimation 1s ease-out forwards';
-            
-            document.body.appendChild(sparkle);
-            
-            setTimeout(() => {
-                sparkle.remove();
-            }, 1000);
-        }
-        
-        // Add sparkle animation CSS
-        const sparkleStyle = document.createElement('style');
-        sparkleStyle.textContent = `
-            @keyframes sparkleAnimation {
-                0% {
-                    transform: translateY(0px) scale(1);
-                    opacity: 0.8;
-                }
-                50% {
-                    transform: translateY(-20px) scale(1.2);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(-40px) scale(0.8);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(sparkleStyle);
-        
-        // Real-time data simulation (optional)
-        setInterval(() => {
-            const liveIndicator = document.querySelector('.pulse-dot');
-            if (liveIndicator) {
-                liveIndicator.style.animation = 'none';
-                setTimeout(() => {
-                    liveIndicator.style.animation = 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite';
-                }, 100);
-            }
-        }, 30000);
     </script>
 @endpush

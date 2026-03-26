@@ -1,0 +1,102 @@
+/* ============================================
+   MODALS - Bootstrap modal overrides
+   ============================================ */
+
+/* === Backdrop === */
+.modal-backdrop.show {
+    opacity: 1;
+    background: rgba(12, 17, 29, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+/* === Modal Dialog === */
+.modal .modal-dialog {
+    max-width: 480px;
+}
+
+.modal .modal-dialog-lg {
+    max-width: 640px;
+}
+
+.modal .modal-content {
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    animation: ds-modal-in var(--transition-base) ease-out;
+}
+
+@keyframes ds-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === Header === */
+.modal .modal-header {
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--slate-200);
+    background: white;
+}
+
+.modal .modal-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--slate-900);
+}
+
+.modal .btn-close {
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+}
+
+.modal .btn-close:hover {
+    opacity: 1;
+}
+
+/* === Body === */
+.modal .modal-body {
+    padding: var(--space-6);
+}
+
+/* === Footer === */
+.modal .modal-footer {
+    padding: var(--space-4) var(--space-6);
+    border-top: 1px solid var(--slate-200);
+    background: var(--slate-50);
+    gap: var(--space-2);
+}
+
+/* === Confirmation Modal (delete, etc.) === */
+.modal-confirm-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    margin: 0 auto var(--space-4);
+    font-size: var(--text-xl);
+}
+
+.modal-confirm-icon--danger {
+    background: var(--danger-50);
+    color: var(--danger);
+}
+
+.modal-confirm-icon--warning {
+    background: var(--warning-50);
+    color: var(--warning);
+}
+
+.modal-confirm-text {
+    text-align: center;
+    color: var(--slate-600);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-5);
+}

@@ -2,50 +2,51 @@
 <div id="sidebar">
     <div class="sidebar-header">
         <div class="logo-container">
-            <i class="fas fa-university text-primary fa-2x"></i>
+            <div class="logo-icon">
+                <i class="fas fa-university"></i>
+            </div>
             <div class="logo-text">
                 <span class="logo-title">UNICLARETIANA</span>
                 <small class="logo-subtitle">Gestor de Proyectos</small>
             </div>
         </div>
-        <!-- Botón solo en móvil -->
-        <button class="sidebar-toggle d-md-none" id="sidebarToggle" title="Plegar/Desplegar menú">
-            <i class="fas fa-chevron-left"></i>
-        </button>
     </div>
 
-    <div class="nav-section">
-        <h6 class="nav-section-title">Menú</h6>
+    <div class="nav-section" style="flex: 1;">
+        <h6 class="nav-section-title">Menu</h6>
         <ul class="nav-items">
-            <li class="nav-item">
+            <li>
                 <a href="{{ route('proyectos.index') }}" class="nav-link {{ request()->routeIs('proyectos.*') ? 'active' : '' }}">
-                    <i class="fas fa-folder"></i>
+                    <i class="fas fa-briefcase"></i>
                     <span class="nav-text">Proyectos</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li>
                 <a href="{{ route('estadistica') }}" class="nav-link {{ request()->routeIs('estadistica') ? 'active' : '' }}">
-                    <i class="fas fa-chart-bar"></i>
-                    <span class="nav-text">Estadística</span>
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-text">Estadistica</span>
                 </a>
             </li>
             @if(auth()->check() && auth()->user()->hasRole('admin'))
-                <li class="nav-item">
+                <li style="margin-top: 8px;">
+                    <h6 class="nav-section-title" style="padding-left: 12px; margin-bottom: 4px;">Administracion</h6>
+                </li>
+                <li>
                     <a href="{{ route('audit.index') }}" class="nav-link {{ request()->routeIs('audit.*') ? 'active' : '' }}">
-                        <i class="fas fa-user-secret"></i>
-                        <span class="nav-text">Auditoría</span>
+                        <i class="fas fa-user-shield"></i>
+                        <span class="nav-text">Auditoria</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li>
                     <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-users-cog"></i>
                         <span class="nav-text">Usuarios</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li>
                     <a href="{{ route('access-requests.index') }}" class="nav-link {{ request()->routeIs('access-requests.*') ? 'active' : '' }}">
-                        <i class="fas fa-user-clock"></i>
-                        <span class="nav-text">Solicitudes de Acceso</span>
+                        <i class="fas fa-inbox"></i>
+                        <span class="nav-text">Solicitudes</span>
                     </a>
                 </li>
             @endif
@@ -53,61 +54,36 @@
     </div>
 
     <!-- User Section -->
-    <div class="nav-section mt-auto">
-        <div class="px-4 py-3 border-top">
-            @guest
-                <div class="d-flex flex-column gap-2">
-                    @if (Route::has('login'))
-                        <a href="{{ route('login') }}" class="nav-link">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span class="nav-text">{{ __('Login') }}</span>
-                        </a>
-                    @endif
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="nav-link">
-                            <i class="fas fa-user-plus"></i>
-                            <span class="nav-text">{{ __('Register') }}</span>
-                        </a>
-                    @endif
+    <div class="sidebar-user">
+        @guest
+            <a href="{{ route('login') }}" class="nav-link">
+                <i class="fas fa-sign-in-alt"></i>
+                <span class="nav-text">Iniciar Sesion</span>
+            </a>
+        @else
+            <a href="#" class="user-profile-link" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                <div class="avatar-circle">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                <div class="user-info">
+                    <h6 class="user-name">{{ Auth::user()->name }}</h6>
+                    <small class="user-email">{{ Auth::user()->email }}</small>
                 </div>
-            @else
-                <a href="#" class="d-flex align-items-center gap-3 px-2 rounded transition user-profile-hover text-decoration-none"
-                   data-bs-toggle="modal" data-bs-target="#editProfileModal"
-                   style="cursor:pointer;">
-                    <div class="flex-shrink-0">
-                        <div class="avatar-circle">
-                            {{ substr(Auth::user()->name, 0, 1) }}
-                        </div>
-                    </div>
-                    <div class="flex-grow-1 min-width-0">
-                        <h6 class="mb-0 text-truncate">{{ Auth::user()->name }}</h6>
-                        <small class="text-muted text-truncate">{{ Auth::user()->email }}</small>
-                    </div>
-                </a>
-@push('styles')
-    <style>
-        .user-profile-hover:hover {
-            background: #f0f4ff;
-            box-shadow: 0 2px 8px rgba(67,97,238,0.08);
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-    </style>
-@endpush
-                <div class="mt-2">
-                    <a class="nav-link text-danger" href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span class="nav-text">{{ __('Logout') }}</span>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-            @endguest
-        </div>
+            </a>
+            <a class="sidebar-logout" href="{{ route('logout') }}"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="nav-text">Cerrar Sesion</span>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        @endguest
     </div>
+
+    <!-- Collapse Toggle (desktop) -->
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Colapsar menu">
+        <i class="fas fa-chevron-left"></i>
+    </button>
 </div>
 
-<!-- Sidebar Overlay for Mobile -->
+<!-- Sidebar Overlay (mobile) -->
 <div class="sidebar-overlay"></div>

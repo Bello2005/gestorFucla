@@ -1,0 +1,204 @@
+/* ============================================
+   FORMS - Inputs, labels, file uploads, validation
+   ============================================ */
+
+/* === Form Layout === */
+.ds-form-section {
+    margin-bottom: var(--space-8);
+}
+
+.ds-form-section-title {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--slate-900);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--slate-200);
+}
+
+.ds-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+}
+
+.ds-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.ds-form-group--full {
+    grid-column: 1 / -1;
+}
+
+/* === Labels === */
+.ds-label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--slate-700);
+    margin-bottom: var(--space-1-5);
+}
+
+.ds-label .required {
+    color: var(--danger);
+    margin-left: var(--space-0-5);
+}
+
+.ds-form-hint {
+    font-size: var(--text-xs);
+    color: var(--slate-500);
+    margin-top: var(--space-1-5);
+}
+
+/* === Inputs === */
+.ds-input,
+.ds-select,
+.ds-textarea {
+    width: 100%;
+    height: 44px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--slate-300);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--slate-900);
+    background: white;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.ds-textarea {
+    height: auto;
+    min-height: 100px;
+    padding: var(--space-3);
+    resize: vertical;
+}
+
+.ds-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-3) center;
+    padding-right: var(--space-10);
+}
+
+.ds-input::placeholder,
+.ds-textarea::placeholder {
+    color: var(--slate-400);
+}
+
+.ds-input:focus,
+.ds-select:focus,
+.ds-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* === File Upload Zone === */
+.ds-file-upload {
+    border: 2px dashed var(--slate-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8) var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.ds-file-upload:hover,
+.ds-file-upload.dragover {
+    border-color: var(--primary);
+    background-color: var(--primary-50);
+}
+
+.ds-file-upload-icon {
+    font-size: var(--text-2xl);
+    color: var(--slate-400);
+    margin-bottom: var(--space-3);
+}
+
+.ds-file-upload-text {
+    font-size: var(--text-sm);
+    color: var(--slate-600);
+}
+
+.ds-file-upload-text strong {
+    color: var(--primary);
+}
+
+.ds-file-upload-hint {
+    font-size: var(--text-xs);
+    color: var(--slate-400);
+    margin-top: var(--space-1);
+}
+
+/* File list */
+.ds-file-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+}
+
+.ds-file-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--slate-50);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+}
+
+.ds-file-item-icon {
+    color: var(--slate-400);
+}
+
+.ds-file-item-name {
+    flex: 1;
+    color: var(--slate-700);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ds-file-item-remove {
+    color: var(--slate-400);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    background: none;
+    border: none;
+    padding: var(--space-1);
+}
+
+.ds-file-item-remove:hover {
+    color: var(--danger);
+}
+
+/* === Validation States === */
+.ds-input.is-invalid,
+.ds-select.is-invalid,
+.ds-textarea.is-invalid {
+    border-color: var(--danger);
+}
+
+.ds-input.is-invalid:focus,
+.ds-select.is-invalid:focus,
+.ds-textarea.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(240, 68, 56, 0.15);
+}
+
+.ds-error {
+    font-size: var(--text-xs);
+    color: var(--danger);
+    margin-top: var(--space-1-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .ds-form-grid {
+        grid-template-columns: 1fr;
+    }
+}

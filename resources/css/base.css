@@ -1,95 +1,65 @@
-@import "./variables.css";
+/* ============================================
+   BASE STYLES - Global typography & resets
+   ============================================ */
 
-/* Reset básico */
 *,
 *::before,
 *::after {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
-    line-height: 1.5;
-    color: var(--gray-800);
-    background-color: var(--gray-50);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--slate-900);
+    background-color: var(--slate-50);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Estilos de tipografía */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-weight: 600;
-    line-height: 1.25;
-    color: var(--gray-900);
+h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--font-semibold);
+    line-height: var(--leading-tight);
+    color: var(--slate-900);
 }
+
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-base); }
 
 a {
     color: var(--primary);
     text-decoration: none;
-    transition: var(--transition);
+    transition: color var(--transition-fast);
 }
 
 a:hover {
-    color: var(--info);
+    color: var(--primary-hover);
 }
 
-/* Estilos de botones base */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    font-weight: 500;
-    transition: var(--transition);
-    cursor: pointer;
-    border: none;
+/* Scrollbar refinement */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
 
-.btn-primary {
-    background-color: var(--primary);
-    color: white;
+::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.btn-primary:hover {
-    background-color: var(--info);
+::-webkit-scrollbar-thumb {
+    background: var(--slate-300);
+    border-radius: var(--radius-full);
 }
 
-/* Contenedores y utilidades */
-.container {
-    width: 100%;
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
+::-webkit-scrollbar-thumb:hover {
+    background: var(--slate-400);
 }
 
-.card {
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--card-shadow);
-    padding: 1.5rem;
-}
-
-/* Grid y Flexbox utilities */
-.flex {
-    display: flex;
-}
-
-.grid {
-    display: grid;
-}
-
-.gap-4 {
-    gap: 1rem;
-}
-
-.gap-8 {
-    gap: 2rem;
+/* Selection */
+::selection {
+    background-color: var(--primary-100);
+    color: var(--primary-900);
 }

@@ -1,0 +1,162 @@
+/* ============================================
+   BADGES - Status pills, role badges, chips
+   ============================================ */
+
+/* === Base Badge === */
+.ds-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding: var(--space-0-5) var(--space-3);
+    height: 24px;
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Status dot inside badge */
+.ds-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Backward-compatible dot class used in Blade components */
+.ds-badge .ds-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* === Status Variants === */
+.ds-badge--activo {
+    background: var(--success-50);
+    color: var(--success-700);
+}
+.ds-badge--activo .dot {
+    background: var(--success);
+}
+
+.ds-badge--inactivo {
+    background: var(--warning-50);
+    color: var(--warning-700);
+}
+.ds-badge--inactivo .dot {
+    background: var(--warning);
+}
+
+.ds-badge--cerrado {
+    background: var(--slate-100);
+    color: var(--slate-600);
+}
+.ds-badge--cerrado .dot {
+    background: var(--slate-400);
+}
+
+/* === Semantic Variants === */
+.ds-badge--primary {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.ds-badge--success {
+    background: var(--success-50);
+    color: var(--success-700);
+}
+
+.ds-badge--warning {
+    background: var(--warning-50);
+    color: var(--warning-700);
+}
+
+.ds-badge--danger {
+    background: var(--danger-50);
+    color: var(--danger-700);
+}
+
+.ds-badge--info {
+    background: var(--info-50);
+    color: var(--info-700);
+}
+
+.ds-badge--gold {
+    background: var(--gold-100);
+    color: var(--gold-700);
+}
+
+/* === Filter Chips (clickable) === */
+.ds-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding: var(--space-1-5) var(--space-3);
+    height: 32px;
+    border: 1px solid var(--slate-300);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    color: var(--slate-600);
+    background: white;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.ds-chip:hover {
+    border-color: var(--slate-400);
+    color: var(--slate-900);
+}
+
+.ds-chip.active {
+    background: var(--primary-50);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.ds-chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* === Role Badge === */
+.ds-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-0-5) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+}
+
+.ds-role-badge--admin {
+    background: var(--gold-100);
+    color: var(--gold-700);
+}
+
+.ds-role-badge--user {
+    background: var(--slate-100);
+    color: var(--slate-600);
+}
+
+/* === Count Badge (notifications) === */
+.ds-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 var(--space-1-5);
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: var(--font-semibold);
+    line-height: 1;
+    background: var(--danger);
+    color: white;
+}

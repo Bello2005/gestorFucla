@@ -1,0 +1,165 @@
+/* ============================================
+   BUTTONS - All button variants
+   ============================================ */
+
+.ds-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 40px;
+    padding: 0 var(--space-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.ds-btn:active {
+    transform: scale(0.98);
+}
+
+/* === Primary === */
+.ds-btn--primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.ds-btn--primary:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: white;
+}
+
+/* === Secondary (Outline) === */
+.ds-btn--secondary {
+    background: white;
+    color: var(--slate-700);
+    border-color: var(--slate-300);
+}
+
+.ds-btn--secondary:hover {
+    background: var(--slate-50);
+    border-color: var(--slate-400);
+    color: var(--slate-900);
+}
+
+/* === Ghost === */
+.ds-btn--ghost {
+    background: transparent;
+    color: var(--slate-600);
+    border-color: transparent;
+}
+
+.ds-btn--ghost:hover {
+    background: var(--slate-100);
+    color: var(--slate-900);
+}
+
+/* === Danger === */
+.ds-btn--danger {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+}
+
+.ds-btn--danger:hover {
+    background: var(--danger-700);
+    border-color: var(--danger-700);
+    color: white;
+}
+
+/* === Danger Ghost === */
+.ds-btn--danger-ghost {
+    background: transparent;
+    color: var(--danger);
+    border-color: transparent;
+}
+
+.ds-btn--danger-ghost:hover {
+    background: var(--danger-50);
+}
+
+/* === Success === */
+.ds-btn--success {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}
+
+.ds-btn--success:hover {
+    background: var(--success-700);
+    border-color: var(--success-700);
+    color: white;
+}
+
+/* === Gold (Institutional) === */
+.ds-btn--gold {
+    background: var(--gold-500);
+    color: white;
+    border-color: var(--gold-500);
+}
+
+.ds-btn--gold:hover {
+    background: var(--gold-600);
+    border-color: var(--gold-600);
+    color: white;
+}
+
+/* === Sizes === */
+.ds-btn--sm {
+    height: 32px;
+    padding: 0 var(--space-3);
+    font-size: var(--text-xs);
+}
+
+.ds-btn--lg {
+    height: 48px;
+    padding: 0 var(--space-6);
+    font-size: var(--text-base);
+}
+
+/* === Icon Button === */
+.ds-btn--icon {
+    width: 40px;
+    padding: 0;
+}
+
+.ds-btn--icon.ds-btn--sm {
+    width: 32px;
+}
+
+/* === Button Group === */
+.ds-btn-group {
+    display: flex;
+    gap: var(--space-2);
+}
+
+/* === Loading State === */
+.ds-btn--loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.ds-btn--loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: ds-spin 600ms linear infinite;
+}
+
+@keyframes ds-spin {
+    to { transform: rotate(360deg); }
+}

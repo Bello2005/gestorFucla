@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\CustomUserProvider;
@@ -21,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Carbon::setLocale('es');
+
         // Registrar el proveedor de autenticación personalizado
         Auth::provider('custom', function ($app, array $config) {
             return new CustomUserProvider($app['hash'], $config['model']);

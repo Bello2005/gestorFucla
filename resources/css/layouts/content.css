@@ -1,86 +1,120 @@
-@import "../variables.css";
+/* ============================================
+   CONTENT AREA - Page layout utilities
+   ============================================ */
 
-.content-wrapper {
-    width: 100%;
-    padding: 2rem;
-}
-
-.search-box {
-    max-width: 300px;
-}
-
-.search-box input {
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--gray-200);
-}
-
-.search-box input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
-}
-
-.table-responsive {
-    margin-top: 2rem;
-    overflow-x: auto;
-}
-
-.table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table th {
-    background-color: var(--gray-50);
-    color: var(--gray-700);
-    font-weight: 600;
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 2px solid var(--gray-200);
-}
-
-.table td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--gray-200);
-}
-
-.table tbody tr:hover {
-    background-color: var(--gray-50);
-}
-
-/* Estilos para los controles de la tabla */
-.table-controls {
+/* === Page Header === */
+.page-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-4);
 }
 
-.table-length select {
-    padding: 0.5rem;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--gray-200);
+.page-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--slate-900);
+    margin: 0;
 }
 
-/* Estilos para la paginación */
-.dataTables_paginate {
-    margin-top: 1rem;
+.page-subtitle {
+    font-size: var(--text-sm);
+    color: var(--slate-500);
+    margin-top: var(--space-1);
+}
+
+/* === Content Sections === */
+.content-section {
+    margin-bottom: var(--space-6);
+}
+
+.content-section-title {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--slate-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-4);
+}
+
+/* === Empty State === */
+.empty-state {
     display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-16) var(--space-8);
+    text-align: center;
 }
 
-.paginate_button {
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    background-color: var(--gray-50);
+.empty-state-icon {
+    font-size: var(--text-4xl);
+    color: var(--slate-300);
+    margin-bottom: var(--space-4);
+}
+
+.empty-state-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--slate-700);
+    margin-bottom: var(--space-2);
+}
+
+.empty-state-text {
+    font-size: var(--text-sm);
+    color: var(--slate-500);
+    max-width: 400px;
+    margin-bottom: var(--space-5);
+}
+
+/* === Divider === */
+.ds-divider {
+    height: 1px;
+    background: var(--slate-200);
+    margin: var(--space-6) 0;
     border: none;
-    cursor: pointer;
 }
 
-.paginate_button.current {
-    background-color: var(--primary);
-    color: white;
+/* === Quick Actions Grid === */
+.quick-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+/* === Alert inline (for pages that need it) === */
+.ds-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    border: 1px solid;
+}
+
+.ds-alert--success {
+    background: var(--success-50);
+    border-color: var(--success-100);
+    color: var(--success-700);
+}
+
+.ds-alert--danger {
+    background: var(--danger-50);
+    border-color: var(--danger-100);
+    color: var(--danger-700);
+}
+
+.ds-alert--warning {
+    background: var(--warning-50);
+    border-color: var(--warning-100);
+    color: var(--warning-700);
+}
+
+.ds-alert--info {
+    background: var(--info-50);
+    border-color: var(--info-100);
+    color: var(--info-700);
 }
