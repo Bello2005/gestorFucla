@@ -1,65 +1,87 @@
-/* ============================================
-   BASE STYLES - Global typography & resets
-   ============================================ */
+/* Base: html/body, enlaces, scrollbar, selección, foco */
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
 }
 
 body {
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--text-sm);
-    line-height: var(--leading-normal);
-    color: var(--slate-900);
-    background-color: var(--slate-50);
+    line-height: 1.6;
+    color: var(--neutral-800);
+    background-color: var(--surface-tertiary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: var(--font-semibold);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
     line-height: var(--leading-tight);
-    color: var(--slate-900);
+    color: var(--uni-navy);
 }
 
-h1 { font-size: var(--text-2xl); }
-h2 { font-size: var(--text-xl); }
-h3 { font-size: var(--text-lg); }
-h4 { font-size: var(--text-base); }
+h1 {
+    font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+    font-weight: var(--font-extrabold);
+    letter-spacing: -0.02em;
+}
+h2 {
+    font-size: var(--text-xl);
+}
+h3 {
+    font-size: var(--text-lg);
+}
+h4 {
+    font-size: var(--text-base);
+}
 
-a {
-    color: var(--primary);
-    text-decoration: none;
+a:not([class]) {
+    color: var(--uni-gold-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
     transition: color var(--transition-fast);
 }
 
-a:hover {
-    color: var(--primary-hover);
+a:not([class]):hover {
+    color: var(--uni-gold);
 }
 
-/* Scrollbar refinement */
+:focus-visible {
+    outline: 2px solid var(--uni-gold);
+    outline-offset: 2px;
+}
+
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--neutral-100);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--slate-300);
+    background: var(--neutral-300);
     border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--slate-400);
+    background: var(--neutral-400);
 }
 
-/* Selection */
 ::selection {
-    background-color: var(--primary-100);
-    color: var(--primary-900);
+    background-color: var(--uni-gold-pale);
+    color: var(--uni-navy-deep);
 }

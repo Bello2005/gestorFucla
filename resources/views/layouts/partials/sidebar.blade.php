@@ -1,77 +1,91 @@
-<!-- Sidebar -->
-<div id="sidebar">
+<nav id="sidebar" class="uc-sidebar" role="navigation" aria-label="Principal">
     <div class="sidebar-header">
-        <div class="logo-container">
-            <div class="logo-icon">
-                <i class="fas fa-university"></i>
-            </div>
+        <a href="{{ route('dashboard') }}" class="logo-container">
+            <img class="logo-mark" src="{{ asset('images/brand/logo-mark.svg') }}" width="44" height="44" alt="" />
             <div class="logo-text">
                 <span class="logo-title">UNICLARETIANA</span>
-                <small class="logo-subtitle">Gestor de Proyectos</small>
+                <small class="logo-subtitle">Gestión de Extensión</small>
             </div>
-        </div>
+        </a>
     </div>
 
-    <div class="nav-section" style="flex: 1;">
-        <h6 class="nav-section-title">Menu</h6>
+    <div class="nav-section">
+        <h2 class="nav-section-title">Menú principal</h2>
         <ul class="nav-items">
             <li>
-                <a href="{{ route('proyectos.index') }}" class="nav-link {{ request()->routeIs('proyectos.*') ? 'active' : '' }}">
-                    <i class="fas fa-briefcase"></i>
+                <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>
+                    <x-uc.icon name="layout-dashboard" />
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('proyectos.index') }}" class="nav-link {{ request()->routeIs('proyectos.*') ? 'active' : '' }}" @if(request()->routeIs('proyectos.*')) aria-current="page" @endif>
+                    <x-uc.icon name="briefcase" />
                     <span class="nav-text">Proyectos</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('estadistica') }}" class="nav-link {{ request()->routeIs('estadistica') ? 'active' : '' }}">
-                    <i class="fas fa-chart-line"></i>
-                    <span class="nav-text">Estadistica</span>
+                <a href="{{ route('banco.index') }}" class="nav-link {{ request()->routeIs('banco.*') ? 'active' : '' }}" @if(request()->routeIs('banco.*')) aria-current="page" @endif>
+                    <x-uc.icon name="library-big" />
+                    <span class="nav-text">Banco de Proyectos</span>
                 </a>
             </li>
-            @if(auth()->check() && auth()->user()->hasRole('admin'))
-                <li style="margin-top: 8px;">
-                    <h6 class="nav-section-title" style="padding-left: 12px; margin-bottom: 4px;">Administracion</h6>
-                </li>
+            <li>
+                <a href="{{ route('estadistica') }}" class="nav-link {{ request()->routeIs('estadistica') ? 'active' : '' }}" @if(request()->routeIs('estadistica')) aria-current="page" @endif>
+                    <x-uc.icon name="line-chart" />
+                    <span class="nav-text">Estadísticas</span>
+                </a>
+            </li>
+        </ul>
+
+        @if(auth()->check() && auth()->user()->hasRole('admin'))
+            <h2 class="nav-section-title" style="margin-top: 12px;">Administración</h2>
+            <ul class="nav-items">
                 <li>
                     <a href="{{ route('audit.index') }}" class="nav-link {{ request()->routeIs('audit.*') ? 'active' : '' }}">
-                        <i class="fas fa-user-shield"></i>
-                        <span class="nav-text">Auditoria</span>
+                        <x-uc.icon name="shield" />
+                        <span class="nav-text">Auditoría</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                        <i class="fas fa-users-cog"></i>
+                        <x-uc.icon name="users" />
                         <span class="nav-text">Usuarios</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('access-requests.index') }}" class="nav-link {{ request()->routeIs('access-requests.*') ? 'active' : '' }}">
-                        <i class="fas fa-inbox"></i>
+                        <x-uc.icon name="inbox" />
                         <span class="nav-text">Solicitudes</span>
                     </a>
                 </li>
-            @endif
-        </ul>
+                <li>
+                    <a href="{{ route('catalogos.index') }}" class="nav-link {{ request()->routeIs('catalogos.*') ? 'active' : '' }}">
+                        <x-uc.icon name="book-marked" />
+                        <span class="nav-text">Catálogos</span>
+                    </a>
+                </li>
+            </ul>
+        @endif
     </div>
 
-    <!-- User Section -->
     <div class="sidebar-user">
         @guest
             <a href="{{ route('login') }}" class="nav-link">
-                <i class="fas fa-sign-in-alt"></i>
-                <span class="nav-text">Iniciar Sesion</span>
+                <span class="nav-text">Iniciar sesión</span>
             </a>
         @else
-            <a href="#" class="user-profile-link" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                <div class="avatar-circle">{{ substr(Auth::user()->name, 0, 1) }}</div>
+            <a href="#" class="user-profile-link" data-bs-toggle="modal" data-bs-target="#editProfileModal" aria-label="Editar perfil">
+                <div class="avatar-circle" aria-hidden="true">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                 <div class="user-info">
-                    <h6 class="user-name">{{ Auth::user()->name }}</h6>
+                    <h3 class="user-name">{{ Auth::user()->name }}</h3>
                     <small class="user-email">{{ Auth::user()->email }}</small>
                 </div>
             </a>
             <a class="sidebar-logout" href="{{ route('logout') }}"
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fas fa-sign-out-alt"></i>
-                <span class="nav-text">Cerrar Sesion</span>
+                <x-uc.icon name="log-out" />
+                <span class="nav-text">Cerrar sesión</span>
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
@@ -79,11 +93,9 @@
         @endguest
     </div>
 
-    <!-- Collapse Toggle (desktop) -->
-    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Colapsar menu">
-        <i class="fas fa-chevron-left"></i>
+    <button type="button" class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Colapsar menú" aria-label="Colapsar menú lateral">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
     </button>
-</div>
+</nav>
 
-<!-- Sidebar Overlay (mobile) -->
-<div class="sidebar-overlay"></div>
+<div class="sidebar-overlay" role="presentation" aria-hidden="true"></div>

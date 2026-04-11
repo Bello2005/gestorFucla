@@ -1,0 +1,16 @@
+/* Catálogos admin */
+
+.catalogos-page .uc-inline-input {
+    width: 100%;
+    min-width: 120px;
+    border: 1px solid transparent;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: transparent;
+}
+
+.catalogos-page .uc-inline-input:focus {
+    border-color: var(--uni-gold);
+    background: var(--surface-primary);
+    outline: none;
+}

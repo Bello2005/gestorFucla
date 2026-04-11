@@ -1,0 +1,26 @@
+.uc-empty {
+    text-align: center;
+    padding: var(--space-12) var(--space-6);
+    color: var(--neutral-500);
+}
+
+.uc-empty__icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-4);
+    color: var(--neutral-300);
+}
+
+.uc-empty__title {
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: var(--text-lg);
+    color: var(--neutral-700);
+    margin-bottom: var(--space-2);
+}
+
+.uc-empty__text {
+    font-size: var(--text-sm);
+    max-width: 360px;
+    margin: 0 auto var(--space-6);
+}

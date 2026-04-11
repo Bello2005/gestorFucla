@@ -9,29 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudfla                success: function(response) {
-                    $('#resetPasswordModal').modal('hide');
-                    if (response.message.includes('temporal')) {
-                        // Extraer la contraseña temporal del mensaje
-                        const tempPass = response.message.split('temporal: ')[1].split('.')[0];
-                        
-                        // Mostrar el modal de contraseña temporal
-                        $('#tempPasswordText').val(tempPass);
-                        $('#temporalPasswordModal').modal('show');
-                    } else {
-                        // Si es enlace por correo, mostrar mensaje de éxito
-                        alert('Se ha enviado el enlace de restablecimiento al correo del usuario.');
-                        location.reload();
-                    }
-                }x/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css">
-    
-    <!-- Project Styles -->
-    <link rel="stylesheet" href="{{ asset('css/base.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components/table-states.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- DataTables (base + buttons; estilos UC vía app.css) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
     <style>
         #usuariosTable_filter {
             display: none !important;
@@ -84,7 +66,7 @@
         </button>
     </div>
 
-    <div class="card">
+    <div class="card uc-dt-wrap">
         <div class="card-body">
             <div class="search-row mb-3">
                 <div class="search-container">
@@ -365,7 +347,6 @@
 @section('scripts')
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
 $(document).ready(function() {

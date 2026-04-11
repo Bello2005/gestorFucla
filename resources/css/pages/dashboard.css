@@ -1,0 +1,54 @@
+/* Dashboard — command center */
+
+.dashboard-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.dashboard-hero__greeting {
+    font-family: var(--font-display);
+    font-weight: var(--font-extrabold);
+    font-size: clamp(1.25rem, 1.5vw, 1.75rem);
+    color: var(--uni-navy);
+    letter-spacing: -0.02em;
+}
+
+.dashboard-hero__date {
+    font-size: var(--text-sm);
+    color: var(--neutral-500);
+    margin-top: var(--space-1);
+}
+
+.dashboard-grid-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+    .dashboard-grid-split {
+        grid-template-columns: 1fr 380px;
+    }
+}
+
+.stat-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+}
+
+@media (min-width: 641px) {
+    .stat-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1025px) {
+    .stat-cards-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

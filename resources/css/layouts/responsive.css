@@ -1,0 +1,19 @@
+/* Breakpoints y utilidades responsive centralizadas */
+
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 272px;
+    }
+}
+
+@media (max-width: 768px) {
+    .uc-hide-mobile {
+        display: none !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .uc-hide-desktop {
+        display: none !important;
+    }
+}

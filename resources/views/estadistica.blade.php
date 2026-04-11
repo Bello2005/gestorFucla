@@ -9,6 +9,7 @@
 @endsection
 
 @section('content')
+<div class="estadisticas-page">
 <div class="page-header">
     <div>
         <h1 class="page-title">Analitica de Proyectos</h1>
@@ -169,6 +170,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection
 

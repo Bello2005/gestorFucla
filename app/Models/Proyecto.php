@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use App\Traits\Auditable;
 
 class Proyecto extends Model
 {
-    use HasFactory, Auditable;
+    use Auditable, HasFactory;
 
     protected $table = 'proyectos';
 
@@ -27,17 +27,21 @@ class Proyecto extends Model
         'cargar_contrato_o_convenio',
         'cargar_evidencias',
         'estado',
+        'certificado_cumplimiento',
+        'certificado_fecha',
+        'certificado_observaciones',
     ];
 
     protected $casts = [
         'fecha_de_ejecucion' => 'date',
         'valor_total' => 'decimal:2',
         'plazo' => 'decimal:2',
-        'cargar_evidencias' => 'array'
+        'cargar_evidencias' => 'array',
+        'certificado_fecha' => 'date',
     ];
 
     protected $attributes = [
-        'cargar_evidencias' => '[]'
+        'cargar_evidencias' => '[]',
     ];
 
     public function getCargarEvidenciasAttribute($value)
@@ -58,16 +62,17 @@ class Proyecto extends Model
             }
 
             // Si no es array después de decodificar, retornar vacío
-            if (!is_array($value)) {
+            if (! is_array($value)) {
                 return [];
             }
 
             // Filtrar elementos vacíos y no válidos
-            return array_values(array_filter($value, function($item) {
-                return is_string($item) && !empty(trim($item));
+            return array_values(array_filter($value, function ($item) {
+                return is_string($item) && ! empty(trim($item));
             }));
         } catch (\Exception $e) {
-            Log::error('Error procesando evidencias: ' . $e->getMessage());
+            Log::error('Error procesando evidencias: '.$e->getMessage());
+
             return [];
         }
     }
@@ -78,6 +83,7 @@ class Proyecto extends Model
             // Si es nulo o vacío, guardar array vacío
             if (empty($value)) {
                 $this->attributes['cargar_evidencias'] = '[]';
+
                 return;
             }
 
@@ -86,23 +92,25 @@ class Proyecto extends Model
                 json_decode($value);
                 if (json_last_error() === JSON_ERROR_NONE) {
                     $this->attributes['cargar_evidencias'] = $value;
+
                     return;
                 }
             }
 
             // Si es array, convertir a JSON
             if (is_array($value)) {
-                $filtered = array_values(array_filter($value, function($item) {
-                    return is_string($item) && !empty(trim($item));
+                $filtered = array_values(array_filter($value, function ($item) {
+                    return is_string($item) && ! empty(trim($item));
                 }));
                 $this->attributes['cargar_evidencias'] = json_encode($filtered);
+
                 return;
             }
 
             // En cualquier otro caso, guardar array vacío
             $this->attributes['cargar_evidencias'] = '[]';
         } catch (\Exception $e) {
-            Log::error('Error guardando evidencias: ' . $e->getMessage());
+            Log::error('Error guardando evidencias: '.$e->getMessage());
             $this->attributes['cargar_evidencias'] = '[]';
         }
     }
@@ -110,7 +118,7 @@ class Proyecto extends Model
     // Accessor para formatear el valor total
     public function getValorTotalFormattedAttribute()
     {
-        return $this->valor_total ? number_format((float)$this->valor_total, 2, ',', '.') : '0,00';
+        return $this->valor_total ? number_format((float) $this->valor_total, 2, ',', '.') : '0,00';
     }
 
     // Accessor para formatear la fecha

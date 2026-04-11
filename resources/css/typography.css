@@ -1,0 +1,40 @@
+/* Fuentes: cargar en layout (link Google Fonts) — DM Sans, Plus Jakarta Sans, JetBrains Mono */
+
+/* Escala de títulos */
+.uc-page-title {
+    font-family: var(--font-display);
+    font-weight: var(--font-extrabold);
+    font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+    letter-spacing: -0.02em;
+    color: var(--uni-navy);
+    line-height: var(--leading-tight);
+}
+
+.uc-section-title {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    font-size: var(--text-xl);
+    color: var(--neutral-800);
+    line-height: var(--leading-tight);
+}
+
+.uc-card-title {
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: var(--text-base);
+    color: var(--neutral-800);
+}
+
+.uc-label {
+    font-family: var(--font-body);
+    font-weight: var(--font-medium);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neutral-500);
+}
+
+.uc-text-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}

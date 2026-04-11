@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proyecto;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 
 class ProyectoController extends Controller
 {
@@ -22,44 +23,47 @@ class ProyectoController extends Controller
     {
         try {
             $proyecto = null;
-            
+
             if ($request->has('id')) {
                 $proyecto = Proyecto::findOrFail($request->id);
                 $pdf = Pdf::loadView('proyectos.exports.pdf-single', ['proyecto' => $proyecto]);
-                $nombreArchivo = 'Proyecto_' . $proyecto->id . '_' . date('Y-m-d') . '.pdf';
+                $nombreArchivo = 'Proyecto_'.$proyecto->id.'_'.date('Y-m-d').'.pdf';
+
                 return $pdf->download($nombreArchivo)->header('Content-Type', 'application/pdf');
             }
-            
+
             $proyectos = Proyecto::all();
             $pdf = Pdf::loadView('proyectos.exports.pdf', ['proyectos' => $proyectos]);
+
             return $pdf->download('proyectos.pdf')->header('Content-Type', 'application/pdf');
         } catch (\Exception $e) {
             Log::error('Error al exportar a PDF', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             if ($request->ajax()) {
-                return response()->json(['error' => 'Error al exportar a PDF: ' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Error al exportar a PDF: '.$e->getMessage()], 500);
             }
-            return redirect()->back()->withErrors(['error' => 'Error al exportar a PDF: ' . $e->getMessage()]);
+
+            return redirect()->back()->withErrors(['error' => 'Error al exportar a PDF: '.$e->getMessage()]);
         }
     }
 
     public function exportExcel(Request $request)
     {
         try {
-            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $spreadsheet = new Spreadsheet;
             $sheet = $spreadsheet->getActiveSheet();
 
             // Configurar el título
             $sheet->mergeCells('C3:I3');
             $sheet->setCellValue('C3', 'DIRECCIÓN DE EXTENSIÓN');
-            $sheet->getStyle('C3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            
+            $sheet->getStyle('C3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
             $sheet->mergeCells('C4:I4');
             $sheet->setCellValue('C4', 'CONSOLIDADO DE PROYECTOS');
-            $sheet->getStyle('C4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            
+            $sheet->getStyle('C4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
             // Establecer encabezados
             $headers = [
                 'LINEAS DE ACCIÓN',
@@ -70,41 +74,41 @@ class ProyectoController extends Controller
                 'VALOR TOTAL ()',
                 'CARGAR ARCHIVO (PROYECTO)',
                 'CARGAR CONTRATO O CONVENIO',
-                'CARGAR EVIDENCIAS (FOTOGRAFIAS, VIDEOS, PIEZAS PUBLICITARIAS...)'
+                'CARGAR EVIDENCIAS (FOTOGRAFIAS, VIDEOS, PIEZAS PUBLICITARIAS...)',
             ];
-            
+
             // Establecer el estilo para los encabezados
             $headerStyle = [
                 'font' => [
                     'bold' => true,
                 ],
                 'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => ['rgb' => '90EE90']
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '90EE90'],
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'wrapText' => true
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                    'wrapText' => true,
                 ],
                 'borders' => [
                     'allBorders' => [
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
-                    ]
-                ]
+                        'borderStyle' => Border::BORDER_THIN,
+                    ],
+                ],
             ];
-            
+
             // Aplicar encabezados y estilos
             foreach ($headers as $key => $header) {
-                $col = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($key + 1);
-                $sheet->setCellValue($col . '5', $header);
+                $col = Coordinate::stringFromColumnIndex($key + 1);
+                $sheet->setCellValue($col.'5', $header);
                 $sheet->getColumnDimension($col)->setWidth(25);
             }
-            
+
             // Aplicar estilo a toda la fila de encabezados
-            $lastCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(count($headers));
-            $sheet->getStyle('A5:' . $lastCol . '5')->applyFromArray($headerStyle);
-            
+            $lastCol = Coordinate::stringFromColumnIndex(count($headers));
+            $sheet->getStyle('A5:'.$lastCol.'5')->applyFromArray($headerStyle);
+
             // Ajustar altura de la fila de encabezados
             $sheet->getRowDimension(5)->setRowHeight(60);
 
@@ -113,30 +117,31 @@ class ProyectoController extends Controller
             if ($request->has('id')) {
                 $proyecto = Proyecto::findOrFail($request->id);
                 $this->writeProyectoToExcel($sheet, $proyecto, $row);
-                $filename = 'Proyecto_' . $proyecto->id . '_' . date('Y-m-d') . '.xlsx';
+                $filename = 'Proyecto_'.$proyecto->id.'_'.date('Y-m-d').'.xlsx';
             } else {
                 $proyectos = Proyecto::all();
                 foreach ($proyectos as $proyecto) {
                     $this->writeProyectoToExcel($sheet, $proyecto, $row);
                     $row++;
                 }
-                $filename = 'proyectos_' . date('Y-m-d') . '.xlsx';
+                $filename = 'proyectos_'.date('Y-m-d').'.xlsx';
             }
 
             // Crear archivo Excel
-            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer = new Xlsx($spreadsheet);
             $tempFile = tempnam(sys_get_temp_dir(), 'excel_');
             $writer->save($tempFile);
 
             return response()->download($tempFile, $filename, [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ])->deleteFileAfterSend(true);
         } catch (\Exception $e) {
             Log::error('Error al exportar a Excel', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->back()->withErrors(['error' => 'Error al exportar a Excel: ' . $e->getMessage()]);
+
+            return redirect()->back()->withErrors(['error' => 'Error al exportar a Excel: '.$e->getMessage()]);
         }
     }
 
@@ -151,24 +156,24 @@ class ProyectoController extends Controller
             number_format($proyecto->valor_total ?? 0, 2, ',', '.'),
             $proyecto->cargar_archivo_proyecto ? 'Sí' : 'No',
             $proyecto->cargar_contrato_o_convenio ? 'Sí' : 'No',
-            $proyecto->cargar_evidencias ? count($proyecto->cargar_evidencias) . ' archivo(s)' : 'No'
+            $proyecto->cargar_evidencias ? count($proyecto->cargar_evidencias).' archivo(s)' : 'No',
         ];
 
         foreach ($datos as $key => $valor) {
             $colIndex = $key + 1;
-            $col = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
-            $sheet->setCellValue($col . $row, $valor);
-            
+            $col = Coordinate::stringFromColumnIndex($colIndex);
+            $sheet->setCellValue($col.$row, $valor);
+
             // Aplicar estilo a la celda
-            $cellStyle = $sheet->getStyle($col . $row);
+            $cellStyle = $sheet->getStyle($col.$row);
             $cellStyle->getAlignment()
                 ->setWrapText(true)
-                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
-                ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-            
-            $cellStyle->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                ->setHorizontal(Alignment::HORIZONTAL_CENTER)
+                ->setVertical(Alignment::VERTICAL_CENTER);
+
+            $cellStyle->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
         }
-        
+
         // Ajustar altura de la fila
         $sheet->getRowDimension($row)->setRowHeight(30);
     }
@@ -176,13 +181,13 @@ class ProyectoController extends Controller
     public function exportWord(Request $request)
     {
         try {
-            $phpWord = new \PhpOffice\PhpWord\PhpWord();
+            $phpWord = new PhpWord;
             $section = $phpWord->addSection();
 
             if ($request->has('id')) {
                 $proyecto = Proyecto::findOrFail($request->id);
                 $this->writeProyectoToWord($section, $proyecto);
-                $filename = 'Proyecto_' . $proyecto->id . '_' . date('Y-m-d') . '.docx';
+                $filename = 'Proyecto_'.$proyecto->id.'_'.date('Y-m-d').'.docx';
             } else {
                 $proyectos = Proyecto::all();
                 foreach ($proyectos as $proyecto) {
@@ -194,11 +199,11 @@ class ProyectoController extends Controller
 
             // Crear archivo temporal con extensión .docx
             $tempFile = tempnam(sys_get_temp_dir(), 'word_');
-            $finalTempFile = $tempFile . '.docx';
+            $finalTempFile = $tempFile.'.docx';
             rename($tempFile, $finalTempFile);
 
             // Guardar el documento
-            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+            $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
             $objWriter->save($finalTempFile);
 
             // Leer el contenido y eliminar el archivo temporal
@@ -209,16 +214,17 @@ class ProyectoController extends Controller
             return response($content)
                 ->withHeaders([
                     'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                    'Content-Disposition' => 'attachment; filename="'.$filename.'"',
                     'Content-Length' => strlen($content),
-                    'Cache-Control' => 'private, no-transform, no-store, must-revalidate'
+                    'Cache-Control' => 'private, no-transform, no-store, must-revalidate',
                 ]);
         } catch (\Exception $e) {
             Log::error('Error al exportar a Word', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->back()->withErrors(['error' => 'Error al exportar a Word: ' . $e->getMessage()]);
+
+            return redirect()->back()->withErrors(['error' => 'Error al exportar a Word: '.$e->getMessage()]);
         }
     }
 
@@ -227,42 +233,48 @@ class ProyectoController extends Controller
         // Título del proyecto
         $section->addText($proyecto->nombre_del_proyecto, ['bold' => true, 'size' => 16]);
         $section->addTextBreak();
-        
+
         // Información básica
-        $section->addText('ID: ' . $proyecto->id);
-        $section->addText('Estado: ' . ucfirst($proyecto->estado));
-        $section->addText('Valor Total: $' . number_format($proyecto->valor_total, 0, ',', '.'));
-        $section->addText('Plazo: ' . $proyecto->plazo . ' meses');
-        $section->addText('Fecha de Ejecución: ' . ($proyecto->fecha_de_ejecucion ? date('d/m/Y', strtotime($proyecto->fecha_de_ejecucion)) : 'No especificada'));
+        $section->addText('ID: '.$proyecto->id);
+        $section->addText('Estado: '.ucfirst($proyecto->estado));
+        $section->addText('Valor Total: $'.number_format($proyecto->valor_total, 0, ',', '.'));
+        $section->addText('Plazo: '.$proyecto->plazo.' meses');
+        $section->addText('Fecha de Ejecución: '.($proyecto->fecha_de_ejecucion ? date('d/m/Y', strtotime($proyecto->fecha_de_ejecucion)) : 'No especificada'));
         $section->addTextBreak();
-        
+
         // Información detallada
         $section->addText('Entidad Contratante:', ['bold' => true]);
         $section->addText($proyecto->entidad_contratante);
         $section->addTextBreak();
-        
+
         $section->addText('Cobertura:', ['bold' => true]);
         $section->addText($proyecto->cobertura);
         $section->addTextBreak();
-        
+
         $section->addText('Objeto Contractual:', ['bold' => true]);
         $section->addText($proyecto->objeto_contractual);
         $section->addTextBreak();
-        
+
         $section->addText('Líneas de Acción:', ['bold' => true]);
         $section->addText($proyecto->lineas_de_accion);
         $section->addTextBreak();
-        
+
         // Fechas
-        $section->addText('Creado: ' . $proyecto->created_at->format('d/m/Y H:i:s'));
-        $section->addText('Última actualización: ' . $proyecto->updated_at->format('d/m/Y H:i:s'));
+        $section->addText('Creado: '.$proyecto->created_at->format('d/m/Y H:i:s'));
+        $section->addText('Última actualización: '.$proyecto->updated_at->format('d/m/Y H:i:s'));
     }
 
     public function index()
     {
         $order = request('order', 'desc');
-        $proyectos = Proyecto::orderBy('created_at', $order)->get();
-        
+        $q = Proyecto::query();
+        if (request('cert') === 'con') {
+            $q->whereNotNull('certificado_cumplimiento');
+        } elseif (request('cert') === 'sin') {
+            $q->whereNull('certificado_cumplimiento');
+        }
+        $proyectos = $q->orderBy('created_at', $order)->get();
+
         $entidades = Proyecto::distinct()
             ->whereNotNull('entidad_contratante')
             ->pluck('entidad_contratante')
@@ -290,7 +302,7 @@ class ProyectoController extends Controller
                 'entidad_contratante' => 'nullable|string|max:255',
                 'fecha_de_ejecucion' => 'nullable|date',
                 'plazo' => 'nullable|numeric|min:0',
-                'valor_total' => 'nullable|numeric|min:0'
+                'valor_total' => 'nullable|numeric|min:0',
             ]);
 
             $data = $validated;
@@ -319,7 +331,7 @@ class ProyectoController extends Controller
             if ($request->expectsJson()) {
                 return response()->json([
                     'message' => 'Proyecto creado exitosamente',
-                    'id' => $proyecto->id
+                    'id' => $proyecto->id,
                 ]);
             }
 
@@ -331,19 +343,19 @@ class ProyectoController extends Controller
             DB::rollBack();
             Log::error('Error al crear proyecto', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Error al crear el proyecto: ' . $e->getMessage()
+                    'message' => 'Error al crear el proyecto: '.$e->getMessage(),
                 ], 500);
             }
 
             return redirect()
                 ->back()
                 ->withInput()
-                ->withErrors(['error' => 'Error al crear el proyecto: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Error al crear el proyecto: '.$e->getMessage()]);
         }
     }
 
@@ -363,7 +375,7 @@ class ProyectoController extends Controller
         try {
             Log::info('Iniciando actualización', [
                 'proyecto_id' => $proyecto->id,
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
 
             $securityChecks = [
@@ -372,13 +384,13 @@ class ProyectoController extends Controller
                 'project_id' => $request->input('proyecto_id') == $proyecto->id,
             ];
 
-            $failedChecks = array_filter($securityChecks, fn($check) => !$check);
-            
-            if (!empty($failedChecks)) {
+            $failedChecks = array_filter($securityChecks, fn ($check) => ! $check);
+
+            if (! empty($failedChecks)) {
                 Log::error('Falló la validación de seguridad', [
                     'proyecto_id' => $proyecto->id,
                     'failed_checks' => array_keys($failedChecks),
-                    'request_data' => $request->all()
+                    'request_data' => $request->all(),
                 ]);
                 throw new \Exception('Falló la validación de seguridad');
             }
@@ -392,7 +404,7 @@ class ProyectoController extends Controller
                 'fecha_de_ejecucion' => 'nullable|date',
                 'plazo' => 'nullable|numeric|min:0',
                 'valor_total' => 'nullable|numeric|min:0',
-                'estado' => 'nullable|string|in:activo,inactivo,cerrado'
+                'estado' => 'nullable|string|in:activo,inactivo,cerrado',
             ]);
 
             if ($request->hasFile('archivo_proyecto')) {
@@ -424,7 +436,7 @@ class ProyectoController extends Controller
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Proyecto actualizado exitosamente'
+                    'message' => 'Proyecto actualizado exitosamente',
                 ]);
             }
 
@@ -437,19 +449,19 @@ class ProyectoController extends Controller
             Log::error('Error al actualizar proyecto', [
                 'proyecto_id' => $proyecto->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Error al actualizar el proyecto: ' . $e->getMessage()
+                    'message' => 'Error al actualizar el proyecto: '.$e->getMessage(),
                 ], 500);
             }
 
             return redirect()
                 ->back()
                 ->withInput()
-                ->withErrors(['error' => 'Error al actualizar el proyecto: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Error al actualizar el proyecto: '.$e->getMessage()]);
         }
     }
 
@@ -459,11 +471,11 @@ class ProyectoController extends Controller
             if ($proyecto->cargar_archivo_proyecto) {
                 Storage::disk('public')->delete($proyecto->cargar_archivo_proyecto);
             }
-            
+
             if ($proyecto->cargar_contrato_o_convenio) {
                 Storage::disk('public')->delete($proyecto->cargar_contrato_o_convenio);
             }
-            
+
             if ($proyecto->cargar_evidencias) {
                 foreach ($proyecto->cargar_evidencias as $evidencia) {
                     Storage::disk('public')->delete($evidencia);
@@ -474,7 +486,7 @@ class ProyectoController extends Controller
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Proyecto eliminado exitosamente'
+                    'message' => 'Proyecto eliminado exitosamente',
                 ]);
             }
 
@@ -486,18 +498,18 @@ class ProyectoController extends Controller
             Log::error('Error al eliminar proyecto', [
                 'proyecto_id' => $proyecto->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Error al eliminar el proyecto: ' . $e->getMessage()
+                    'message' => 'Error al eliminar el proyecto: '.$e->getMessage(),
                 ], 500);
             }
 
             return redirect()
                 ->back()
-                ->withErrors(['error' => 'Error al eliminar el proyecto: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Error al eliminar el proyecto: '.$e->getMessage()]);
         }
     }
 
@@ -511,23 +523,26 @@ class ProyectoController extends Controller
                 unset($evidencias[$indice]);
                 $proyecto->cargar_evidencias = array_values($evidencias);
                 $proyecto->save();
+
                 return response()->json([
                     'success' => true,
-                    'message' => 'Evidencia eliminada exitosamente.'
+                    'message' => 'Evidencia eliminada exitosamente.',
                 ]);
             }
+
             return response()->json([
                 'success' => false,
-                'message' => 'No se encontró la evidencia para eliminar.'
+                'message' => 'No se encontró la evidencia para eliminar.',
             ], 404);
         } catch (\Exception $e) {
             Log::error('Error al eliminar evidencia', [
                 'proyecto_id' => $proyecto->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar la evidencia: ' . $e->getMessage()
+                'message' => 'Error al eliminar la evidencia: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -539,23 +554,26 @@ class ProyectoController extends Controller
                 Storage::disk('public')->delete($proyecto->cargar_contrato_o_convenio);
                 $proyecto->cargar_contrato_o_convenio = null;
                 $proyecto->save();
+
                 return response()->json([
                     'success' => true,
-                    'message' => 'Archivo de contrato/convenio eliminado exitosamente.'
+                    'message' => 'Archivo de contrato/convenio eliminado exitosamente.',
                 ]);
             }
+
             return response()->json([
                 'success' => false,
-                'message' => 'No se encontró el archivo de contrato/convenio para eliminar.'
+                'message' => 'No se encontró el archivo de contrato/convenio para eliminar.',
             ], 404);
         } catch (\Exception $e) {
             Log::error('Error al eliminar archivo de contrato/convenio', [
                 'proyecto_id' => $proyecto->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar el archivo de contrato/convenio: ' . $e->getMessage()
+                'message' => 'Error al eliminar el archivo de contrato/convenio: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -567,24 +585,61 @@ class ProyectoController extends Controller
                 Storage::disk('public')->delete($proyecto->cargar_archivo_proyecto);
                 $proyecto->cargar_archivo_proyecto = null;
                 $proyecto->save();
+
                 return response()->json([
                     'success' => true,
-                    'message' => 'Archivo del proyecto eliminado exitosamente.'
+                    'message' => 'Archivo del proyecto eliminado exitosamente.',
                 ]);
             }
+
             return response()->json([
                 'success' => false,
-                'message' => 'No se encontró el archivo para eliminar.'
+                'message' => 'No se encontró el archivo para eliminar.',
             ], 404);
         } catch (\Exception $e) {
             Log::error('Error al eliminar archivo del proyecto', [
                 'proyecto_id' => $proyecto->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar el archivo: ' . $e->getMessage()
+                'message' => 'Error al eliminar el archivo: '.$e->getMessage(),
             ], 500);
         }
+    }
+
+    public function subirCertificado(Request $request, Proyecto $proyecto)
+    {
+        $request->validate([
+            'certificado' => 'required|file|mimes:pdf|max:10240',
+            'certificado_fecha' => 'nullable|date',
+            'certificado_observaciones' => 'nullable|string',
+        ]);
+        $path = $request->file('certificado')->store('proyectos/certificados/'.$proyecto->id, 'public');
+        if ($proyecto->certificado_cumplimiento) {
+            Storage::disk('public')->delete($proyecto->certificado_cumplimiento);
+        }
+        $proyecto->update([
+            'certificado_cumplimiento' => $path,
+            'certificado_fecha' => $request->certificado_fecha,
+            'certificado_observaciones' => $request->certificado_observaciones,
+        ]);
+
+        return redirect()->back()->with('success', 'Certificado de cumplimiento guardado.');
+    }
+
+    public function eliminarCertificado(Proyecto $proyecto)
+    {
+        if ($proyecto->certificado_cumplimiento) {
+            Storage::disk('public')->delete($proyecto->certificado_cumplimiento);
+        }
+        $proyecto->update([
+            'certificado_cumplimiento' => null,
+            'certificado_fecha' => null,
+            'certificado_observaciones' => null,
+        ]);
+
+        return redirect()->back()->with('success', 'Certificado eliminado.');
     }
 }

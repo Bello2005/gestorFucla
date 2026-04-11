@@ -227,6 +227,44 @@
     </div>
 </div>
 
+<!-- Certificado de cumplimiento -->
+<div class="ds-card" style="margin-top: 24px;">
+    <h3 class="ds-card-title"><i class="fas fa-certificate" style="color: var(--uni-gold); margin-right: 8px;"></i> Certificado de cumplimiento</h3>
+    @if($proyecto->certificado_cumplimiento)
+        <p class="detail-field-value mb-2">
+            <a href="{{ Storage::url($proyecto->certificado_cumplimiento) }}" target="_blank" class="ds-btn ds-btn--secondary ds-btn--sm"><i class="fas fa-download"></i> Descargar PDF</a>
+        </p>
+        <p><span class="detail-field-label">Fecha del certificado</span> {{ optional($proyecto->certificado_fecha)->format('d/m/Y') ?? '—' }}</p>
+        @if($proyecto->certificado_observaciones)
+            <p><span class="detail-field-label">Observaciones</span> {{ $proyecto->certificado_observaciones }}</p>
+        @endif
+        <form action="{{ route('proyectos.certificado.destroy', $proyecto) }}" method="post" class="mt-3" onsubmit="return confirm('¿Eliminar certificado?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="ds-btn ds-btn--danger ds-btn--sm">Eliminar certificado</button>
+        </form>
+    @else
+        <form action="{{ route('proyectos.certificado.store', $proyecto) }}" method="post" enctype="multipart/form-data" class="row g-2">
+            @csrf
+            <div class="col-12 col-md-4">
+                <label class="ds-label">Archivo PDF</label>
+                <input type="file" name="certificado" accept="application/pdf" class="form-control" required>
+            </div>
+            <div class="col-12 col-md-3">
+                <label class="ds-label">Fecha</label>
+                <input type="date" name="certificado_fecha" class="form-control">
+            </div>
+            <div class="col-12 col-md-5">
+                <label class="ds-label">Observaciones</label>
+                <input type="text" name="certificado_observaciones" class="form-control">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="ds-btn ds-btn--primary">Guardar certificado</button>
+            </div>
+        </form>
+    @endif
+</div>
+
 <!-- Bottom Actions -->
 <div class="ds-card" style="margin-top: 24px;">
     <div class="ds-card-body" style="display: flex; justify-content: space-between; align-items: center;">

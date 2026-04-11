@@ -80,6 +80,9 @@
                 <i class="fas fa-images"></i> Evidencias
                 <span class="edit-tab-badge">{{ $proyecto->cargar_evidencias ? count($proyecto->cargar_evidencias) : 0 }}</span>
             </button>
+            <button type="button" class="edit-tab" data-tab="certificado">
+                <i class="fas fa-certificate"></i> Certificado
+            </button>
         </div>
 
         <!-- Tab: Info General -->
@@ -258,6 +261,39 @@
                         <div class="empty-state-icon"><i class="fas fa-folder-open"></i></div>
                         <p class="empty-state-text">No hay evidencias cargadas</p>
                     </div>
+                @endif
+            </div>
+        </div>
+
+        <div class="edit-tab-content" id="tab-certificado">
+            <div class="ds-card-body">
+                <p class="page-subtitle mb-3">Certificado de cumplimiento (PDF). Se guarda de forma independiente al resto del formulario.</p>
+                @if($proyecto->certificado_cumplimiento)
+                    <p><a href="{{ Storage::url($proyecto->certificado_cumplimiento) }}" target="_blank" class="ds-btn ds-btn--secondary ds-btn--sm"><i class="fas fa-download"></i> Descargar</a></p>
+                    <form action="{{ route('proyectos.certificado.destroy', $proyecto) }}" method="post" onsubmit="return confirm('¿Eliminar certificado?');" class="mt-2">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="ds-btn ds-btn--danger ds-btn--sm">Eliminar certificado</button>
+                    </form>
+                @else
+                    <form action="{{ route('proyectos.certificado.store', $proyecto) }}" method="post" enctype="multipart/form-data" class="row g-2">
+                        @csrf
+                        <div class="col-12 col-md-4">
+                            <label class="ds-label">PDF</label>
+                            <input type="file" name="certificado" class="form-control" accept="application/pdf" required>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <label class="ds-label">Fecha</label>
+                            <input type="date" name="certificado_fecha" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="ds-label">Observaciones</label>
+                            <input type="text" name="certificado_observaciones" class="ds-input">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="ds-btn ds-btn--primary">Subir certificado</button>
+                        </div>
+                    </form>
                 @endif
             </div>
         </div>

@@ -1,16 +1,15 @@
 /* ============================================
-   SIDEBAR - Light refined (Notion-style)
+   SIDEBAR — Institutional Navigation Tower (navy + gold)
    ============================================ */
 
-/* === Sidebar Container === */
 #sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    background: white;
-    border-right: 1px solid var(--slate-200);
+    background: linear-gradient(180deg, var(--uni-navy-deep) 0%, var(--uni-navy) 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
     z-index: 1030;
     display: flex;
     flex-direction: column;
@@ -22,14 +21,14 @@
     width: var(--sidebar-collapsed-width);
 }
 
-/* === Header / Logo === */
+/* Header / marca */
 .sidebar-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-5) var(--space-4);
-    border-bottom: 1px solid var(--slate-200);
-    min-height: 65px;
+    padding: var(--space-6) var(--space-5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    min-height: 88px;
 }
 
 .logo-container {
@@ -37,19 +36,20 @@
     align-items: center;
     gap: var(--space-3);
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
 }
 
-.logo-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: var(--gold-100);
-    color: var(--gold-600);
-    border-radius: var(--radius-md);
-    font-size: var(--text-lg);
+.logo-container:hover {
+    opacity: 0.95;
+}
+
+.logo-mark {
+    width: 44px;
+    height: 44px;
     flex-shrink: 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
 }
 
 .logo-text {
@@ -60,19 +60,22 @@
 }
 
 .logo-title {
+    font-family: var(--font-display);
     font-weight: var(--font-bold);
-    font-size: var(--text-sm);
-    color: var(--slate-900);
+    font-size: 15px;
+    color: var(--uni-gold-light);
     letter-spacing: 0.02em;
 }
 
 .logo-subtitle {
     font-size: 11px;
-    color: var(--slate-500);
+    color: rgba(255, 255, 255, 0.45);
     font-weight: var(--font-normal);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
 }
 
-/* Collapsed state - hide text */
 #sidebar.collapsed .logo-text,
 #sidebar.collapsed .nav-text,
 #sidebar.collapsed .nav-section-title,
@@ -86,12 +89,14 @@
 
 #sidebar.collapsed .sidebar-header {
     justify-content: center;
-    padding: var(--space-5) var(--space-2);
+    padding: var(--space-6) var(--space-2);
 }
 
-/* === Navigation === */
+/* Navegación */
 .nav-section {
     padding: var(--space-3) var(--space-3);
+    flex: 1;
+    overflow-y: auto;
 }
 
 .nav-section-title {
@@ -99,7 +104,7 @@
     font-weight: var(--font-semibold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--slate-400);
+    color: rgba(255, 255, 255, 0.35);
     padding: var(--space-2) var(--space-3);
     margin-bottom: var(--space-1);
     overflow: hidden;
@@ -112,77 +117,74 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 }
 
-/* === Nav Link === */
 .nav-link {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-2) var(--space-3);
-    height: 40px;
-    color: var(--slate-600);
+    padding: 12px 20px;
+    min-height: 44px;
+    color: rgba(255, 255, 255, 0.65);
     text-decoration: none;
-    border-radius: var(--radius-md);
+    border-radius: 10px;
     font-size: var(--text-sm);
     font-weight: var(--font-medium);
-    transition: all var(--transition-fast);
+    transition: background var(--transition-fast), color var(--transition-fast);
     position: relative;
     overflow: hidden;
     white-space: nowrap;
 }
 
-.nav-link i {
-    width: 20px;
-    text-align: center;
-    font-size: var(--text-base);
+.nav-link .uc-icon {
+    display: flex;
     flex-shrink: 0;
-    transition: color var(--transition-fast);
+    color: inherit;
+    opacity: 0.9;
 }
 
 .nav-link:hover {
-    background: var(--slate-100);
-    color: var(--slate-900);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.92);
     text-decoration: none;
 }
 
 .nav-link.active {
-    background: var(--primary-50);
-    color: var(--primary);
+    background: rgba(198, 146, 42, 0.12);
+    color: var(--uni-gold-light);
     font-weight: var(--font-semibold);
 }
 
 .nav-link.active::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
-    top: var(--space-2);
-    bottom: var(--space-2);
+    top: 10px;
+    bottom: 10px;
     width: 3px;
-    background: var(--primary);
+    background: var(--uni-gold);
     border-radius: 0 var(--radius-full) var(--radius-full) 0;
 }
 
-.nav-link.active i {
-    color: var(--primary);
+.nav-link.active .uc-icon {
+    color: var(--uni-gold-light);
 }
 
-/* Collapsed nav */
 #sidebar.collapsed .nav-link {
     justify-content: center;
-    padding: var(--space-2);
+    padding: 12px;
 }
 
 #sidebar.collapsed .nav-link.active::before {
     display: none;
 }
 
-/* === User Profile Section === */
+/* Usuario */
 .sidebar-user {
     margin-top: auto;
-    padding: var(--space-3) var(--space-3);
-    border-top: 1px solid var(--slate-200);
+    padding: var(--space-4) var(--space-3);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .user-profile-link {
@@ -197,23 +199,23 @@
 }
 
 .user-profile-link:hover {
-    background: var(--slate-100);
+    background: rgba(255, 255, 255, 0.06);
     text-decoration: none;
 }
 
 .avatar-circle {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-full);
-    background: var(--gold-100);
-    color: var(--gold-700);
+    background: linear-gradient(135deg, var(--uni-gold) 0%, var(--uni-gold-deep) 100%);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: var(--font-bold);
     font-size: var(--text-sm);
     flex-shrink: 0;
-    border: 2px solid var(--gold-200);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .user-info {
@@ -225,7 +227,7 @@
 .user-name {
     font-size: var(--text-sm);
     font-weight: var(--font-semibold);
-    color: var(--slate-900);
+    color: rgba(255, 255, 255, 0.92);
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -234,21 +236,20 @@
 
 .user-email {
     font-size: 11px;
-    color: var(--slate-500);
+    color: rgba(255, 255, 255, 0.45);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     display: block;
 }
 
-/* Logout */
 .sidebar-logout {
     display: flex;
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-2) var(--space-3);
-    margin-top: var(--space-1);
-    color: var(--slate-500);
+    margin-top: var(--space-2);
+    color: rgba(255, 255, 255, 0.5);
     text-decoration: none;
     border-radius: var(--radius-md);
     font-size: var(--text-sm);
@@ -256,8 +257,8 @@
 }
 
 .sidebar-logout:hover {
-    background: var(--danger-50);
-    color: var(--danger);
+    background: rgba(231, 76, 60, 0.15);
+    color: #ff8a80;
     text-decoration: none;
 }
 
@@ -274,47 +275,43 @@
     padding: var(--space-2);
 }
 
-/* === Collapse Toggle === */
+/* Toggle colapsar */
 .sidebar-collapse-btn {
     position: absolute;
-    bottom: 80px;
+    bottom: 88px;
     right: -14px;
     width: 28px;
     height: 28px;
-    background: white;
-    border: 1px solid var(--slate-200);
+    background: var(--uni-navy-light);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--slate-500);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 12px;
     transition: all var(--transition-fast);
     z-index: 10;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
 }
 
 .sidebar-collapse-btn:hover {
-    background: var(--slate-50);
-    color: var(--slate-900);
-    border-color: var(--slate-300);
-}
-
-#sidebar.collapsed .sidebar-collapse-btn {
-    right: -14px;
+    background: var(--uni-navy);
+    color: var(--uni-gold-light);
+    border-color: rgba(198, 146, 42, 0.4);
 }
 
 #sidebar.collapsed .sidebar-collapse-btn i {
     transform: rotate(180deg);
 }
 
-/* === Main Content Offset === */
+/* Main offset */
 #main-content {
     margin-left: var(--sidebar-width);
     min-height: 100vh;
     transition: margin-left var(--transition-sidebar);
-    background: var(--slate-50);
+    background: var(--surface-tertiary);
 }
 
 #main-content.expanded {
@@ -327,7 +324,7 @@
     padding: var(--space-6) var(--space-8);
 }
 
-/* === Overlay (Mobile) === */
+/* Overlay */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -335,16 +332,16 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(12, 17, 29, 0.4);
-    backdrop-filter: blur(4px);
+    background: rgba(15, 26, 46, 0.45);
+    backdrop-filter: blur(6px);
     z-index: 1020;
-    transition: opacity var(--transition-base);
 }
 
-/* === Mobile === */
-@media (max-width: 768px) {
+/* Tablet/móvil: sidebar overlay */
+@media (max-width: 1024px) {
     #sidebar {
         transform: translateX(-100%);
+        box-shadow: var(--shadow-xl);
     }
 
     #sidebar.show {

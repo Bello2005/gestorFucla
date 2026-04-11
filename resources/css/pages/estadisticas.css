@@ -1,0 +1,13 @@
+/* Estadísticas — charts */
+
+.estadisticas-page .chart-card {
+    background: var(--surface-primary);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+}
+
+.estadisticas-page .chart-card canvas {
+    max-height: 320px;
+}

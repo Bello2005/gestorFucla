@@ -1,0 +1,22 @@
+.uc-upload-zone {
+    border: 2px dashed var(--neutral-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    text-align: center;
+    background: var(--neutral-50);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+    cursor: pointer;
+}
+
+.uc-upload-zone:hover,
+.uc-upload-zone--dragover {
+    border-color: var(--uni-gold);
+    background: var(--uni-gold-pale);
+}
+
+.uc-upload-zone input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}

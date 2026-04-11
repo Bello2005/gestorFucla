@@ -1,7 +1,11 @@
 /* ============================================
-   MAIN STYLESHEET - Gestor UNICLARETIANA
-   Entry point for Vite/Tailwind build
+   MAIN STYLESHEET — Gestor UNICLARETIANA (Vite + Tailwind 4)
    ============================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
+
+/* Bootstrap 5: utilidades y componentes usados en Blade (.btn, .modal, .dropdown, grid) — tokens UC sobrescriben después */
+@import "bootstrap/dist/css/bootstrap.min.css";
 
 @import "tailwindcss";
 
@@ -10,32 +14,47 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-/* === Design System Tokens === */
-@import "./design-system.css";
-
-/* === Base Styles === */
+/* Tokens y fundación */
+@import "./design-tokens.css";
+@import "./reset.css";
+@import "./typography.css";
 @import "./base.css";
+@import "./utilities/helpers.css";
 
-/* === Layouts === */
+/* Layouts */
+@import "./layouts/responsive.css";
 @import "./layouts/sidebar.css";
 @import "./layouts/content.css";
 @import "./layouts/header.css";
 
-/* === Components === */
+/* Componentes */
 @import "./components/cards.css";
 @import "./components/tables.css";
+@import "./components/datatables-overrides.css";
 @import "./components/forms.css";
 @import "./components/buttons.css";
 @import "./components/badges.css";
 @import "./components/modals.css";
 @import "./components/toasts.css";
+@import "./components/skeleton.css";
+@import "./components/empty-states.css";
+@import "./components/stepper.css";
+@import "./components/timeline.css";
+@import "./components/file-upload.css";
+@import "./components/expandable-text.css";
+@import "./components/tabs-uc.css";
+@import "./components/pagination-uc.css";
 
-/* === Pages === */
+/* Páginas */
 @import "./pages/auth.css";
+@import "./pages/dashboard.css";
 @import "./pages/proyectos.css";
+@import "./pages/estadisticas.css";
+@import "./pages/audit.css";
+@import "./pages/banco-proyectos.css";
+@import "./pages/catalogos.css";
 
-/* === Tailwind Theme Override === */
 @theme {
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }

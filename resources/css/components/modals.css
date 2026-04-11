@@ -2,11 +2,11 @@
    MODALS - Bootstrap modal overrides
    ============================================ */
 
-/* === Backdrop === */
+/* === Backdrop (institucional: navy + blur) === */
 .modal-backdrop.show {
-    opacity: 1;
-    background: rgba(12, 17, 29, 0.4);
-    backdrop-filter: blur(4px);
+    opacity: 1 !important;
+    background: rgba(27, 42, 74, 0.4);
+    backdrop-filter: blur(8px);
 }
 
 /* === Modal Dialog === */

@@ -1,0 +1,69 @@
+/* Utilidades globales */
+
+.uc-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.uc-skip-link {
+    position: absolute;
+    left: -9999px;
+    z-index: 10000;
+    padding: var(--space-3) var(--space-4);
+    background: var(--uni-gold);
+    color: var(--uni-navy-deep);
+    font-weight: var(--font-semibold);
+    border-radius: var(--radius-md);
+}
+
+.uc-skip-link:focus {
+    left: var(--space-4);
+    top: var(--space-4);
+    outline: 2px solid var(--uni-navy);
+    outline-offset: 2px;
+}
+
+.uc-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.uc-line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@keyframes uc-page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-content {
+    animation: uc-page-enter 400ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-content {
+        animation: none;
+    }
+}
+
+.uc-max-w-form {
+    max-width: 640px;
+}

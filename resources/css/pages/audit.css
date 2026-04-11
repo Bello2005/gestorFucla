@@ -1,0 +1,9 @@
+/* Auditoría */
+
+.audit-page .ds-card,
+.audit-page .uc-card {
+    background: var(--surface-primary);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+}

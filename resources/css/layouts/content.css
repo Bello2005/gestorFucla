@@ -13,9 +13,11 @@
 }
 
 .page-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-bold);
-    color: var(--slate-900);
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+    font-weight: var(--font-extrabold);
+    letter-spacing: -0.02em;
+    color: var(--uni-navy);
     margin: 0;
 }
 

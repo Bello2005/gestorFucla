@@ -9,8 +9,7 @@
 @endsection
 
 @section('styles')
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 @endsection
 
 @section('content')
@@ -70,7 +69,7 @@
 </div>
 
 <!-- Projects Table -->
-<div class="ds-card projects-table-card">
+<div class="ds-card projects-table-card uc-dt-wrap">
     <div class="table-toolbar">
         <div class="table-search">
             <i class="fas fa-search search-icon"></i>
@@ -102,6 +101,12 @@
             <a href="{{ route('proyectos.create') }}" class="ds-btn ds-btn--primary">
                 <i class="fas fa-plus"></i> Nuevo Proyecto
             </a>
+        </div>
+        <div class="d-flex gap-2 flex-wrap align-items-center mt-2">
+            <span class="small text-muted">Certificado:</span>
+            <a href="{{ request()->fullUrlWithQuery(['cert' => null]) }}" class="ds-btn ds-btn--sm {{ !request('cert') ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Todos</a>
+            <a href="{{ request()->fullUrlWithQuery(['cert' => 'con']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='con' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Con certificado</a>
+            <a href="{{ request()->fullUrlWithQuery(['cert' => 'sin']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='sin' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Sin certificado</a>
         </div>
     </div>
 
@@ -154,7 +159,12 @@
                         <span class="value-cell">${{ number_format($proyecto->valor_total ?? 0, 0, ',', '.') }}</span>
                     </td>
                     <td>
-                        <x-estado-badge :estado="$proyecto->estado" />
+                        <div class="d-inline-flex align-items-center gap-1">
+                            <x-estado-badge :estado="$proyecto->estado" />
+                            @if($proyecto->certificado_cumplimiento)
+                                <span class="text-success" title="Certificado de cumplimiento cargado" aria-label="Certificado de cumplimiento cargado"><i class="fas fa-shield-halved"></i></span>
+                            @endif
+                        </div>
                     </td>
                     @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
                     <td>
@@ -324,7 +334,6 @@
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
         $(document).ready(function() {

@@ -1,0 +1,25 @@
+.uc-expandable {
+    position: relative;
+}
+
+.uc-expandable__inner {
+    overflow: hidden;
+    transition: max-height 300ms ease;
+}
+
+.uc-expandable--collapsed .uc-expandable__inner {
+    max-height: 4.8em;
+}
+
+.uc-expandable__toggle {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--uni-gold-deep);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
