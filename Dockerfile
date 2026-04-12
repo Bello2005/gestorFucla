@@ -20,6 +20,7 @@ RUN apk add --no-cache \
         nginx supervisor curl unzip \
         libpng-dev libjpeg-turbo-dev freetype-dev \
         libzip-dev icu-dev libxml2-dev \
+        oniguruma-dev \
         postgresql16-client postgresql16-dev \
     && docker-php-ext-configure gd \
           --with-freetype --with-jpeg \
