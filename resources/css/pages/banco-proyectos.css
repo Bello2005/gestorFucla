@@ -157,36 +157,55 @@ tr:focus-within .row-actions {
 .banco-stat-icon--aprobado   { background: var(--success-50); color: var(--success-700); }
 .banco-stat-icon--ejecucion  { background: var(--gold-100); color: var(--gold-700); }
 
-/* === KPI grid propio para Banco de Proyectos (5 tarjetas, sin heredar .stat-cards-grid) === */
+/* === KPI Banco: una fila horizontal (5 tarjetas); scroll si no cabe === */
 .banco-kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: var(--space-4);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: var(--space-3);
     margin-bottom: var(--space-6);
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+    padding-bottom: var(--space-1);
 }
 
-/* 769–1100px: 3 columnas → 3+2, sin hueco */
-@media (max-width: 1100px) and (min-width: 769px) {
-    .banco-kpi-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+.banco-kpi-grid > .stat-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    flex: 1 1 0;
+    min-width: 140px;
 }
 
-/* ≤768px: 2 columnas; 5ª tarjeta (impar) ocupa fila completa */
-@media (max-width: 768px) {
-    .banco-kpi-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .banco-kpi-grid > .stat-card:last-child:nth-child(odd) {
-        grid-column: 1 / -1;
-    }
+.banco-kpi-grid .stat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-0-5);
+    min-width: 0;
 }
 
-/* ≤480px: columna única */
-@media (max-width: 480px) {
+.banco-kpi-grid .stat-card-label {
+    line-height: 1.2;
+}
+
+.banco-kpi-grid .stat-card-value {
+    line-height: 1.1;
+}
+
+/* Solo en móvil estrecho: tarjetas de ancho fijo con scroll horizontal */
+@media (max-width: 640px) {
     .banco-kpi-grid {
-        grid-template-columns: 1fr;
+        overflow-x: auto;
+        padding-bottom: var(--space-2);
+    }
+
+    .banco-kpi-grid > .stat-card {
+        flex: 0 0 160px;
     }
 }
 
