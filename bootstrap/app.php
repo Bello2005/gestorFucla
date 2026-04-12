@@ -80,11 +80,4 @@ if (file_exists($__env_path)) {
 }
 // --- END: ensure .env variables are available to getenv()/$_ENV/$_SERVER
 
-// debug temporal en bootstrap/app.php
-try {
-    file_put_contents(dirname(__DIR__).'/storage/logs/bootstrap_loaded.log', "[".date('c')."] bootstrap/app.php cargado por SAPI: ".php_sapi_name()." PID:".getmypid().PHP_EOL, FILE_APPEND);
-} catch (\Throwable $e) {
-    error_log("No pude escribir bootstrap_loaded.log: ".$e->getMessage());
-}
-
 return $app;

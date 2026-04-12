@@ -46,8 +46,9 @@ COPY --from=node-build /app/public/build public/build
 
 # Permissions
 RUN mkdir -p storage/logs storage/framework/{sessions,views,cache} bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache public/build \
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod -R 755 public/build
 
 # Nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
