@@ -13,7 +13,7 @@ COPY public/ public/
 RUN npm run build
 
 # ─── Stage 2: PHP runtime ────────────────────────────────────────────────────
-FROM php:8.3-fpm-alpine AS php-base
+FROM php:8.4-fpm-alpine AS php-base
 
 # System deps + PHP extensions
 RUN apk add --no-cache \
