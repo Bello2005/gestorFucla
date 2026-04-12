@@ -12,10 +12,58 @@
 /* === Modal Dialog === */
 .modal .modal-dialog {
     max-width: 480px;
+    margin: var(--space-3) auto;
 }
 
 .modal .modal-dialog-lg {
     max-width: 640px;
+}
+
+/* Phones pequeños: modal no puede salirse del viewport */
+@media (max-width: 429px) {
+    .modal .modal-dialog,
+    .modal .modal-dialog-lg {
+        margin: var(--space-2);
+        max-width: calc(100vw - var(--space-4));
+    }
+
+    .modal .modal-header {
+        padding: var(--space-4);
+    }
+
+    .modal .modal-body {
+        padding: var(--space-4);
+    }
+
+    .modal .modal-footer {
+        padding: var(--space-3) var(--space-4);
+        flex-direction: column-reverse;
+        gap: var(--space-2);
+    }
+
+    .modal .modal-footer .ds-btn,
+    .modal .modal-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* iPhone SE: reducir título */
+@media (max-width: 375px) {
+    .modal .modal-title {
+        font-size: var(--text-base);
+    }
+}
+
+/* Touch: área táctil del botón cerrar */
+@media (hover: none) and (pointer: coarse) {
+    .modal .btn-close {
+        min-width: var(--touch-target);
+        min-height: var(--touch-target);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .modal .modal-content {

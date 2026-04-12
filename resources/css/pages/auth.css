@@ -421,7 +421,8 @@
     }
 }
 
-@media (max-width: 480px) {
+/* Phones (< 480px): full-screen sin card */
+@media (max-width: 479px) {
     .auth-page {
         padding: 0;
         background: white;
@@ -430,15 +431,31 @@
     .auth-container {
         box-shadow: none;
         border-radius: 0;
+        min-height: 100vh;
     }
 
     .auth-form-panel {
-        padding: var(--space-6) var(--space-5);
+        padding: var(--space-6) var(--space-4);
     }
 
     .auth-form .form-options {
         flex-direction: column;
         align-items: flex-start;
         gap: var(--space-3);
+    }
+}
+
+/* iPhone SE (≤ 375px): padding mínimo */
+@media (max-width: 375px) {
+    .auth-form-panel {
+        padding: var(--space-5) var(--space-3);
+    }
+
+    .auth-brand-title {
+        font-size: var(--text-xl);
+    }
+
+    .auth-form-title {
+        font-size: var(--text-xl);
     }
 }

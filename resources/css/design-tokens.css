@@ -160,6 +160,23 @@
     --bp-xl: 1280px;
     --bp-2xl: 1536px;
 
+    /* === Breakpoints extendidos (mobile-first granularity) === */
+    --bp-xs:       375px;  /* iPhone SE */
+    --bp-xs-plus:  430px;  /* iPhone 17 Pro Max, Galaxy S25 */
+    --bp-sm-plus:  480px;  /* Phones landscape */
+    --bp-tablet:   820px;  /* iPad Air portrait — gap crítico */
+    --bp-wide:    1440px;  /* 15" laptop, QHD */
+    --bp-2k:      1920px;  /* Monitor 24" */
+
+    /* === Touch target mínimo (WCAG 2.5.5) === */
+    --touch-target: 44px;
+
+    /* === Content padding responsive === */
+    --content-px-xs: var(--space-4);   /* 16px — phones pequeños */
+    --content-px-sm: var(--space-5);   /* 20px — phones */
+    --content-px-md: var(--space-6);   /* 24px — tablets */
+    --content-px-lg: var(--space-8);   /* 32px — desktop */
+
     /* === Transiciones === */
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);

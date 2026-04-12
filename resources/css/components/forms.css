@@ -18,8 +18,15 @@
 
 .ds-form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-5);
+    grid-template-columns: 1fr; /* Mobile-first: 1 columna por defecto */
+    gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+    .ds-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-5);
+    }
 }
 
 .ds-form-group {
@@ -168,6 +175,18 @@
     background: none;
     border: none;
     padding: var(--space-1);
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .ds-file-item-remove {
+        min-width: var(--touch-target);
+        min-height: var(--touch-target);
+    }
 }
 
 .ds-file-item-remove:hover {
@@ -196,9 +215,9 @@
     gap: var(--space-1);
 }
 
-/* === Responsive === */
-@media (max-width: 768px) {
-    .ds-form-grid {
-        grid-template-columns: 1fr;
+/* File upload en phones muy pequeños */
+@media (max-width: 429px) {
+    .ds-file-upload {
+        padding: var(--space-5) var(--space-4);
     }
 }

@@ -35,12 +35,8 @@
 }
 
 /* === Stat Card (KPI) === */
-.stat-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-}
+/* Nota: .stat-cards-grid se define en pages/dashboard.css con mobile-first.
+   Esta declaración ya no pisa ese valor. Solo heredamos los demás estilos de .stat-card. */
 
 .stat-card {
     background: white;
@@ -152,8 +148,15 @@
 
 .detail-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-4) var(--space-8);
+    grid-template-columns: 1fr; /* mobile-first */
+    gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+    .detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-4) var(--space-8);
+    }
 }
 
 .detail-item-label {
@@ -168,19 +171,7 @@
     font-weight: var(--font-medium);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .stat-cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .detail-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .stat-cards-grid {
-        grid-template-columns: 1fr;
-    }
+/* stat-card margin bottom (antes en .stat-cards-grid) */
+.stat-card {
+    margin-bottom: 0; /* gap del grid maneja el espacio */
 }

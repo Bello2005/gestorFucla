@@ -71,12 +71,26 @@
 .delta--up   { background: var(--success-50); color: var(--success); }
 .delta--down { background: var(--danger-50);  color: var(--danger); }
 
-/* === Status summary row === */
+/* === Status summary row — mobile-first === */
 .status-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: 1fr; /* mobile: 1 columna */
+    gap: 12px;
     margin-top: 16px;
+}
+
+@media (min-width: 480px) {
+    .status-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+}
+
+@media (min-width: 820px) {
+    .status-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
 }
 
 .status-row-item {
@@ -127,12 +141,20 @@
     color: var(--slate-900);
 }
 
-/* === Dashboard main grid === */
+/* === Dashboard main grid — mobile-first === */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 24px;
-    margin-top: 24px;
+    grid-template-columns: 1fr; /* mobile: full stack */
+    gap: 16px;
+    margin-top: 16px;
+}
+
+@media (min-width: 820px) {
+    .dashboard-grid {
+        grid-template-columns: 1.5fr 1fr;
+        gap: 24px;
+        margin-top: 24px;
+    }
 }
 
 /* === Recent Projects list === */
@@ -230,11 +252,18 @@
     color: var(--slate-400);
 }
 
-/* === Quick Actions grid === */
+/* === Quick Actions grid — mobile-first === */
 .quick-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr; /* mobile: 1 columna */
+    gap: 10px;
+}
+
+@media (min-width: 480px) {
+    .quick-actions {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
 }
 
 .quick-action-item {
@@ -284,14 +313,7 @@
 /* === Chart section (Phase future) === */
 
 /* === Responsive === */
-@media (max-width: 1024px) {
-    .status-row { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 768px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .status-row     { grid-template-columns: 1fr; }
-    .quick-actions  { grid-template-columns: 1fr; }
+@media (max-width: 479px) {
     .recent-project-meta { flex-direction: row; align-items: center; gap: 8px; }
 }
 
@@ -325,7 +347,14 @@
 .dashboard-grid-split {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-5);
+}
+
+@media (min-width: 820px) {
+    .dashboard-grid-split {
+        grid-template-columns: 1fr 340px;
+        gap: var(--space-6);
+    }
 }
 
 @media (min-width: 1024px) {
@@ -334,19 +363,21 @@
     }
 }
 
+/* stat-cards-grid: mobile-first, 1 → 2 → 4 columnas */
 .stat-cards-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-4);
+    gap: var(--space-3);
 }
 
-@media (min-width: 641px) {
+@media (min-width: 480px) {
     .stat-cards-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-4);
     }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
     .stat-cards-grid {
         grid-template-columns: repeat(4, 1fr);
     }

@@ -69,12 +69,30 @@
     background-color: var(--slate-100);
 }
 
-@media (max-width: 768px) {
+/* Móvil + iPad Air portrait: botón de menú visible cuando sidebar es drawer */
+@media (max-width: 819px) {
     .mobile-menu-btn {
         display: flex;
+        /* Touch target mínimo */
+        width: var(--touch-target);
+        height: var(--touch-target);
     }
 
     .top-header {
-        padding: 0 var(--space-4);
+        padding: 0 var(--content-px-xs);
+    }
+}
+
+@media (min-width: 430px) and (max-width: 819px) {
+    .top-header {
+        padding: 0 var(--content-px-sm);
+    }
+}
+
+/* Breadcrumbs: ocultar intermedios en pantallas muy pequeñas */
+@media (max-width: 479px) {
+    .breadcrumbs .separator ~ .separator,
+    .breadcrumbs a:not(:last-of-type):not(:first-of-type) {
+        display: none;
     }
 }

@@ -113,6 +113,18 @@ tr:focus-within .row-actions {
     opacity: 1;
 }
 
+/* Touch: hover no funciona, actions siempre visibles */
+@media (hover: none) and (pointer: coarse) {
+    .row-actions {
+        opacity: 1;
+    }
+
+    .action-btn {
+        width: var(--touch-target);
+        height: var(--touch-target);
+    }
+}
+
 .action-btn {
     display: inline-flex;
     align-items: center;

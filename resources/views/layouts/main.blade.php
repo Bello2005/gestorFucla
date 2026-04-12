@@ -170,8 +170,9 @@
             localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
         });
 
-        // Restore sidebar state
-        if (localStorage.getItem('sidebar-collapsed') === 'true') {
+        // Restore sidebar state — solo en desktop (≥ 820px)
+        // En mobile/tablet el sidebar es drawer overlay, collapsed state no aplica
+        if (window.innerWidth >= 820 && localStorage.getItem('sidebar-collapsed') === 'true') {
             document.getElementById('sidebar')?.classList.add('collapsed');
             document.getElementById('main-content')?.classList.add('expanded');
         }

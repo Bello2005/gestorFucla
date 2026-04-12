@@ -318,12 +318,6 @@
     margin-left: var(--sidebar-collapsed-width);
 }
 
-.page-content {
-    max-width: var(--content-max-width);
-    margin: 0 auto;
-    padding: var(--space-6) var(--space-8);
-}
-
 /* Overlay */
 .sidebar-overlay {
     display: none;
@@ -337,15 +331,30 @@
     z-index: 1020;
 }
 
-/* Tablet/móvil: sidebar overlay */
-@media (max-width: 1024px) {
+/* Móvil + iPad Air portrait (< 820px): sidebar como drawer overlay */
+@media (max-width: 819px) {
     #sidebar {
         transform: translateX(-100%);
         box-shadow: var(--shadow-xl);
+        /* En overlay siempre ancho completo, ignorar estado collapsed */
+        width: 272px !important;
     }
 
     #sidebar.show {
         transform: translateX(0);
+    }
+
+    /* Restaurar textos ocultos por collapsed en desktop */
+    #sidebar .logo-text,
+    #sidebar .nav-text,
+    #sidebar .nav-section-title,
+    #sidebar .user-info {
+        display: flex !important;
+    }
+
+    #sidebar .logo-text {
+        display: flex !important;
+        flex-direction: column;
     }
 
     .sidebar-overlay.show {
@@ -358,9 +367,5 @@
 
     .sidebar-collapse-btn {
         display: none;
-    }
-
-    .page-content {
-        padding: var(--space-4);
     }
 }

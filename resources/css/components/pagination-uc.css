@@ -29,3 +29,11 @@
     border-color: var(--uni-gold);
     color: white;
 }
+
+/* Touch: área táctil mínima */
+@media (hover: none) and (pointer: coarse) {
+    .uc-pagination__btn {
+        min-height: var(--touch-target);
+        min-width: var(--touch-target);
+    }
+}

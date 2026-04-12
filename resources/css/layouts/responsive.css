@@ -1,19 +1,113 @@
-/* Breakpoints y utilidades responsive centralizadas */
+/* ============================================
+   RESPONSIVE SYSTEM — Mobile-first utilities
+   Breakpoints: 375 | 430 | 480 | 640 | 820 | 1024 | 1280 | 1440 | 1920
+   ============================================ */
 
-@media (max-width: 1024px) {
-    :root {
-        --sidebar-width: 272px;
+/* === Visibility utilities === */
+
+/* Mobile-only (< 820px) */
+.uc-show-mobile      { display: none !important; }
+.uc-hide-mobile      { display: revert !important; }
+
+/* Tablet-down (< 1024px) */
+.uc-show-tablet-down { display: none !important; }
+.uc-hide-tablet-down { display: revert !important; }
+
+/* Desktop-only (≥ 1024px) */
+.uc-show-desktop     { display: none !important; }
+.uc-hide-desktop     { display: revert !important; }
+
+@media (max-width: 819px) {
+    .uc-show-mobile      { display: revert !important; }
+    .uc-hide-mobile      { display: none !important; }
+}
+
+@media (max-width: 1023px) {
+    .uc-show-tablet-down { display: revert !important; }
+    .uc-hide-tablet-down { display: none !important; }
+}
+
+@media (min-width: 1024px) {
+    .uc-show-desktop     { display: revert !important; }
+    .uc-hide-desktop     { display: none !important; }
+}
+
+/* === Content padding — adaptive scale === */
+
+.page-content {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: var(--space-4) var(--content-px-xs);
+}
+
+@media (min-width: 430px) {
+    .page-content {
+        padding-left: var(--content-px-sm);
+        padding-right: var(--content-px-sm);
     }
 }
 
-@media (max-width: 768px) {
-    .uc-hide-mobile {
-        display: none !important;
+@media (min-width: 820px) {
+    .page-content {
+        padding: var(--space-5) var(--content-px-md);
     }
 }
 
-@media (min-width: 769px) {
-    .uc-hide-desktop {
-        display: none !important;
+@media (min-width: 1024px) {
+    .page-content {
+        padding: var(--space-6) var(--content-px-lg);
+    }
+}
+
+/* === Touch target enforcement — WCAG 2.5.5 === */
+
+@media (hover: none) and (pointer: coarse) {
+    .ds-btn,
+    .nav-link,
+    .uc-tabs__btn,
+    .uc-pagination__btn,
+    .action-btn,
+    .mobile-menu-btn,
+    .sidebar-collapse-btn,
+    .ds-toast-close {
+        min-height: var(--touch-target);
+        min-width: var(--touch-target);
+    }
+
+    /* Ampliar área táctil sin cambiar tamaño visual */
+    input[type="checkbox"],
+    input[type="radio"] {
+        padding: 10px;
+        margin: -10px;
+    }
+}
+
+/* === Layout flex utilities === */
+
+.uc-flex-col-mobile {
+    flex-direction: column;
+}
+
+@media (min-width: 640px) {
+    .uc-flex-col-mobile {
+        flex-direction: row;
+    }
+}
+
+.uc-full-mobile {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .uc-full-mobile {
+        width: auto;
+    }
+}
+
+/* === Large screen body scale === */
+
+@media (min-width: 1440px) {
+    body {
+        font-size: var(--text-base);
     }
 }
