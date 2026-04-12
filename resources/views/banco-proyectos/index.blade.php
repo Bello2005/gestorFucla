@@ -22,7 +22,7 @@
 </div>
 
 {{-- ── Stat cards ──────────────────────────────────────────────────── --}}
-<div class="stat-cards-grid" style="margin-bottom:1.5rem;">
+<div class="banco-kpi-grid">
 
     <div class="stat-card stat-card--primary">
         <div class="banco-stat-icon banco-stat-icon--total">
