@@ -102,11 +102,13 @@
                 <i class="fas fa-plus"></i> Nuevo Proyecto
             </a>
         </div>
-        <div class="d-flex gap-2 flex-wrap align-items-center mt-2">
-            <span class="small text-muted">Certificado:</span>
-            <a href="{{ request()->fullUrlWithQuery(['cert' => null]) }}" class="ds-btn ds-btn--sm {{ !request('cert') ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Todos</a>
-            <a href="{{ request()->fullUrlWithQuery(['cert' => 'con']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='con' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Con certificado</a>
-            <a href="{{ request()->fullUrlWithQuery(['cert' => 'sin']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='sin' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Sin certificado</a>
+        <div class="table-toolbar-filters">
+            <span class="table-toolbar-filters__label">Certificado:</span>
+            <div class="table-toolbar-filters__row">
+                <a href="{{ request()->fullUrlWithQuery(['cert' => null]) }}" class="ds-btn ds-btn--sm {{ !request('cert') ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Todos</a>
+                <a href="{{ request()->fullUrlWithQuery(['cert' => 'con']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='con' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Con certificado</a>
+                <a href="{{ request()->fullUrlWithQuery(['cert' => 'sin']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='sin' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Sin certificado</a>
+            </div>
         </div>
     </div>
 
