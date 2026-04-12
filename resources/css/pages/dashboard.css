@@ -1,4 +1,303 @@
-/* Dashboard — command center */
+/* ============================================
+   DASHBOARD — Command Center
+   ============================================ */
+
+/* === KPI Cards: color variants === */
+.stat-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+/* Icon background/color per variant */
+.stat-card--info    .stat-card-icon { background: #EFF6FF; color: #2563EB; }
+.stat-card--success .stat-card-icon { background: var(--success-50); color: var(--success); }
+.stat-card--warning .stat-card-icon { background: var(--warning-50); color: var(--warning); }
+.stat-card--slate   .stat-card-icon { background: var(--slate-100);  color: var(--slate-600); }
+.stat-card--primary .stat-card-icon { background: var(--uni-gold-pale); color: var(--uni-gold); }
+
+/* Top accent border per variant */
+.stat-card--info    { border-top: 3px solid #2563EB; }
+.stat-card--success { border-top: 3px solid var(--success); }
+.stat-card--warning { border-top: 3px solid var(--warning); }
+.stat-card--slate   { border-top: 3px solid var(--slate-400); }
+.stat-card--primary { border-top: 3px solid var(--uni-gold); }
+
+/* Legacy class aliases (backward compat) */
+.stat-card--blue    { border-top: 3px solid #2563EB; }
+.stat-card--blue    .stat-card-icon { background: #EFF6FF; color: #2563EB; }
+.stat-card--green   { border-top: 3px solid var(--success); }
+.stat-card--green   .stat-card-icon { background: var(--success-50); color: var(--success); }
+.stat-card--amber   { border-top: 3px solid var(--warning); }
+.stat-card--amber   .stat-card-icon { background: var(--warning-50); color: var(--warning); }
+
+.stat-card-label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: var(--font-semibold);
+    color: var(--slate-500);
+}
+
+.stat-card-value {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--slate-900);
+    line-height: 1.1;
+    margin: 2px 0 4px;
+}
+
+.stat-card-value--mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+}
+
+/* === Trend delta badges === */
+.stat-card-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: var(--font-medium);
+    padding: 2px 6px;
+    border-radius: var(--radius-full);
+}
+
+.delta--up   { background: var(--success-50); color: var(--success); }
+.delta--down { background: var(--danger-50);  color: var(--danger); }
+
+/* === Status summary row === */
+.status-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.status-row-item {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-row-bar {
+    height: 6px;
+    background: var(--slate-100);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.status-row-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-row-fill--success { background: var(--success); }
+.status-row-fill--warning { background: var(--warning); }
+.status-row-fill--danger  { background: var(--danger); }
+
+.status-row-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-row-label {
+    font-size: var(--text-sm);
+    color: var(--slate-600);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-row-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+    color: var(--slate-900);
+}
+
+/* === Dashboard main grid === */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+/* === Recent Projects list === */
+.recent-projects-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-project-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid var(--slate-100);
+    transition: background var(--transition-fast) ease;
+    gap: 12px;
+}
+
+.recent-project-item:last-child { border-bottom: none; }
+.recent-project-item:hover { background: var(--slate-50); }
+
+.recent-project-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+
+.recent-project-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-project-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background: var(--uni-gold-pale);
+    color: var(--uni-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.recent-project-name {
+    display: block;
+    font-weight: var(--font-medium);
+    font-size: var(--text-sm);
+    color: var(--slate-900);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-project-entity {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--slate-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-project-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.recent-project-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--slate-700);
+}
+
+.recent-project-value--zero {
+    color: var(--slate-500);
+    font-family: inherit;
+    font-weight: var(--font-medium);
+    max-width: 9rem;
+    text-align: right;
+}
+
+.recent-project-time {
+    font-size: 11px;
+    color: var(--slate-400);
+}
+
+/* === Quick Actions grid === */
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.quick-action-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--slate-200);
+    text-decoration: none;
+    color: var(--slate-700);
+    transition: all var(--transition-fast) ease;
+}
+
+.quick-action-item:hover {
+    border-color: var(--uni-gold-light);
+    background: var(--uni-gold-pale);
+    color: var(--slate-900);
+}
+
+.quick-action-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.quick-action-icon--success { background: var(--success-50); color: var(--success); }
+.quick-action-icon--info    { background: var(--info-50);    color: var(--info); }
+.quick-action-icon--warning { background: var(--warning-50); color: var(--warning); }
+.quick-action-icon--slate   { background: var(--slate-100);  color: var(--slate-600); }
+
+.quick-action-label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+.quick-action-label--nowrap {
+    white-space: nowrap;
+}
+
+/* === Chart section placeholder === */
+/* === Chart section (Phase future) === */
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+    .status-row { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .status-row     { grid-template-columns: 1fr; }
+    .quick-actions  { grid-template-columns: 1fr; }
+    .recent-project-meta { flex-direction: row; align-items: center; gap: 8px; }
+}
+
+/* ============================================
+   Original dashboard layout tokens (below)
+   ============================================ */
 
 .dashboard-hero {
     display: flex;

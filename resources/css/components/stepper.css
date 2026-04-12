@@ -72,3 +72,65 @@
     color: var(--uni-navy);
     font-weight: var(--font-bold);
 }
+
+/* Sub-label (optional description line) */
+.uc-stepper__sublabel {
+    font-size: 11px;
+    color: var(--neutral-400);
+    margin-top: var(--space-0-5);
+}
+
+/* Step content panels */
+.uc-step-panel {
+    display: none;
+}
+
+.uc-step-panel--active {
+    display: block;
+    animation: stepFadeIn 200ms ease-out;
+}
+
+@keyframes stepFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile: stack stepper vertically */
+@media (max-width: 640px) {
+    .uc-stepper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+    }
+
+    .uc-stepper__item {
+        flex-direction: row;
+        text-align: left;
+        align-items: flex-start;
+        padding-bottom: var(--space-5);
+        flex: none;
+        width: 100%;
+    }
+
+    .uc-stepper__item:not(:last-child)::after {
+        /* Vertical connector */
+        left: 17px;
+        top: 36px;
+        bottom: -8px;
+        right: auto;
+        width: 2px;
+        height: auto;
+    }
+
+    .uc-stepper__label,
+    .uc-stepper__sublabel {
+        margin-top: 0;
+        margin-left: var(--space-3);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .uc-step-panel--active {
+        animation: none;
+    }
+}

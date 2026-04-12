@@ -244,22 +244,24 @@
             <button type="submit" class="ds-btn ds-btn--danger ds-btn--sm">Eliminar certificado</button>
         </form>
     @else
-        <form action="{{ route('proyectos.certificado.store', $proyecto) }}" method="post" enctype="multipart/form-data" class="row g-2">
+        <form action="{{ route('proyectos.certificado.store', $proyecto) }}" method="post" enctype="multipart/form-data" class="row g-3">
             @csrf
             <div class="col-12 col-md-4">
-                <label class="ds-label">Archivo PDF</label>
-                <input type="file" name="certificado" accept="application/pdf" class="form-control" required>
+                <label class="ds-label">Archivo PDF <span class="required-dot" aria-hidden="true"></span></label>
+                <input type="file" name="certificado" accept="application/pdf" class="ds-input" style="height:auto;padding:var(--space-2);" required>
             </div>
             <div class="col-12 col-md-3">
-                <label class="ds-label">Fecha</label>
-                <input type="date" name="certificado_fecha" class="form-control">
+                <label class="ds-label">Fecha del certificado</label>
+                <input type="date" name="certificado_fecha" class="ds-input">
             </div>
             <div class="col-12 col-md-5">
                 <label class="ds-label">Observaciones</label>
-                <input type="text" name="certificado_observaciones" class="form-control">
+                <input type="text" name="certificado_observaciones" class="ds-input" placeholder="Notas opcionales…">
             </div>
             <div class="col-12">
-                <button type="submit" class="ds-btn ds-btn--primary">Guardar certificado</button>
+                <button type="submit" class="ds-btn ds-btn--primary">
+                    <i class="fas fa-upload"></i> Guardar certificado
+                </button>
             </div>
         </form>
     @endif

@@ -1,3 +1,4 @@
+{{-- DEPRECATED: zero views extend this layout. Use layouts.main. Do not reference. --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>

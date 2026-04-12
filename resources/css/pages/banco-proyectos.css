@@ -1,12 +1,22 @@
-/* Banco de Proyectos */
+/* ============================================
+   BANCO DE PROYECTOS — Page styles
+   ============================================ */
 
-.banco-page .uc-hero-code {
+/* Hero project code (mono gold) */
+.uc-hero-code {
     font-family: var(--font-mono);
     font-weight: var(--font-semibold);
     font-size: var(--text-sm);
     color: var(--uni-gold-deep);
+    text-decoration: none;
 }
 
+a.uc-hero-code:hover {
+    color: var(--uni-gold);
+    text-decoration: underline;
+}
+
+/* Faculty / program badge */
 .banco-faculty-badge {
     display: inline-flex;
     align-items: center;
@@ -16,4 +26,205 @@
     font-weight: var(--font-medium);
     background: var(--neutral-100);
     color: var(--neutral-700);
+    margin-top: 3px;
+}
+
+/* === Estado badge variants === */
+/* Base: extend .ds-badge */
+.uc-estado--borrador {
+    background: var(--neutral-100);
+    color: var(--neutral-600);
+    border-color: var(--neutral-200);
+}
+
+.uc-estado--en_evaluacion {
+    background: var(--info-50);
+    color: var(--info-700);
+    border-color: var(--info-100);
+}
+
+.uc-estado--aprobado {
+    background: var(--success-50);
+    color: var(--success-700);
+    border-color: var(--success-100);
+}
+
+.uc-estado--rechazado {
+    background: var(--danger-50);
+    color: var(--danger-700);
+    border-color: var(--danger-100);
+}
+
+.uc-estado--en_ejecucion {
+    background: var(--gold-100);
+    color: var(--gold-700);
+    border-color: var(--gold-200);
+}
+
+.uc-estado--cerrado {
+    background: var(--neutral-200);
+    color: var(--neutral-700);
+    border-color: var(--neutral-300);
+}
+
+.uc-estado--suspendido {
+    background: var(--warning-50);
+    color: var(--warning-700);
+    border-color: var(--warning-100);
+}
+
+/* Pulse dot for active-process states */
+@keyframes uc-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.45; transform: scale(0.75); }
+}
+
+.uc-estado--en_evaluacion::before,
+.uc-estado--en_ejecucion::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+    background: currentColor;
+    animation: uc-pulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .uc-estado--en_evaluacion::before,
+    .uc-estado--en_ejecucion::before {
+        animation: none;
+    }
+}
+
+/* === Table row actions (visible on hover) === */
+.row-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+tr:hover .row-actions,
+tr:focus-within .row-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-md);
+    background: white;
+    color: var(--neutral-500);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+    background: var(--neutral-50);
+    color: var(--neutral-800);
+    border-color: var(--neutral-300);
+}
+
+.action-btn--view:hover  { color: var(--info); border-color: var(--info-100); background: var(--info-50); }
+.action-btn--edit:hover  { color: var(--uni-gold-deep); border-color: var(--gold-200); background: var(--gold-100); }
+.action-btn--delete:hover { color: var(--danger); border-color: var(--danger-100); background: var(--danger-50); }
+
+/* === Stat card icons for banco === */
+.banco-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.banco-stat-icon--total      { background: var(--uni-navy); color: white; }
+.banco-stat-icon--borrador   { background: var(--neutral-100); color: var(--neutral-600); }
+.banco-stat-icon--evaluacion { background: var(--info-50); color: var(--info-700); }
+.banco-stat-icon--aprobado   { background: var(--success-50); color: var(--success-700); }
+.banco-stat-icon--ejecucion  { background: var(--gold-100); color: var(--gold-700); }
+
+/* === Table cell utilities === */
+.cell-muted {
+    color: var(--neutral-500);
+    font-size: var(--text-sm);
+}
+
+.cell-mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
+}
+
+.cell-actions {
+    text-align: right;
+    white-space: nowrap;
+    width: 1%;
+}
+
+/* === Banco table row hover === */
+.banco-table tbody tr:hover {
+    background: rgba(253, 246, 227, 0.5); /* uni-gold-pale at 50% */
+}
+
+/* === Detail grid (2-col metadata layout) === */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+}
+
+@media (max-width: 640px) {
+    .detail-grid { grid-template-columns: 1fr; }
+}
+
+.detail-item-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neutral-500);
+    margin: 0 0 var(--space-1) 0;
+}
+
+.detail-item-value {
+    font-size: var(--text-sm);
+    color: var(--neutral-800);
+    margin: 0;
+    line-height: var(--leading-normal);
+}
+
+/* === Word counter for textareas === */
+.word-counter {
+    font-size: var(--text-xs);
+    color: var(--neutral-400);
+    text-align: right;
+    margin-top: var(--space-1);
+}
+
+.word-counter--warn { color: var(--warning); }
+.word-counter--over { color: var(--danger); font-weight: var(--font-semibold); }
+
+/* === Autores repeater === */
+.autor-row {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.autor-row .ds-input {
+    flex: 1;
 }

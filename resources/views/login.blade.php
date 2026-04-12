@@ -6,9 +6,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Iniciar Sesion - UNICLARETIANA</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     @vite(['resources/css/app.css'])
@@ -18,26 +15,29 @@
         <!-- Left Panel: Branding -->
         <div class="auth-brand">
             <div class="auth-brand-content">
-                <div class="auth-brand-logo">
-                    <i class="fas fa-university"></i>
+                <div class="auth-brand-logo--img">
+                    <img src="{{ asset('images/brand/logo-mark.svg') }}" alt="UNICLARETIANA" />
                 </div>
                 <h1 class="auth-brand-title">UNICLARETIANA</h1>
                 <div class="auth-brand-accent"></div>
+                <blockquote class="auth-brand-quote">
+                    "Formando líderes para la transformación social"
+                </blockquote>
                 <p class="auth-brand-subtitle">
-                    Sistema de Gestion de Proyectos de Extension y Proyeccion Social
+                    Sistema de Gestión de Proyectos de Extensión y Proyección Social
                 </p>
                 <ul class="auth-features">
                     <li>
                         <span class="feature-icon"><i class="fas fa-shield-halved"></i></span>
-                        Gestion segura de proyectos
+                        Gestión segura de proyectos
                     </li>
                     <li>
                         <span class="feature-icon"><i class="fas fa-chart-line"></i></span>
-                        Estadisticas en tiempo real
+                        Estadísticas en tiempo real
                     </li>
                     <li>
                         <span class="feature-icon"><i class="fas fa-file-export"></i></span>
-                        Exportacion a PDF, Excel y Word
+                        Exportación a PDF, Excel y Word
                     </li>
                     <li>
                         <span class="feature-icon"><i class="fas fa-users"></i></span>

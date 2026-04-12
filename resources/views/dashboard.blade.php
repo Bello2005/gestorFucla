@@ -32,8 +32,8 @@
         $deltaEntRaw    = $stats['entidades'] - $statsAnterior['entidades'];
     @endphp
 
-    <div class="stat-card stat-card--blue">
-        <div class="stat-card-icon stat-card-icon--blue">
+    <div class="stat-card stat-card--info">
+        <div class="stat-card-icon">
             <i class="fas fa-folder-open"></i>
         </div>
         <div class="stat-card-content">
@@ -47,8 +47,8 @@
     </div>
 
     {{-- Activos (green) --}}
-    <div class="stat-card stat-card--green">
-        <div class="stat-card-icon stat-card-icon--green">
+    <div class="stat-card stat-card--success">
+        <div class="stat-card-icon">
             <i class="fas fa-check-circle"></i>
         </div>
         <div class="stat-card-content">
@@ -62,8 +62,8 @@
     </div>
 
     {{-- Valor Total (amber) --}}
-    <div class="stat-card stat-card--amber">
-        <div class="stat-card-icon stat-card-icon--amber">
+    <div class="stat-card stat-card--warning">
+        <div class="stat-card-icon">
             <i class="fas fa-dollar-sign"></i>
         </div>
         <div class="stat-card-content">
@@ -82,7 +82,7 @@
 
     {{-- Entidades (slate) --}}
     <div class="stat-card stat-card--slate">
-        <div class="stat-card-icon stat-card-icon--slate">
+        <div class="stat-card-icon">
             <i class="fas fa-building"></i>
         </div>
         <div class="stat-card-content">
@@ -231,256 +231,4 @@
 
 @endsection
 
-@push('styles')
-<style>
-    /* ── KPI cards with color semantics ──────────────────────── */
-    .stat-card-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: var(--radius-lg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        flex-shrink: 0;
-    }
-    .stat-card-icon--blue   { background: #EFF6FF; color: #2563EB; }
-    .stat-card-icon--green  { background: var(--success-50); color: var(--success); }
-    .stat-card-icon--amber  { background: var(--warning-50); color: var(--warning); }
-    .stat-card-icon--slate  { background: var(--slate-100);  color: var(--slate-600); }
-
-    .stat-card--blue   { border-top: 3px solid #2563EB; }
-    .stat-card--green  { border-top: 3px solid var(--success); }
-    .stat-card--amber  { border-top: 3px solid var(--warning); }
-    .stat-card--slate  { border-top: 3px solid var(--slate-400); }
-
-    .stat-card-label {
-        font-size: var(--text-xs);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        font-weight: var(--font-semibold);
-        color: var(--slate-500);
-    }
-    .stat-card-value {
-        font-size: var(--text-3xl);
-        font-weight: var(--font-bold);
-        color: var(--slate-900);
-        line-height: 1.1;
-        margin: 2px 0 4px;
-    }
-    .stat-card-value--mono {
-        font-family: var(--font-mono);
-        font-size: var(--text-2xl);
-    }
-
-    /* Trend delta badge */
-    .stat-card-delta {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 11px;
-        font-weight: var(--font-medium);
-        padding: 2px 6px;
-        border-radius: var(--radius-full);
-    }
-    .delta--up   { background: var(--success-50); color: var(--success); }
-    .delta--down { background: var(--danger-50);  color: var(--danger); }
-
-    /* ── Status summary row ───────────────────────────────────── */
-    .status-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-        margin-top: 16px;
-    }
-    .status-row-item {
-        background: white;
-        border: 1px solid var(--slate-200);
-        border-radius: var(--radius-lg);
-        padding: 16px 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    .status-row-bar {
-        height: 6px;
-        background: var(--slate-100);
-        border-radius: var(--radius-full);
-        overflow: hidden;
-    }
-    .status-row-fill {
-        height: 100%;
-        border-radius: var(--radius-full);
-        transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .status-row-fill--success { background: var(--success); }
-    .status-row-fill--warning { background: var(--warning); }
-    .status-row-fill--danger  { background: var(--danger); }
-    .status-row-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .status-row-label {
-        font-size: var(--text-sm);
-        color: var(--slate-600);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .status-row-count {
-        font-family: var(--font-mono);
-        font-size: var(--text-base);
-        font-weight: var(--font-bold);
-        color: var(--slate-900);
-    }
-
-    /* ── Dashboard grid ────────────────────────────────────────── */
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr;
-        gap: 24px;
-        margin-top: 24px;
-    }
-
-    /* ── Recent Projects list ─────────────────────────────────── */
-    .recent-projects-list {
-        display: flex;
-        flex-direction: column;
-    }
-    .recent-project-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 14px 24px;
-        text-decoration: none;
-        color: inherit;
-        border-bottom: 1px solid var(--slate-100);
-        transition: background var(--transition-fast) ease;
-        gap: 12px;
-    }
-    .recent-project-item:last-child { border-bottom: none; }
-    .recent-project-item:hover { background: var(--slate-50); }
-
-    .recent-project-info {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 0;
-        flex: 1;
-    }
-    .recent-project-text {
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-    }
-    .recent-project-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: var(--radius-md);
-        background: var(--primary-50);
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        flex-shrink: 0;
-    }
-    .recent-project-name {
-        display: block;
-        font-weight: var(--font-medium);
-        font-size: var(--text-sm);
-        color: var(--slate-900);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .recent-project-entity {
-        display: block;
-        font-size: var(--text-xs);
-        color: var(--slate-500);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .recent-project-meta {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 4px;
-        flex-shrink: 0;
-    }
-    .recent-project-value {
-        font-family: var(--font-mono);
-        font-size: var(--text-xs);
-        font-weight: var(--font-semibold);
-        color: var(--slate-700);
-    }
-    .recent-project-value--zero {
-        color: var(--slate-500);
-        font-family: inherit;
-        font-weight: var(--font-medium);
-        max-width: 9rem;
-        text-align: right;
-    }
-    .recent-project-time {
-        font-size: 11px;
-        color: var(--slate-400);
-    }
-
-    /* ── Quick Actions grid ───────────────────────────────────── */
-    .quick-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-    }
-    .quick-action-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px 16px;
-        border-radius: var(--radius-md);
-        border: 1px solid var(--slate-200);
-        text-decoration: none;
-        color: var(--slate-700);
-        transition: all var(--transition-fast) ease;
-    }
-    .quick-action-item:hover {
-        border-color: var(--slate-300);
-        background: var(--slate-50);
-        color: var(--slate-900);
-    }
-    .quick-action-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: var(--radius-md);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        flex-shrink: 0;
-    }
-    .quick-action-icon--success { background: var(--success-50); color: var(--success); }
-    .quick-action-icon--info    { background: var(--info-50);    color: var(--info); }
-    .quick-action-icon--warning { background: var(--warning-50); color: var(--warning); }
-    .quick-action-icon--slate   { background: var(--slate-100);  color: var(--slate-600); }
-    .quick-action-label {
-        font-size: var(--text-sm);
-        font-weight: var(--font-medium);
-    }
-    .quick-action-label--nowrap {
-        white-space: nowrap;
-    }
-
-    /* ── Responsive ───────────────────────────────────────────── */
-    @media (max-width: 1024px) {
-        .status-row { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 768px) {
-        .dashboard-grid { grid-template-columns: 1fr; }
-        .status-row     { grid-template-columns: 1fr; }
-        .quick-actions  { grid-template-columns: 1fr; }
-        .recent-project-meta { flex-direction: row; align-items: center; gap: 8px; }
-    }
-</style>
-@endpush
+{{-- All styles now live in resources/css/pages/dashboard.css --}}

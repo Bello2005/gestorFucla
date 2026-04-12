@@ -1,5 +1,8 @@
-/* Catálogos admin */
+/* ============================================
+   CATÁLOGOS — Admin page styles
+   ============================================ */
 
+/* Legacy inline input (kept for compat) */
 .catalogos-page .uc-inline-input {
     width: 100%;
     min-width: 120px;
@@ -13,4 +16,75 @@
     border-color: var(--uni-gold);
     background: var(--surface-primary);
     outline: none;
+}
+
+/* === Inline editable input variant === */
+.ds-input--inline {
+    border-color: transparent;
+    background: transparent;
+    padding-block: var(--space-1);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.ds-input--inline:hover {
+    border-color: var(--neutral-200);
+    background: var(--neutral-50);
+}
+
+.ds-input--inline:focus {
+    border-color: var(--uni-gold);
+    background: var(--surface-primary);
+    box-shadow: var(--shadow-gold);
+}
+
+/* === Catalogo active/inactive toggle === */
+.catalogo-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.catalogo-toggle input[type="checkbox"] {
+    /* visually hidden but accessible */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+}
+
+.catalogo-toggle__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--neutral-200);
+    background: var(--neutral-100);
+    color: var(--neutral-600);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.catalogo-toggle__label::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--neutral-400);
+}
+
+.catalogo-toggle input[type="checkbox"]:checked + .catalogo-toggle__label {
+    background: var(--success-50);
+    border-color: var(--success-100);
+    color: var(--success-700);
+}
+
+.catalogo-toggle input[type="checkbox"]:checked + .catalogo-toggle__label::before {
+    background: var(--success);
 }

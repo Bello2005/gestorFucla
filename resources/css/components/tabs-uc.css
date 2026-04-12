@@ -29,3 +29,8 @@
     font-weight: var(--font-semibold);
     border-bottom-color: var(--uni-gold);
 }
+
+/* Tab panels — hidden state (replaces Bootstrap d-none for tabs) */
+.tab-panel--hidden {
+    display: none;
+}

@@ -33,13 +33,47 @@
     background: var(--uni-gold);
 }
 
+/* Action-type dot color variants */
+.uc-timeline__item--estado-change .uc-timeline__dot { background: var(--info); }
+.uc-timeline__item--create        .uc-timeline__dot { background: var(--success); }
+.uc-timeline__item--delete        .uc-timeline__dot { background: var(--danger); }
+.uc-timeline__item--edit          .uc-timeline__dot { background: var(--warning); }
+.uc-timeline__item--upload        .uc-timeline__dot { background: var(--uni-gold); }
+
 .uc-timeline__meta {
     font-size: var(--text-xs);
     color: var(--neutral-500);
     margin-bottom: var(--space-1);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
 }
 
 .uc-timeline__body {
     font-size: var(--text-sm);
     color: var(--neutral-800);
+    line-height: var(--leading-normal);
+}
+
+/* User chip inline in meta */
+.uc-timeline__user {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 11px;
+    font-weight: var(--font-medium);
+    color: var(--neutral-600);
+    background: var(--neutral-100);
+    border-radius: var(--radius-full);
+    padding: 1px 8px;
+}
+
+/* Highlighted state-change entry */
+.uc-timeline__item--estado-change {
+    background: var(--info-50);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    margin-left: calc(-1 * var(--space-3));
+    margin-right: calc(-1 * var(--space-3));
 }
