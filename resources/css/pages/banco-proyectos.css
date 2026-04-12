@@ -157,6 +157,48 @@ tr:focus-within .row-actions {
 .banco-stat-icon--aprobado   { background: var(--success-50); color: var(--success-700); }
 .banco-stat-icon--ejecucion  { background: var(--gold-100); color: var(--gold-700); }
 
+/* Cinco KPIs: grid base es 4 cols (4+1 deja hueco). Desktop: 5 cols; 769–1200px: 6 cols (3 arriba, 2 abajo, sin columnas vacías). */
+.stat-cards-grid.stat-cards-grid--banco {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-bottom: var(--space-6);
+}
+
+/* Between 769px and 1100px: 3 cols → cards wrap 3+2, centred */
+@media (max-width: 1100px) and (min-width: 769px) {
+    .stat-cards-grid.stat-cards-grid--banco {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    /* Last 2 cards (4th and 5th) each span 1.5 cols via subgrid trick:
+       use a 6-col grid so 2 cards fill the bottom row evenly */
+    /* Simpler: just let them wrap 3+2 and centre the bottom row */
+    .stat-cards-grid.stat-cards-grid--banco > .stat-card:nth-child(4),
+    .stat-cards-grid.stat-cards-grid--banco > .stat-card:nth-child(5) {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-cards-grid.stat-cards-grid--banco {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat-cards-grid.stat-cards-grid--banco > .stat-card {
+        grid-column: auto;
+    }
+
+    /* 5th card (odd total) spans full width so no blank gap */
+    .stat-cards-grid.stat-cards-grid--banco > .stat-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-cards-grid.stat-cards-grid--banco {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* === Table cell utilities === */
 .cell-muted {
     color: var(--neutral-500);
