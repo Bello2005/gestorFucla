@@ -3,6 +3,14 @@ set -e
 
 cd /var/www/html
 
+# ── Ensure writable directories exist (idempotent) ─────────────────────────
+mkdir -p storage/logs \
+         storage/framework/sessions \
+         storage/framework/views \
+         storage/framework/cache \
+         bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+
 # ── Build .env from environment variables ──────────────────────────────────
 # Strip surrounding quotes from APP_NAME in case Render wraps the value
 _APP_NAME="${APP_NAME:-Sistema de Gestion}"
@@ -47,7 +55,7 @@ fi
 # ── Optimize for production ────────────────────────────────────────────────
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
+php artisan view:cache || true
 
 # ── Run migrations ─────────────────────────────────────────────────────────
 php artisan migrate --force
