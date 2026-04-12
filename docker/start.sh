@@ -21,7 +21,7 @@ APP_NAME="$_APP_NAME"
 APP_ENV=${APP_ENV:-production}
 APP_KEY=${APP_KEY}
 APP_DEBUG=${APP_DEBUG:-false}
-APP_URL=${APP_URL:-http://localhost}
+APP_URL=${APP_URL:-https://localhost}
 
 LOG_CHANNEL=stderr
 LOG_LEVEL=${LOG_LEVEL:-error}
