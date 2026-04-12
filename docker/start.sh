@@ -4,8 +4,12 @@ set -e
 cd /var/www/html
 
 # ── Build .env from environment variables ──────────────────────────────────
+# Strip surrounding quotes from APP_NAME in case Render wraps the value
+_APP_NAME="${APP_NAME:-Sistema de Gestion}"
+_APP_NAME=$(printf '%s' "$_APP_NAME" | sed 's/^"//;s/"$//')
+
 cat > .env <<EOF
-APP_NAME="${APP_NAME:-Sistema de Gestión}"
+APP_NAME="$_APP_NAME"
 APP_ENV=${APP_ENV:-production}
 APP_KEY=${APP_KEY}
 APP_DEBUG=${APP_DEBUG:-false}
