@@ -339,12 +339,17 @@
         $(document).ready(function() {
             // Initialize DataTable
             var table = $('#proyectosTable').DataTable({
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-                },
                 dom: 't<"bottom"lp>',
-                order: [[0, 'asc']],
-                pageLength: 10
+                ordering: false,
+                pageLength: 25,
+                language: {
+                    emptyTable: "No hay proyectos registrados",
+                    zeroRecords: "No se encontraron resultados",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ proyectos",
+                    infoEmpty: "Mostrando 0 proyectos",
+                    lengthMenu: "Mostrar _MENU_ proyectos",
+                    paginate: { previous: "Anterior", next: "Siguiente" }
+                }
             });
 
             var estadoActual = 'todos';

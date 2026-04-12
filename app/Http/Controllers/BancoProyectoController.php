@@ -33,7 +33,7 @@ class BancoProyectoController extends Controller
             });
         }
 
-        $proyectos = $q->orderByDesc('created_at')->get();
+        $proyectos = $q->orderByDesc('created_at')->paginate(20)->withQueryString();
 
         $counts = BancoProyecto::query()
             ->selectRaw('estado, count(*) as c')
