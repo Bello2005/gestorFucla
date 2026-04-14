@@ -113,8 +113,7 @@
         </div>
     </div>
 
-    @if(app()->environment('local'))
-    <!-- DEV CREDENTIALS MODAL — only visible in local environment -->
+    <!-- DEV CREDENTIALS MODAL -->
     <div id="devModal" class="dev-modal-backdrop" role="dialog" aria-modal="true" aria-label="Credenciales de desarrollo">
         <div class="dev-modal">
             <!-- Header -->
@@ -179,7 +178,7 @@
             <!-- Footer hint -->
             <div class="dev-modal-footer">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Solo visible en entorno <strong>local</strong>. No aparece en producción.
+                Solo visible en entorno de <strong>desarrollo</strong>. Credenciales de prueba.
             </div>
         </div>
     </div>
@@ -440,7 +439,6 @@
             .dev-modal { width: 100%; max-width: 380px; }
         }
     </style>
-    @endif
 
     <script>
         // Password toggle
@@ -456,7 +454,6 @@
             }
         });
 
-        @if(app()->environment('local'))
         // Dev modal logic
         (function () {
             const modal    = document.getElementById('devModal');
@@ -497,7 +494,6 @@
                 });
             });
         })();
-        @endif
     </script>
 </body>
 </html>
