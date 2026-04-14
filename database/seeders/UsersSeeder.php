@@ -14,28 +14,14 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        DB::table('users')->upsert(
             [
-                'name' => 'Usuario Prueba 1',
-                'email' => 'test1@uniclaretiana.edu.co',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now()
+                ['name' => 'Usuario Prueba 1', 'email' => 'test1@uniclaretiana.edu.co', 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
+                ['name' => 'Usuario Prueba 2', 'email' => 'test2@uniclaretiana.edu.co', 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
+                ['name' => 'Usuario Prueba 3', 'email' => 'test3@uniclaretiana.edu.co', 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             ],
-            [
-                'name' => 'Usuario Prueba 2',
-                'email' => 'test2@uniclaretiana.edu.co',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'name' => 'Usuario Prueba 3',
-                'email' => 'test3@uniclaretiana.edu.co',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
-        ]);
+            ['email'],
+            ['name', 'password', 'updated_at']
+        );
     }
 }
