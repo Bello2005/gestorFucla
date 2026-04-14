@@ -21,7 +21,7 @@
             <li>
                 <a href="{{ route('proyectos.index') }}" class="nav-link {{ request()->routeIs('proyectos.*') ? 'active' : '' }}" @if(request()->routeIs('proyectos.*')) aria-current="page" @endif>
                     <x-uc.icon name="briefcase" />
-                    <span class="nav-text">Proyectos</span>
+                    <span class="nav-text">Proyectos Activos</span>
                 </a>
             </li>
             <li>

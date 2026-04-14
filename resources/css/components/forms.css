@@ -29,6 +29,19 @@
     }
 }
 
+/* === Checkbox / radio responsive grid === */
+.ds-check-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+@media (min-width: 480px) {
+    .ds-check-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 .ds-form-group {
     display: flex;
     flex-direction: column;
@@ -103,12 +116,56 @@
 
 /* === File Upload Zone === */
 .ds-file-upload {
+    position: relative;          /* ancla el input absoluto */
     border: 2px dashed var(--slate-300);
     border-radius: var(--radius-lg);
-    padding: var(--space-8) var(--space-6);
+    padding: var(--space-6) var(--space-5);
     text-align: center;
     cursor: pointer;
+    overflow: hidden;             /* recorta el input nativo */
     transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 96px;
+}
+
+/* Input nativo invisible sobre toda la zona */
+.ds-file-upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* Ícono cloud */
+.ds-file-upload > i,
+.ds-file-upload > .ds-file-upload-icon {
+    font-size: var(--text-2xl);
+    color: var(--slate-400);
+    pointer-events: none;
+}
+
+/* Texto principal */
+.ds-file-upload > span,
+.ds-file-upload > .ds-file-upload-text {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--slate-600);
+    pointer-events: none;
+}
+
+/* Hint (small) */
+.ds-file-upload > small,
+.ds-file-upload > .ds-file-upload-hint {
+    font-size: var(--text-xs);
+    color: var(--slate-400);
+    pointer-events: none;
 }
 
 .ds-file-upload:hover,

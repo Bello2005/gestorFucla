@@ -69,23 +69,22 @@
     background-color: var(--slate-100);
 }
 
-/* Móvil + iPad Air portrait: botón de menú visible cuando sidebar es drawer */
-@media (max-width: 819px) {
+/* Móvil + tablets portrait (< 1024px): botón de menú visible cuando sidebar es drawer */
+@media (max-width: 1023px) {
     .mobile-menu-btn {
         display: flex;
-        /* Touch target mínimo */
         width: var(--touch-target);
         height: var(--touch-target);
     }
 
     .top-header {
-        padding: 0 var(--content-px-xs);
+        padding: 0 var(--content-px-xs); /* 16px — phones */
     }
 }
 
-@media (min-width: 430px) and (max-width: 819px) {
+@media (min-width: 430px) and (max-width: 1023px) {
     .top-header {
-        padding: 0 var(--content-px-sm);
+        padding: 0 var(--content-px-sm); /* 20px — larger phones & tablets */
     }
 }
 

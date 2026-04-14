@@ -331,8 +331,58 @@
     z-index: 1020;
 }
 
-/* Móvil + iPad Air portrait (< 820px): sidebar como drawer overlay */
-@media (max-width: 819px) {
+/* Tablets landscape (1024–1193px): sidebar auto-colapsado a sólo iconos
+   Cubre: iPad Air landscape (1180px), iPad Pro 11" landscape (~1194px).
+   Los tablets portrait (820–1023px) usan el drawer de abajo (como móvil).
+   No aplica a: MacBook 13" (1280px), laptops 14" (1280px+). */
+@media (min-width: 1024px) and (max-width: 1193px) {
+    #sidebar {
+        width: var(--sidebar-collapsed-width) !important;
+    }
+
+    #sidebar .logo-text,
+    #sidebar .nav-text,
+    #sidebar .nav-section-title,
+    #sidebar .user-info {
+        display: none !important;
+    }
+
+    #sidebar .logo-container,
+    #sidebar .sidebar-header {
+        justify-content: center;
+        padding-left: var(--space-2);
+        padding-right: var(--space-2);
+    }
+
+    #sidebar .nav-link {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    #sidebar .nav-link.active::before {
+        display: none;
+    }
+
+    #sidebar .user-profile-link {
+        justify-content: center;
+        padding: var(--space-2);
+    }
+
+    #sidebar .sidebar-logout {
+        justify-content: center;
+    }
+
+    .sidebar-collapse-btn {
+        display: none !important;
+    }
+
+    #main-content {
+        margin-left: var(--sidebar-collapsed-width) !important;
+    }
+}
+
+/* Móvil + tablets portrait (< 1024px): sidebar como drawer overlay */
+@media (max-width: 1023px) {
     #sidebar {
         transform: translateX(-100%);
         box-shadow: var(--shadow-xl);

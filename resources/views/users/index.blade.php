@@ -104,27 +104,37 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-user-plus" style="margin-right: 8px;"></i>Crear Nuevo Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header-content">
+                    <div class="modal-icon-badge modal-icon-badge--navy">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title">Crear Nuevo Usuario</h5>
+                        <p class="modal-subtitle">Completa los campos para registrar un nuevo acceso</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">
+                    <i class="fas fa-xmark"></i>
+                </button>
             </div>
             <form id="createUserForm">
                 @csrf
                 <div class="modal-body">
-                    <div class="form-group" style="margin-bottom: 16px;">
+                    <div class="form-group">
                         <label class="ds-label" for="name">Nombre</label>
                         <input type="text" class="ds-input" id="name" name="name" required>
                     </div>
-                    <div class="form-group" style="margin-bottom: 16px;">
+                    <div class="form-group">
                         <label class="ds-label" for="email">Email</label>
                         <input type="email" class="ds-input" id="email" name="email" required autocomplete="username">
                     </div>
-                    <div class="form-group" style="margin-bottom: 16px;">
-                        <label class="ds-label" for="password">Contrasena</label>
+                    <div class="form-group">
+                        <label class="ds-label" for="password">Contraseña</label>
                         <input type="password" class="ds-input" id="password" name="password" required autocomplete="new-password">
                     </div>
                     <div class="form-group">
                         <label class="ds-label">Roles</label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="ds-check-grid">
                             @foreach($roles as $role)
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->id }}" id="role{{ $role->id }}">
@@ -148,29 +158,42 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-user-edit" style="margin-right: 8px;"></i>Editar Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header-content">
+                    <div class="modal-icon-badge modal-icon-badge--navy">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title">Editar Usuario</h5>
+                        <p class="modal-subtitle">Modifica los datos del usuario seleccionado</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">
+                    <i class="fas fa-xmark"></i>
+                </button>
             </div>
             <form id="editUserForm">
                 @csrf
                 @method('PUT')
                 <input type="hidden" id="editUserId" name="user_id">
                 <div class="modal-body">
-                    <div class="form-group" style="margin-bottom: 16px;">
+                    <div class="form-group">
                         <label class="ds-label" for="editName">Nombre</label>
                         <input type="text" class="ds-input" id="editName" name="name" required>
                     </div>
-                    <div class="form-group" style="margin-bottom: 16px;">
+                    <div class="form-group">
                         <label class="ds-label" for="editEmail">Email</label>
                         <input type="email" class="ds-input" id="editEmail" name="email" required autocomplete="username">
                     </div>
-                    <div class="form-group" style="margin-bottom: 16px;">
-                        <label class="ds-label" for="editPassword">Nueva Contrasena <small style="color: var(--slate-400);">(dejar vacio para mantener la actual)</small></label>
+                    <div class="form-group">
+                        <label class="ds-label" for="editPassword">
+                            Nueva Contraseña
+                            <small>(dejar vacío para mantener la actual)</small>
+                        </label>
                         <input type="password" class="ds-input" id="editPassword" name="password" autocomplete="new-password">
                     </div>
                     <div class="form-group">
                         <label class="ds-label">Roles</label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" id="editRolesContainer">
+                        <div class="ds-check-grid" id="editRolesContainer">
                             @foreach($roles as $role)
                             <div class="form-check">
                                 <input class="form-check-input edit-role" type="checkbox" name="roles[]" value="{{ $role->id }}" id="editRole{{ $role->id }}">
@@ -189,42 +212,63 @@
     </div>
 </div>
 
-<!-- Modal Restablecer Contrasena -->
+<!-- Modal Restablecer Contraseña -->
 <div class="modal fade" id="resetPasswordModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Restablecer Contrasena</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header-content">
+                    <div class="modal-icon-badge modal-icon-badge--gold">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title">Restablecer Contraseña</h5>
+                        <p class="modal-subtitle">Gestiona las credenciales del usuario</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">
+                    <i class="fas fa-xmark"></i>
+                </button>
             </div>
             <form id="resetPasswordForm">
                 <input type="hidden" id="resetUserId" name="user_id">
                 <div class="modal-body">
-                    <div class="form-group" style="margin-bottom: 16px;">
-                        <label class="ds-label">Metodo de Restablecimiento</label>
-                        <div style="display: flex; gap: 16px; margin-top: 8px;">
+                    <div class="form-group">
+                        <label class="ds-label">Método de Restablecimiento</label>
+                        <div class="modal-radio-group">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="reset_type" id="resetTypeEmail" value="email" checked>
-                                <label class="form-check-label" for="resetTypeEmail">Enviar enlace por correo</label>
+                                <label class="form-check-label" for="resetTypeEmail">
+                                    <i class="fas fa-envelope" style="font-size: 13px; opacity: 0.7;"></i>
+                                    Enviar enlace por correo
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="reset_type" id="resetTypeTemporal" value="temporal">
-                                <label class="form-check-label" for="resetTypeTemporal">Generar contrasena temporal</label>
+                                <label class="form-check-label" for="resetTypeTemporal">
+                                    <i class="fas fa-key" style="font-size: 13px; opacity: 0.7;"></i>
+                                    Generar contraseña temporal
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" style="margin-bottom: 16px;">
+                    <div class="form-group">
                         <label class="ds-label" for="resetReason">Motivo del Restablecimiento</label>
                         <textarea class="ds-textarea" id="resetReason" name="motivo" rows="2"></textarea>
                         <small style="color: var(--slate-400); font-size: var(--text-xs);">Recomendado para mantener un registro de las razones del cambio.</small>
                     </div>
-                    <div class="form-check" style="margin-bottom: 8px;">
-                        <input class="form-check-input" type="checkbox" name="force_change" id="forceChange" checked>
-                        <label class="form-check-label" for="forceChange">Obligar a cambiar la contrasena en el primer acceso</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="invalidate_sessions" id="invalidateSessions" checked>
-                        <label class="form-check-label" for="invalidateSessions">Invalidar todas las sesiones activas</label>
+                    <div class="form-group">
+                        <label class="ds-label">Opciones adicionales</label>
+                        <div class="modal-check-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="force_change" id="forceChange" checked>
+                                <label class="form-check-label" for="forceChange">Obligar a cambiar la contraseña en el primer acceso</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="invalidate_sessions" id="invalidateSessions" checked>
+                                <label class="form-check-label" for="invalidateSessions">Invalidar todas las sesiones activas</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -236,24 +280,34 @@
     </div>
 </div>
 
-<!-- Modal Contrasena Temporal -->
+<!-- Modal Contraseña Temporal -->
 <div class="modal fade" id="temporalPasswordModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Contrasena Temporal Generada</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header-content">
+                    <div class="modal-icon-badge modal-icon-badge--gold">
+                        <i class="fas fa-lock-open"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title">Contraseña Temporal Generada</h5>
+                        <p class="modal-subtitle">Guarda esta contraseña antes de cerrar</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">
+                    <i class="fas fa-xmark"></i>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="ds-alert ds-alert--warning" style="margin-bottom: 16px;">
+                <div class="ds-alert ds-alert--warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <strong>Importante:</strong> Esta contrasena temporal solo se mostrara una vez.
+                    <strong>Importante:</strong> Esta contraseña temporal solo se mostrará una vez.
                 </div>
-                <p style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: 16px;">El usuario debera cambiarla inmediatamente al ingresar. Las sesiones activas han sido cerradas.</p>
+                <p style="font-size: var(--text-sm); color: var(--slate-600);">El usuario deberá cambiarla inmediatamente al ingresar. Las sesiones activas han sido cerradas.</p>
                 <div class="form-group">
-                    <label class="ds-label">Contrasena Temporal:</label>
+                    <label class="ds-label">Contraseña Temporal</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="text" class="ds-input" id="tempPasswordText" readonly style="font-family: var(--font-mono);">
+                        <input type="text" class="ds-input" id="tempPasswordText" readonly>
                         <button class="ds-btn ds-btn--secondary" type="button" id="copyTempPassword">
                             <i class="fas fa-copy"></i> Copiar
                         </button>

@@ -275,7 +275,10 @@
                 <label class="ds-label">Autores / Investigadores</label>
                 <div id="autoresContainer" style="display:flex;flex-direction:column;gap:var(--space-2);">
                     @php
-                        $autoresList = old('autores', $bancoProyecto->autores ?? ['']);
+                        $autoresRaw = old('autores', $bancoProyecto->autores ?? []);
+                        $autoresList = collect($autoresRaw)->map(function($a) {
+                            return is_array($a) ? ($a['nombre'] ?? '') : (string) $a;
+                        })->all();
                         if (empty($autoresList)) $autoresList = [''];
                     @endphp
                     @foreach($autoresList as $autor)

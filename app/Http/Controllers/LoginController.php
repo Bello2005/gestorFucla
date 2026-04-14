@@ -18,9 +18,11 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            "email" => ["required", "email"],
-            "password" => ["required"]
+            "email"    => ["required", "email"],
+            "password" => ["required"],
         ]);
+
+        $remember = $request->boolean("remember");
 
         $user = User::where("email", $credentials["email"])->first();
 
@@ -30,27 +32,24 @@ class LoginController extends Controller
                 ->withInput();
         }
 
-        // Primero verificamos si es una contraseña sin encriptar
+        // Contraseña aún sin encriptar → migrar al vuelo
         if ($user->password === $credentials["password"]) {
-            // Actualizamos la contraseña con versión encriptada
             $user->password = Hash::make($credentials["password"]);
             $user->save();
-            
-            Auth::login($user);
+
+            Auth::login($user, $remember);
             $request->session()->regenerate();
             return redirect()->intended("dashboard");
         }
-        
-        // Si no coincide, intentamos verificar si está encriptada
+
+        // Contraseña encriptada normal
         try {
             if (Hash::check($credentials["password"], $user->password)) {
-                Auth::login($user);
+                Auth::login($user, $remember);
                 $request->session()->regenerate();
                 return redirect()->intended("dashboard");
             }
         } catch (\RuntimeException $e) {
-            // Si hay un error al verificar el hash, significa que la contraseña
-            // no está en formato válido de hash
             Log::warning("Contraseña en formato inválido para usuario: " . $user->email);
         }
 

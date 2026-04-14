@@ -79,11 +79,22 @@
     border: none;
 }
 
-/* === Quick Actions Grid === */
-.quick-actions {
-    display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
+
+/* === Page header — phones pequeños (< 430px) === */
+@media (max-width: 429px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-actions {
+        width: 100%;
+    }
+
+    .page-actions .ds-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* === Alert inline (for pages that need it) === */

@@ -132,7 +132,7 @@
                 @foreach($proyectos as $proyecto)
                 <tr>
                     <td>
-                        <div class="project-name-cell">
+                        <a href="{{ route('proyectos.show', $proyecto->id) }}" class="project-name-cell" style="text-decoration:none;color:inherit;">
                             <div class="project-icon">
                                 <i class="fas fa-folder"></i>
                             </div>
@@ -140,7 +140,7 @@
                                 <span class="project-name">{{ $proyecto->nombre_del_proyecto }}</span>
                                 <span class="project-id">#{{ $proyecto->id }}</span>
                             </div>
-                        </div>
+                        </a>
                     </td>
                     <td>
                         <div class="contract-details">{{ $proyecto->objeto_contractual }}</div>

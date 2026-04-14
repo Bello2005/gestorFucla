@@ -311,11 +311,11 @@
 
     .table-toolbar-filters__row {
         width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     }
 
     .table-toolbar-filters .ds-btn--sm {
-        flex: 1 1 auto;
-        min-width: calc(50% - var(--space-1));
         justify-content: center;
         white-space: normal;
         line-height: 1.25;
