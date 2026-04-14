@@ -1,7 +1,7 @@
 <nav id="sidebar" class="uc-sidebar" role="navigation" aria-label="Principal">
     <div class="sidebar-header">
         <a href="{{ route('dashboard') }}" class="logo-container">
-            <img class="logo-mark" src="{{ asset('images/brand/logo-mark.svg') }}" width="44" height="44" alt="" />
+            <img class="logo-mark" src="{{ asset('images/brand/logo-mark.png') }}" width="44" height="44" alt="" aria-hidden="true" />
             <div class="logo-text">
                 <span class="logo-title">UNICLARETIANA</span>
                 <small class="logo-subtitle">Gestión de Extensión</small>

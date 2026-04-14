@@ -56,11 +56,15 @@ class AccessRequestController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make('password123'), // Contraseña temporal
                 'is_temporary_password' => true
-            ]);                // Asignar rol de usuario normal (role_id = 3)
-                DB::table('role_user')->insert([
-                    'user_id' => $user->id,
-                    'role_id' => 3
-                ]);
+            ]);
+                // Asignar rol de usuario normal (lookup por slug para evitar IDs hardcodeados)
+                $roleId = \App\Models\Role::where('slug', 'user')->value('id');
+                if ($roleId) {
+                    DB::table('role_user')->insert([
+                        'user_id' => $user->id,
+                        'role_id' => $roleId
+                    ]);
+                }
 
                 // Actualizar estado de la solicitud
                 $request->update([
@@ -98,28 +102,28 @@ class AccessRequestController extends Controller
         }
     }
 
-    public function reject(Request $request, AccessRequest $accessRequest)
+    public function reject(Request $httpRequest, AccessRequest $request)
     {
         // Verificar si la solicitud ya fue procesada
-        if ($accessRequest->status !== 'pending') {
+        if ($request->status !== 'pending') {
             return response()->json([
                 'error' => 'La solicitud ya ha sido procesada anteriormente'
             ], 422);
         }
 
         try {
-            $validated = $request->validate([
+            $validated = $httpRequest->validate([
                 'admin_comment' => 'required|string'
             ]);
 
-            $accessRequest->update([
+            $request->update([
                 'status' => 'rejected',
                 'reviewed_at' => now(),
                 'admin_comment' => $validated['admin_comment']
             ]);
 
             // TODO: Enviar email al usuario notificando el rechazo
-            Log::info("Solicitud de acceso rechazada para {$accessRequest->email}");
+            Log::info("Solicitud de acceso rechazada para {$request->email}");
 
             return response()->json([
                 'success' => true,

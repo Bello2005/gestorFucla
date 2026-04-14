@@ -139,7 +139,7 @@
                 <div class="dev-cred-row" data-email="test1@uniclaretiana.edu.co" data-password="password">
                     <div class="dev-cred-avatar dev-cred-avatar--admin">A</div>
                     <div class="dev-cred-info">
-                        <span class="dev-cred-name">Usuario 1 <span class="dev-role-pill dev-role-pill--admin">Admin</span></span>
+                        <span class="dev-cred-name">Usuario Prueba 1 <span class="dev-role-pill dev-role-pill--admin">Admin</span></span>
                         <span class="dev-cred-email">test1@uniclaretiana.edu.co</span>
                         <span class="dev-cred-pass"><code>password</code></span>
                     </div>
@@ -150,9 +150,9 @@
                 </div>
 
                 <div class="dev-cred-row" data-email="test2@uniclaretiana.edu.co" data-password="password">
-                    <div class="dev-cred-avatar dev-cred-avatar--user">2</div>
+                    <div class="dev-cred-avatar dev-cred-avatar--user">S</div>
                     <div class="dev-cred-info">
-                        <span class="dev-cred-name">Usuario 2 <span class="dev-role-pill">User</span></span>
+                        <span class="dev-cred-name">Usuario Prueba 2 <span class="dev-role-pill dev-role-pill--supervisor">Supervisor</span></span>
                         <span class="dev-cred-email">test2@uniclaretiana.edu.co</span>
                         <span class="dev-cred-pass"><code>password</code></span>
                     </div>
@@ -163,9 +163,9 @@
                 </div>
 
                 <div class="dev-cred-row" data-email="test3@uniclaretiana.edu.co" data-password="password">
-                    <div class="dev-cred-avatar dev-cred-avatar--user">3</div>
+                    <div class="dev-cred-avatar dev-cred-avatar--user">U</div>
                     <div class="dev-cred-info">
-                        <span class="dev-cred-name">Usuario 3 <span class="dev-role-pill">User</span></span>
+                        <span class="dev-cred-name">Usuario Prueba 3 <span class="dev-role-pill">Usuario</span></span>
                         <span class="dev-cred-email">test3@uniclaretiana.edu.co</span>
                         <span class="dev-cred-pass"><code>password</code></span>
                     </div>
@@ -387,6 +387,11 @@
             background: rgba(232, 185, 74, 0.15);
             color: #e8b94a;
             border: 1px solid rgba(232, 185, 74, 0.25);
+        }
+        .dev-role-pill--supervisor {
+            background: rgba(100, 180, 255, 0.15);
+            color: #64b4ff;
+            border: 1px solid rgba(100, 180, 255, 0.25);
         }
 
         /* Fill button */

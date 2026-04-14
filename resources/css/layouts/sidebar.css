@@ -48,8 +48,9 @@
     width: 44px;
     height: 44px;
     flex-shrink: 0;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(198, 146, 42, 0.25);
+    object-fit: cover;
 }
 
 .logo-text {

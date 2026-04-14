@@ -53,7 +53,13 @@ $app->singleton(
 */
 
 // --- BEGIN: ensure .env variables are available to getenv()/$_ENV/$_SERVER
-$__env_path = dirname(__DIR__).DIRECTORY_SEPARATOR.'.env';
+// Respect .env.testing when APP_ENV=testing (e.g. when running php artisan test)
+$__app_env = getenv('APP_ENV') ?: ($_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? 'local');
+$__env_file = ($__app_env === 'testing') ? '.env.testing' : '.env';
+$__env_path = dirname(__DIR__).DIRECTORY_SEPARATOR.$__env_file;
+if (!file_exists($__env_path)) {
+    $__env_path = dirname(__DIR__).DIRECTORY_SEPARATOR.'.env'; // fallback
+}
 if (file_exists($__env_path)) {
     $__env_lines = file($__env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($__env_lines as $__line) {
@@ -72,10 +78,16 @@ if (file_exists($__env_path)) {
             (substr($__value, 0, 1) === '\'' && substr($__value, -1) === '\'')) {
             $__value = substr($__value, 1, -1);
         }
-        // set in all places so Laravel and PHP (getenv) will see them
-        putenv($__name.'='.$__value);
-        $_ENV[$__name] = $__value;
-        $_SERVER[$__name] = $__value;
+        // Only set if not already defined (e.g. by phpunit.xml <env> elements)
+        if (getenv($__name) === false) {
+            putenv($__name.'='.$__value);
+        }
+        if (!array_key_exists($__name, $_ENV)) {
+            $_ENV[$__name] = $__value;
+        }
+        if (!array_key_exists($__name, $_SERVER)) {
+            $_SERVER[$__name] = $__value;
+        }
     }
 }
 // --- END: ensure .env variables are available to getenv()/$_ENV/$_SERVER

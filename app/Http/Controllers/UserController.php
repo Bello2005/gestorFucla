@@ -117,9 +117,8 @@ class UserController extends Controller
                 // Registrar historial
                 PasswordResetHistory::create([
                     'user_id' => $user->id,
-                    'reset_by' => auth()->id(),
-                    'reason' => $request->motivo,
-                    'method' => 'temporal'
+                    'type'    => 'temporal',
+                    'reason'  => $request->motivo,
                 ]);
 
                 // Si se solicita invalidar sesiones
@@ -155,9 +154,8 @@ class UserController extends Controller
                 // Registrar historial
                 PasswordResetHistory::create([
                     'user_id' => $user->id,
-                    'reset_by' => auth()->id(),
-                    'reason' => $request->motivo,
-                    'method' => 'email'
+                    'type'    => 'email',
+                    'reason'  => $request->motivo,
                 ]);
 
                 if ($request->invalidate_sessions == 1) {
