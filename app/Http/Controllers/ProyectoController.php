@@ -112,7 +112,8 @@ class ProyectoController extends Controller
         try {
             $data = array_merge(
                 $request->validated(),
-                $this->fileService->procesarArchivosStore($request->allFiles())
+                $this->fileService->procesarArchivosStore($request->allFiles()),
+                ['created_by' => auth()->id()]
             );
 
             $proyecto = Proyecto::create($data);

@@ -75,7 +75,7 @@
 
     {{-- ── KPI Strip ──────────────────────────────────────────────── --}}
     <div class="stat-cards-grid stat-cards-grid--show">
-        @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+        @if(auth()->check() && (auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty() || $proyecto->created_by === auth()->id()))
         <div class="stat-card stat-card--warning stat-card--row">
             <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
             <div class="stat-card-content">
@@ -158,7 +158,7 @@
         </div>
 
         {{-- Detalles Financieros --}}
-        @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+        @if(auth()->check() && (auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty() || $proyecto->created_by === auth()->id()))
         <div class="ds-card">
             <div class="ds-card-header">
                 <h2 class="ds-card-section-title">
@@ -349,7 +349,7 @@
                            target="_blank" class="ds-btn ds-btn--secondary ds-btn--sm">
                             <i class="fas fa-download"></i> Descargar PDF
                         </a>
-                        @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                        @if(auth()->check() && (auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty() || $proyecto->created_by === auth()->id()))
                             <form action="{{ route('proyectos.certificado.destroy', $proyecto) }}"
                                   method="post" onsubmit="return confirm('¿Eliminar certificado?');">
                                 @csrf
@@ -363,7 +363,7 @@
                     </div>
                 </div>
             @else
-                @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                @if(auth()->check() && (auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty() || $proyecto->created_by === auth()->id()))
                     <form action="{{ route('proyectos.certificado.store', $proyecto) }}"
                           method="post" enctype="multipart/form-data" class="proyecto-cert-form">
                         @csrf
@@ -406,7 +406,7 @@
             <a href="{{ route('proyectos.edit', $proyecto) }}" class="ds-btn ds-btn--primary">
                 <i class="fas fa-pen"></i> Editar Proyecto
             </a>
-            @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+            @if(auth()->check() && (auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty() || $proyecto->created_by === auth()->id()))
                 <form action="{{ route('proyectos.destroy', $proyecto) }}" method="POST"
                       onsubmit="return confirm('¿Eliminar este proyecto? Esta acción no se puede deshacer.')">
                     @csrf

@@ -23,6 +23,7 @@ class Proyecto extends Model
         'fecha_de_ejecucion',
         'plazo',
         'valor_total',
+        'created_by',
         'cargar_archivo_proyecto',
         'cargar_contrato_o_convenio',
         'cargar_presupuesto',
