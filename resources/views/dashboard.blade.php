@@ -62,7 +62,7 @@
     </div>
 
     {{-- Valor Total (amber) — solo visible para administradores --}}
-    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+    @if(auth()->check() && auth()->user()->hasRole('admin'))
     <div class="stat-card stat-card--warning">
         <div class="stat-card-icon">
             <i class="fas fa-dollar-sign"></i>
@@ -155,7 +155,7 @@
                             </div>
                             <div class="recent-project-meta">
                                 <x-estado-badge :estado="$proyecto->estado" />
-                                @if(auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty() || $proyecto->created_by === auth()->id())
+                                @if(auth()->user()->hasRole('admin') || $proyecto->created_by === auth()->id())
                                     @if(($proyecto->valor_total ?? 0) == 0)
                                         <span class="recent-project-value recent-project-value--zero"
                                               title="Sin presupuesto registrado">Sin presupuesto</span>

@@ -194,4 +194,44 @@ class ProyectosCrudTest extends TestCase
     {
         $this->actingAsUser()->get('/proyectos/99999')->assertStatus(404);
     }
+
+    // =========================================================
+    //  created_by — autoría del proyecto
+    // =========================================================
+
+    public function test_store_saves_created_by_as_authenticated_user(): void
+    {
+        Storage::fake('public');
+        $user = $this->createUser();
+
+        $this->actingAs($user)->post('/proyectos', array_merge(
+            $this->validData(),
+            $this->requiredFiles()
+        ));
+
+        $this->assertDatabaseHas('proyectos', [
+            'nombre_del_proyecto' => 'Proyecto de Prueba',
+            'created_by'          => $user->id,
+        ]);
+    }
+
+    public function test_store_different_users_save_their_own_created_by(): void
+    {
+        Storage::fake('public');
+        $userA = $this->createUser(['email' => 'usera@test.com']);
+        $userB = $this->createUser(['email' => 'userb@test.com']);
+
+        $this->actingAs($userA)->post('/proyectos', array_merge(
+            $this->validData(['nombre_del_proyecto' => 'Proyecto A']),
+            $this->requiredFiles()
+        ));
+
+        $this->actingAs($userB)->post('/proyectos', array_merge(
+            $this->validData(['nombre_del_proyecto' => 'Proyecto B']),
+            $this->requiredFiles()
+        ));
+
+        $this->assertDatabaseHas('proyectos', ['nombre_del_proyecto' => 'Proyecto A', 'created_by' => $userA->id]);
+        $this->assertDatabaseHas('proyectos', ['nombre_del_proyecto' => 'Proyecto B', 'created_by' => $userB->id]);
+    }
 }

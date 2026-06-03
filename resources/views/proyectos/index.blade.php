@@ -52,7 +52,7 @@
             <span class="stat-card-value">{{ $proyectos->where('estado', 'activo')->count() }}</span>
         </div>
     </div>
-    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+    @if(auth()->check() && auth()->user()->hasRole('admin'))
     <div class="stat-card stat-card--warning">
         <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
         <div class="stat-card-content">
@@ -123,11 +123,11 @@
                     <th>Alcance</th>
                     <th>Entidad</th>
                     <th>Tiempo</th>
-                    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                    @if(auth()->check() && auth()->user()->hasRole('admin'))
                         <th class="text-end">Valor Total</th>
                     @endif
                     <th>Estado</th>
-                    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                    @if(auth()->check() && auth()->user()->hasRole('admin'))
                         <th class="text-center">Acciones</th>
                     @endif
                 </tr>
@@ -161,7 +161,7 @@
                         <div class="time-cell-date">{{ $proyecto->fecha_de_ejecucion ? $proyecto->fecha_de_ejecucion->format('d M, Y') : 'N/A' }}</div>
                         <div class="time-cell-duration">{{ $proyecto->plazo ? $proyecto->plazo . ' meses' : 'N/A' }}</div>
                     </td>
-                    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                    @if(auth()->check() && auth()->user()->hasRole('admin'))
                     <td class="text-end">
                         <span class="value-cell">${{ number_format($proyecto->valor_total ?? 0, 0, ',', '.') }}</span>
                     </td>
@@ -174,7 +174,7 @@
                             @endif
                         </div>
                     </td>
-                    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                    @if(auth()->check() && auth()->user()->hasRole('admin'))
                     <td>
                         <div class="action-buttons">
                             <a href="{{ route('proyectos.show', $proyecto->id) }}" class="action-btn action-btn--view" title="Ver proyecto">
