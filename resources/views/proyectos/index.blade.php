@@ -100,6 +100,9 @@
                     </li>
                 </ul>
             </div>
+            <a href="{{ asset('plantillas/FGE05_Planilla_Seguimiento_Convocatorias.xlsx') }}" download class="ds-btn ds-btn--ghost" title="Descargar plantilla de seguimiento a convocatorias">
+                <i class="fas fa-file-excel"></i> Plantilla convocatorias
+            </a>
             <a href="{{ route('proyectos.create') }}" class="ds-btn ds-btn--primary">
                 <i class="fas fa-plus"></i> Nuevo Proyecto
             </a>
