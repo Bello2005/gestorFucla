@@ -75,6 +75,7 @@
 
     {{-- ── KPI Strip ──────────────────────────────────────────────── --}}
     <div class="stat-cards-grid stat-cards-grid--show">
+        @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
         <div class="stat-card stat-card--warning stat-card--row">
             <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
             <div class="stat-card-content">
@@ -84,6 +85,7 @@
                 </span>
             </div>
         </div>
+        @endif
         <div class="stat-card stat-card--success stat-card--row">
             <div class="stat-card-icon"><i class="fas fa-circle-check"></i></div>
             <div class="stat-card-content">
@@ -156,6 +158,7 @@
         </div>
 
         {{-- Detalles Financieros --}}
+        @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
         <div class="ds-card">
             <div class="ds-card-header">
                 <h2 class="ds-card-section-title">
@@ -205,6 +208,7 @@
                 </dl>
             </div>
         </div>
+        @endif
     </div>
 
     {{-- ── Archivos y Documentos ──────────────────────────────────── --}}

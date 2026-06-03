@@ -164,8 +164,8 @@
                         <div class="ds-file-upload">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span>Seleccionar archivo</span>
-                            <small>PDF, DOC, DOCX, XLS, XLSX (Max: 10MB)</small>
-                            <input type="file" id="archivo_proyecto" name="archivo_proyecto" accept=".pdf,.doc,.docx,.xlsx,.xls">
+                            <small>Propuesta, anteproyecto o documento principal (Max: 20MB)</small>
+                            <input type="file" id="archivo_proyecto" name="archivo_proyecto" accept=".pdf,.doc,.docx,.xlsx,.xls,.ppt,.pptx">
                         </div>
                         @error('archivo_proyecto')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
                         @if($proyecto->cargar_archivo_proyecto)
@@ -190,7 +190,7 @@
                         <div class="ds-file-upload">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span>Seleccionar archivo</span>
-                            <small>PDF, DOC, DOCX (Max: 10MB)</small>
+                            <small>Contrato, convenio o acuerdo suscrito (Max: 20MB)</small>
                             <input type="file" id="archivo_contrato" name="archivo_contrato" accept=".pdf,.doc,.docx">
                         </div>
                         @error('archivo_contrato')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
@@ -201,6 +201,58 @@
                                     <a href="{{ Storage::url($proyecto->cargar_contrato_o_convenio) }}" target="_blank">{{ basename($proyecto->cargar_contrato_o_convenio) }}</a>
                                 </div>
                                 <button type="button" class="action-btn action-btn--delete delete-file-btn" data-file-type="contrato" data-file-url="{{ route('proyectos.delete.contrato', $proyecto->id) }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Presupuesto -->
+                    <div class="doc-upload-card">
+                        <div class="doc-upload-header">
+                            <i class="fas fa-file-invoice-dollar" style="color: var(--warning);"></i>
+                            <span>Presupuesto</span>
+                        </div>
+                        <div class="ds-file-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Seleccionar archivo</span>
+                            <small>Presupuesto detallado o plan financiero (Max: 20MB)</small>
+                            <input type="file" id="archivo_presupuesto" name="archivo_presupuesto" accept=".pdf,.doc,.docx,.xlsx,.xls">
+                        </div>
+                        @error('archivo_presupuesto')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
+                        @if($proyecto->cargar_presupuesto)
+                            <div class="doc-current">
+                                <div class="doc-current-info">
+                                    <i class="fas fa-file-invoice-dollar" style="color: var(--warning);"></i>
+                                    <a href="{{ Storage::url($proyecto->cargar_presupuesto) }}" target="_blank">{{ basename($proyecto->cargar_presupuesto) }}</a>
+                                </div>
+                                <button type="button" class="action-btn action-btn--delete delete-file-btn" data-file-type="presupuesto" data-file-url="{{ route('proyectos.delete.presupuesto', $proyecto->id) }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Cronograma -->
+                    <div class="doc-upload-card">
+                        <div class="doc-upload-header">
+                            <i class="fas fa-calendar-alt" style="color: var(--info);"></i>
+                            <span>Cronograma</span>
+                        </div>
+                        <div class="ds-file-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Seleccionar archivo</span>
+                            <small>Cronograma de actividades o plan de trabajo (Max: 20MB)</small>
+                            <input type="file" id="archivo_cronograma" name="archivo_cronograma" accept=".pdf,.doc,.docx,.xlsx,.xls">
+                        </div>
+                        @error('archivo_cronograma')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
+                        @if($proyecto->cargar_cronograma)
+                            <div class="doc-current">
+                                <div class="doc-current-info">
+                                    <i class="fas fa-calendar-alt" style="color: var(--info);"></i>
+                                    <a href="{{ Storage::url($proyecto->cargar_cronograma) }}" target="_blank">{{ basename($proyecto->cargar_cronograma) }}</a>
+                                </div>
+                                <button type="button" class="action-btn action-btn--delete delete-file-btn" data-file-type="cronograma" data-file-url="{{ route('proyectos.delete.cronograma', $proyecto->id) }}">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>

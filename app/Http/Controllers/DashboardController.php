@@ -51,6 +51,14 @@ class DashboardController extends Controller
         // --- Recent projects (ordered by latest activity) ---
         $recientes = Proyecto::orderBy('updated_at', 'desc')->take(5)->get();
 
+        // --- Top entities by project count (reuses $proyectos, no extra query) ---
+        $topEntidades = $proyectos
+            ->groupBy('entidad_contratante')
+            ->map(fn ($g) => ['nombre' => $g->first()->entidad_contratante, 'total' => $g->count()])
+            ->sortByDesc('total')
+            ->take(5)
+            ->values();
+
         // --- Status summary for full-width row ---
         $resumenEstados = collect([
             ['label' => 'Activos',   'count' => $stats['activos'],   'variant' => 'success', 'icon' => 'fa-check-circle'],
@@ -63,7 +71,8 @@ class DashboardController extends Controller
             'statsAnterior',
             'recientes',
             'usuarioNombre',
-            'resumenEstados'
+            'resumenEstados',
+            'topEntidades'
         ));
     }
 }

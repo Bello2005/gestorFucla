@@ -22,8 +22,10 @@ class StoreProyectoRequest extends FormRequest
             'fecha_de_ejecucion'   => 'nullable|date',
             'plazo'                => 'nullable|numeric|min:0',
             'valor_total'          => 'nullable|numeric|min:0',
-            'archivo_proyecto'     => 'nullable|file|max:20480',
-            'archivo_contrato'     => 'nullable|file|max:20480',
+            'archivo_proyecto'     => 'required|file|max:20480',
+            'archivo_contrato'     => 'required|file|max:20480',
+            'archivo_presupuesto'  => 'nullable|file|max:20480',
+            'archivo_cronograma'   => 'nullable|file|max:20480',
             'evidencias'           => 'nullable|array',
             'evidencias.*'         => 'file|max:20480',
         ];
@@ -33,8 +35,10 @@ class StoreProyectoRequest extends FormRequest
     {
         return [
             'nombre_del_proyecto.required' => 'El nombre del proyecto es obligatorio.',
-            'plazo.numeric'                => 'El plazo debe ser un número.',
-            'valor_total.numeric'          => 'El valor total debe ser un número.',
+            'archivo_proyecto.required'   => 'El documento del proyecto es obligatorio.',
+            'archivo_contrato.required'   => 'El contrato o convenio es obligatorio.',
+            'plazo.numeric'               => 'El plazo debe ser un número.',
+            'valor_total.numeric'         => 'El valor total debe ser un número.',
         ];
     }
 }

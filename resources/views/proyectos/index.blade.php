@@ -52,6 +52,7 @@
             <span class="stat-card-value">{{ $proyectos->where('estado', 'activo')->count() }}</span>
         </div>
     </div>
+    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
     <div class="stat-card stat-card--warning">
         <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
         <div class="stat-card-content">
@@ -59,6 +60,7 @@
             <span class="stat-card-value">{{ formatCOP($proyectos->sum('valor_total')) }}</span>
         </div>
     </div>
+    @endif
     <div class="stat-card stat-card--info">
         <div class="stat-card-icon"><i class="fas fa-building"></i></div>
         <div class="stat-card-content">
@@ -121,7 +123,9 @@
                     <th>Alcance</th>
                     <th>Entidad</th>
                     <th>Tiempo</th>
-                    <th class="text-end">Valor Total</th>
+                    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                        <th class="text-end">Valor Total</th>
+                    @endif
                     <th>Estado</th>
                     @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
                         <th class="text-center">Acciones</th>
@@ -157,9 +161,11 @@
                         <div class="time-cell-date">{{ $proyecto->fecha_de_ejecucion ? $proyecto->fecha_de_ejecucion->format('d M, Y') : 'N/A' }}</div>
                         <div class="time-cell-duration">{{ $proyecto->plazo ? $proyecto->plazo . ' meses' : 'N/A' }}</div>
                     </td>
+                    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
                     <td class="text-end">
                         <span class="value-cell">${{ number_format($proyecto->valor_total ?? 0, 0, ',', '.') }}</span>
                     </td>
+                    @endif
                     <td>
                         <div class="d-inline-flex align-items-center gap-1">
                             <x-estado-badge :estado="$proyecto->estado" />

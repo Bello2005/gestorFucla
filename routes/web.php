@@ -81,6 +81,10 @@ Route::middleware('auth')->group(function () {
         ->name('proyectos.delete.archivo');
     Route::delete('/proyectos/{proyecto}/contrato', [ProyectoController::class, 'deleteContratoArchivo'])
         ->name('proyectos.delete.contrato');
+    Route::delete('/proyectos/{proyecto}/presupuesto', [ProyectoController::class, 'deletePresupuestoArchivo'])
+        ->name('proyectos.delete.presupuesto');
+    Route::delete('/proyectos/{proyecto}/cronograma', [ProyectoController::class, 'deleteCronogramaArchivo'])
+        ->name('proyectos.delete.cronograma');
     Route::delete('/proyectos/{proyecto}/evidencia/{index}', [ProyectoController::class, 'deleteEvidenciaArchivo'])
         ->name('proyectos.delete.evidencia');
 

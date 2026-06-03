@@ -19,8 +19,8 @@
                 <div class="auth-brand-logo" style="margin: 0 auto 20px;">
                     <i class="fas fa-key"></i>
                 </div>
-                <h2 class="auth-form-title">Recuperar Contrasena</h2>
-                <p class="auth-form-desc">Ingresa tu correo y te enviaremos instrucciones para recuperar tu contrasena.</p>
+                <h2 class="auth-form-title">Recuperar Contraseña</h2>
+                <p class="auth-form-desc">No te preocupes, puedes recuperar tu contraseña. Ingresa tu correo y te enviaremos las instrucciones.</p>
             </div>
 
             @if(session('success'))

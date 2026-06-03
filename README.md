@@ -1,301 +1,243 @@
-# Sistema de Gestión de Proyectos
+# SGP — Sistema de Gestión de Proyectos
+### Fundación Universitaria Claretiana · UNICLARETIANA
 
-Este es un sistema de gestión de proyectos desarrollado con Laravel, diseñado para administrar y dar seguimiento a proyectos de manera eficiente.
+Plataforma web para la gestión, seguimiento y control de proyectos de extensión y proyección social. Desarrollada en Laravel 12 con PostgreSQL, sistema de roles, auditoría completa, exportaciones y gestión documental organizada por tipo.
 
-## 📋 Requisitos Previos
+---
 
--   PHP >= 8.2
--   Composer
--   Node.js y NPM
--   MySQL >= 5.7 o MariaDB >= 10.3
--   Extensiones de PHP requeridas:
-    -   BCMath PHP Extension
-    -   Ctype PHP Extension
-    -   cURL PHP Extension
-    -   DOM PHP Extension
-    -   Fileinfo PHP Extension
-    -   JSON PHP Extension
-    -   Mbstring PHP Extension
-    -   OpenSSL PHP Extension
-    -   PCRE PHP Extension
-    -   PDO PHP Extension
-    -   Tokenizer PHP Extension
-    -   XML PHP Extension
+## Características principales
 
-## 🚀 Instalación Local
+| Módulo | Descripción |
+|--------|-------------|
+| **Proyectos** | CRUD completo con 5 tipos de documento independientes (proyecto, contrato, presupuesto, cronograma, evidencias) |
+| **Banco de Proyectos** | Repositorio de propuestas con flujo de estados, versioning de anexos e historial |
+| **Estadísticas** | Dashboard KPI + página analítica con métricas por estado, valor y tendencias |
+| **Exportaciones** | PDF, Excel y Word — por proyecto individual o todos los registros |
+| **Gestión de usuarios** | CRUD con roles (Admin / Usuario), reset de contraseña, contraseña temporal |
+| **Solicitudes de acceso** | Flujo de aprobación/rechazo para nuevos usuarios |
+| **Auditoría** | Log completo de operaciones INSERT/UPDATE/DELETE con exportación CSV |
+| **Catálogos** | Gestión de programas, tipos de proyecto y líneas de investigación |
+| **Seguridad por roles** | Información financiera visible solo para administradores |
 
-1. **Clonar el repositorio**
+---
+
+## Stack tecnológico
+
+- **Backend:** PHP 8.5 · Laravel 12
+- **Base de datos:** PostgreSQL (producción) · SQLite en memoria (tests)
+- **Frontend:** Blade · Tailwind CSS 4 · Bootstrap 5 · Vite
+- **Correo:** Resend (cola asíncrona)
+- **Tests:** PHPUnit 11 — 280 tests, 528 assertions
+
+---
+
+## Requisitos
+
+- PHP >= 8.2 con extensiones: BCMath, Ctype, cURL, DOM, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
+- Composer
+- Node.js + NPM
+- PostgreSQL 14+ (o MySQL 8+ compatible)
+
+---
+
+## Instalación local
 
 ```bash
+# 1. Clonar
 git clone https://github.com/Bello2005/gestor.git
 cd gestor
-```
 
-2. **Instalar dependencias de PHP**
-
-```bash
+# 2. Dependencias PHP y JS
 composer install
-```
-
-3. **Instalar dependencias de Node.js**
-
-```bash
 npm install
-```
 
-4. **Configurar el entorno**
-
-```bash
+# 3. Entorno
 cp .env.example .env
 php artisan key:generate
-```
 
-5. **Configurar la base de datos**
-    - Crear una base de datos en MySQL
-    - Actualizar las credenciales en el archivo `.env`:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nombre_de_tu_base_de_datos
-DB_USERNAME=tu_usuario
-DB_PASSWORD=tu_contraseña
-```
-
-6. **Ejecutar las migraciones y seeders**
-
-```bash
+# 4. Base de datos (.env ya configurado)
 php artisan migrate --seed
-```
 
-7. **Generar assets**
-
-```bash
+# 5. Assets
 npm run build
-```
 
-8. **Iniciar el servidor de desarrollo**
-
-```bash
+# 6. Servidor
 php artisan serve
 ```
 
-La aplicación estará disponible en `http://localhost:8000`
+Acceder en `http://localhost:8000`
 
-## 🌐 Despliegue en Producción
+### Variables de entorno mínimas
 
-1. **Preparación del Servidor**
+```env
+APP_NAME="SGP UNICLARETIANA"
+APP_ENV=local
+APP_URL=http://127.0.0.1:8000
 
-    - Configurar un servidor web (Apache/Nginx)
-    - Instalar PHP 8.2 o superior
-    - Instalar MySQL/MariaDB
-    - Instalar Composer
-    - Instalar Node.js y NPM
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=gestor
+DB_USERNAME=postgres
+DB_PASSWORD=secret
 
-2. **Configuración del Servidor Web**
+MAIL_MAILER=resend
+RESEND_KEY=re_xxxxxxxxxxxxxxxxx
+MAIL_FROM_ADDRESS=noreply@uniclaretiana.edu.co
+MAIL_FROM_NAME="SGP UNICLARETIANA"
+```
 
-    ### Apache
+---
 
-    Asegúrate de que el archivo `.htaccess` esté presente en la carpeta `public/` y que el módulo `mod_rewrite` esté habilitado:
+## Roles y permisos
 
-    ```apache
-    <VirtualHost *:80>
-        ServerName tudominio.com
-        DocumentRoot /ruta/a/tu/proyecto/public
+| Acción | Admin | Usuario |
+|--------|-------|---------|
+| Ver proyectos | ✅ | ✅ |
+| Crear / editar proyectos | ✅ | ✅ |
+| Ver valor económico | ✅ | ❌ |
+| Gestionar usuarios | ✅ | ❌ |
+| Aprobar solicitudes de acceso | ✅ | ❌ |
+| Ver auditoría | ✅ | ❌ |
+| Gestionar catálogos | ✅ | ❌ |
 
-        <Directory /ruta/a/tu/proyecto/public>
-            AllowOverride All
-            Require all granted
-        </Directory>
-    </VirtualHost>
-    ```
+---
 
-    ### Nginx
+## Gestión documental (por proyecto)
 
-    ```nginx
-    server {
-        listen 80;
-        server_name tudominio.com;
-        root /ruta/a/tu/proyecto/public;
+Cada proyecto acepta **5 tipos de documento independientes**, cada uno con su propio botón de carga y eliminación individual:
 
-        add_header X-Frame-Options "SAMEORIGIN";
-        add_header X-Content-Type-Options "nosniff";
+| Campo | Descripción | Requerido |
+|-------|-------------|-----------|
+| Archivo del Proyecto | Propuesta, anteproyecto o documento principal | ✅ |
+| Contrato o Convenio | Contrato, convenio o acuerdo suscrito | ✅ |
+| Presupuesto | Presupuesto detallado o plan financiero | Opcional |
+| Cronograma | Cronograma de actividades o plan de trabajo | Opcional |
+| Evidencias | Soportes, registros fotográficos u otros (múltiple) | Opcional |
 
-        index index.php;
+**Límite por archivo:** 20 MB. **Formatos:** PDF, DOC, DOCX, XLS, XLSX, PPT, JPG, PNG.
 
-        charset utf-8;
+---
 
-        location / {
-            try_files $uri $uri/ /index.php?$query_string;
-        }
-
-        location = /favicon.ico { access_log off; log_not_found off; }
-        location = /robots.txt  { access_log off; log_not_found off; }
-
-        error_page 404 /index.php;
-
-        location ~ \.php$ {
-            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
-            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-            include fastcgi_params;
-        }
-
-        location ~ /\.(?!well-known).* {
-            deny all;
-        }
-    }
-    ```
-
-3. **Despliegue del Código**
+## Tests
 
 ```bash
-# En el servidor de producción
-git clone https://github.com/Bello2005/gestor.git
-cd gestor
-composer install --no-dev
-npm install
-npm run build
+# Suite completa
+php artisan test
 
-cp .env.example .env
-# Editar .env con la configuración de producción
-php artisan key:generate
-php artisan storage:link
+# Por módulo
+php artisan test --filter Auth
+php artisan test --filter Proyecto
+php artisan test --filter BancoProyecto
+php artisan test --filter Admin
+```
+
+**Cobertura actual:** 280 tests · 528 assertions · 0 fallos
+
+Los tests usan SQLite en memoria (`.env.testing`) y no requieren conexión a la base de datos de producción.
+
+---
+
+## Despliegue en producción
+
+```bash
+# En el servidor
+git pull origin production
+composer install --no-dev --optimize-autoloader
+npm install && npm run build
+php artisan migrate --force
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-```
+php artisan storage:link
 
-4. **Configuración del Entorno de Producción**
-   Editar el archivo `.env`:
-
-```env
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://tudominio.com
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=tu_base_de_datos
-DB_USERNAME=tu_usuario
-DB_PASSWORD=tu_contraseña_segura
-
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-QUEUE_CONNECTION=database
-
-MAIL_MAILER=smtp
-MAIL_HOST=tu_servidor_smtp
-MAIL_PORT=587
-MAIL_USERNAME=tu_usuario
-MAIL_PASSWORD=tu_contraseña
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=no-reply@tudominio.com
-MAIL_FROM_NAME="${APP_NAME}"
-```
-
-5. **Permisos de Archivos**
-
-```bash
+# Permisos
 sudo chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 ```
 
-6. **Configuración de Tareas Programadas**
-   Agregar al crontab:
+### Nginx (configuración mínima)
+
+```nginx
+server {
+    listen 80;
+    server_name tudominio.com;
+    root /var/www/gestor/public;
+
+    index index.php;
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* { deny all; }
+}
+```
+
+---
+
+## Seeders disponibles
 
 ```bash
-* * * * * cd /ruta/a/tu/proyecto && php artisan schedule:run >> /dev/null 2>&1
+php artisan db:seed                    # completo (roles + usuarios + catálogos + demo)
+php artisan db:seed --class=RolesSeeder
+php artisan db:seed --class=UsersSeeder
+php artisan db:seed --class=CatalogoSeeder
+php artisan db:seed --class=DemoSeeder
 ```
 
-7. **Supervisor para Colas (opcional)**
+**Usuarios de demo:**
 
-```bash
-sudo apt-get install supervisor
+| Email | Contraseña | Rol |
+|-------|-----------|-----|
+| `admin@uniclaretiana.edu.co` | `password` | Administrador |
+| `usuario@uniclaretiana.edu.co` | `password` | Usuario |
+
+---
+
+## Estructura del proyecto
+
+```
+app/
+├── Http/
+│   ├── Controllers/     # 18 controladores (Auth, Proyectos, Banco, Admin)
+│   ├── Middleware/      # Auth, Admin, AuditAuthentication, VerifyProjectEdit
+│   └── Requests/        # StoreProyectoRequest, UpdateProyectoRequest
+├── Models/              # 12 modelos Eloquent con Auditable trait
+└── Services/
+    ├── ProyectoExportService.php   # PDF, Excel, Word
+    └── ProyectoFileService.php     # Gestión de 5 tipos de archivo
+
+resources/
+├── css/                 # Tailwind 4 + design tokens + componentes
+└── views/               # Blade templates (auth, proyectos, banco-proyectos, admin)
+
+tests/
+├── Feature/             # 25 archivos — flujos HTTP completos
+└── Unit/                # Helpers, modelos, middleware
 ```
 
-Crear archivo de configuración:
+---
 
-```ini
-[program:laravel-worker]
-process_name=%(program_name)s_%(process_num)02d
-command=php /ruta/a/tu/proyecto/artisan queue:work --sleep=3 --tries=3
-autostart=true
-autorestart=true
-user=www-data
-numprocs=8
-redirect_stderr=true
-stdout_logfile=/ruta/a/tu/proyecto/storage/logs/worker.log
-```
+## Changelog reciente
 
-8. **SSL/TLS**
-   Configurar certificado SSL usando Let's Encrypt:
+- **Gestión documental expandida** — 5 campos independientes por proyecto (proyecto, contrato, presupuesto, cronograma, evidencias)
+- **Privacidad financiera** — valor económico oculto para usuarios no administradores
+- **Archivos obligatorios** — proyecto y contrato requeridos al crear
+- **Suite de tests completa** — 280 tests cubriendo todos los flujos de usuario
+- **Fix auditoría** — exportación CSV serializa correctamente valores JSON
+- **Fix perfil** — verificación de email redirige a ruta válida
 
-```bash
-sudo certbot --nginx -d tudominio.com
-```
+---
 
-## 🔒 Seguridad
+## Licencia
 
--   Mantener todas las dependencias actualizadas
--   Configurar correctamente los permisos de archivos
--   Usar contraseñas fuertes
--   Mantener el modo debug desactivado en producción
--   Configurar correctamente el firewall
--   Realizar copias de seguridad regularmente
-
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
--   [Simple, fast routing engine](https://laravel.com/docs/routing).
--   [Powerful dependency injection container](https://laravel.com/docs/container).
--   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
--   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
--   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
--   [Robust background job processing](https://laravel.com/docs/queues).
--   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
--   **[Vehikl](https://vehikl.com)**
--   **[Tighten Co.](https://tighten.co)**
--   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
--   **[64 Robots](https://64robots.com)**
--   **[Curotec](https://www.curotec.com/services/technologies/laravel)**
--   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
--   **[Redberry](https://redberry.international/laravel-development)**
--   **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Desarrollado para **Fundación Universitaria Claretiana — UNICLARETIANA**.  
+Todos los derechos reservados.

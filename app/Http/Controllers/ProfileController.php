@@ -114,12 +114,12 @@ class ProfileController extends Controller
             ->first();
 
         if (!$verification) {
-            return redirect()->route('home')
+            return redirect()->route('dashboard')
                 ->with('error', 'El enlace de verificación es inválido o ya ha sido usado.');
         }
 
         if ($verification->isExpired()) {
-            return redirect()->route('home')
+            return redirect()->route('dashboard')
                 ->with('error', 'El enlace de verificación ha expirado.');
         }
 
@@ -127,7 +127,7 @@ class ProfileController extends Controller
         if (User::where('email', $verification->new_email)
             ->where('id', '!=', $verification->user_id)
             ->exists()) {
-            return redirect()->route('home')
+            return redirect()->route('dashboard')
                 ->with('error', 'Este correo electrónico ya está en uso por otro usuario.');
         }
 

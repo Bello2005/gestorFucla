@@ -45,9 +45,22 @@ class ProyectosCrudTest extends TestCase
     //  store
     // =========================================================
 
+    private function requiredFiles(): array
+    {
+        return [
+            'archivo_proyecto' => UploadedFile::fake()->create('proyecto.pdf', 100, 'application/pdf'),
+            'archivo_contrato' => UploadedFile::fake()->create('contrato.pdf', 100, 'application/pdf'),
+        ];
+    }
+
     public function test_user_can_create_proyecto(): void
     {
-        $response = $this->actingAsUser()->post('/proyectos', $this->validData());
+        Storage::fake('public');
+
+        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+            $this->validData(),
+            $this->requiredFiles()
+        ));
 
         $response->assertRedirect(route('proyectos.index'));
         $this->assertDatabaseHas('proyectos', ['nombre_del_proyecto' => 'Proyecto de Prueba']);
@@ -55,22 +68,46 @@ class ProyectosCrudTest extends TestCase
 
     public function test_store_requires_nombre(): void
     {
-        $data = $this->validData(['nombre_del_proyecto' => '']);
+        Storage::fake('public');
 
+        $data = array_merge($this->validData(['nombre_del_proyecto' => '']), $this->requiredFiles());
         $response = $this->actingAsUser()->post('/proyectos', $data);
 
         $response->assertSessionHasErrors('nombre_del_proyecto');
+    }
+
+    public function test_store_requires_archivo_proyecto(): void
+    {
+        Storage::fake('public');
+
+        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+            $this->validData(),
+            ['archivo_contrato' => UploadedFile::fake()->create('contrato.pdf', 100, 'application/pdf')]
+        ));
+
+        $response->assertSessionHasErrors('archivo_proyecto');
+    }
+
+    public function test_store_requires_archivo_contrato(): void
+    {
+        Storage::fake('public');
+
+        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+            $this->validData(),
+            ['archivo_proyecto' => UploadedFile::fake()->create('proyecto.pdf', 100, 'application/pdf')]
+        ));
+
+        $response->assertSessionHasErrors('archivo_contrato');
     }
 
     public function test_store_with_file_upload(): void
     {
         Storage::fake('public');
 
-        $file = UploadedFile::fake()->create('proyecto.pdf', 100, 'application/pdf');
-
         $response = $this->actingAsUser()->post('/proyectos', array_merge(
             $this->validData(),
-            ['archivo_proyecto' => $file]
+            $this->requiredFiles(),
+            ['evidencias' => [UploadedFile::fake()->create('ev.jpg', 50, 'image/jpeg')]]
         ));
 
         $response->assertRedirect(route('proyectos.index'));

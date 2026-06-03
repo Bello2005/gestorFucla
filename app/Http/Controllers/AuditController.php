@@ -111,8 +111,8 @@ class AuditController extends Controller
                     $audit->user_name,
                     $audit->ip_address,
                     $audit->user_agent,
-                    $audit->old_values,
-                    $audit->new_values,
+                    is_array($audit->old_values) ? json_encode($audit->old_values) : ($audit->old_values ?? ''),
+                    is_array($audit->new_values) ? json_encode($audit->new_values) : ($audit->new_values ?? ''),
                     $audit->created_at
                 ]);
             }

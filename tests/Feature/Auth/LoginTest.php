@@ -88,4 +88,42 @@ class LoginTest extends TestCase
         $response = $this->post('/login', []);
         $response->assertSessionHasErrors(['email', 'password']);
     }
+
+    public function test_login_trims_whitespace_from_email(): void
+    {
+        $this->createUser(['email' => 'trim@test.com']);
+
+        // TrimStrings middleware strips spaces before validation
+        $response = $this->post('/login', [
+            'email'    => '  trim@test.com  ',
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $this->assertAuthenticated();
+    }
+
+    public function test_login_fails_with_empty_password(): void
+    {
+        $this->createUser(['email' => 'empty@test.com']);
+
+        $response = $this->post('/login', [
+            'email'    => 'empty@test.com',
+            'password' => '',
+        ]);
+
+        $response->assertSessionHasErrors('password');
+        $this->assertGuest();
+    }
+
+    public function test_login_fails_with_invalid_email_format(): void
+    {
+        $response = $this->post('/login', [
+            'email'    => 'not-an-email',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
 }

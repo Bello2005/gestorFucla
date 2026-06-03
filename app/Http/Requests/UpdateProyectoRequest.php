@@ -25,6 +25,8 @@ class UpdateProyectoRequest extends FormRequest
             'estado'               => 'nullable|string|in:activo,inactivo,cerrado',
             'archivo_proyecto'     => 'nullable|file|max:20480',
             'archivo_contrato'     => 'nullable|file|max:20480',
+            'archivo_presupuesto'  => 'nullable|file|max:20480',
+            'archivo_cronograma'   => 'nullable|file|max:20480',
             'evidencias'           => 'nullable|array',
             'evidencias.*'         => 'file|max:20480',
         ];

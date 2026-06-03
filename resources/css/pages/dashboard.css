@@ -182,9 +182,103 @@
 @media (min-width: 820px) {
     .dashboard-grid {
         grid-template-columns: 1.5fr 1fr;
+        align-items: start;
         gap: 24px;
         margin-top: 24px;
     }
+}
+
+/* === Right column stacks cards vertically with gap === */
+.dashboard-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (min-width: 820px) {
+    .dashboard-right-col {
+        gap: 24px;
+    }
+}
+
+/* === Top Entidades list === */
+.top-entidades-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.top-entidad-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.top-entidad-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.top-entidad-rank {
+    font-size: 10px;
+    font-weight: var(--font-bold);
+    color: var(--slate-400);
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.top-entidades-list li:first-child .top-entidad-rank {
+    color: var(--uni-gold);
+}
+
+.top-entidad-nombre {
+    font-size: var(--text-sm);
+    color: var(--slate-700);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.top-entidad-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    width: 100px;
+}
+
+.top-entidad-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--slate-100);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.top-entidad-bar-fill {
+    height: 100%;
+    background: var(--uni-gold);
+    border-radius: var(--radius-full);
+    transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 10%;
+}
+
+.top-entidad-count {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--slate-500);
+    font-family: var(--font-mono);
+    width: 16px;
+    text-align: right;
+    flex-shrink: 0;
 }
 
 /* === Recent Projects list === */

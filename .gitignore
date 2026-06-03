@@ -25,7 +25,10 @@ Thumbs.db
 
 # Laravel / PHP
 /public/css/
-/public/js/
+/public/js/*
+!/public/js/datatables
+/public/js/datatables/*
+!/public/js/datatables/es-ES.json
 # /public/images/ — tracked intentionally (brand assets & login bg)
 /storage/
 /bootstrap/cache/
@@ -44,3 +47,9 @@ php.ini
 *.vscode/
 yarn-error.log
 npm-debug.log
+package-lock.json.bak
+.phpunit.result.cache
+.env.testing.local
+# Editor artifacts
+.cursor/
+*.code-workspace

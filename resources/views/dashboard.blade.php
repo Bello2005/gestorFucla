@@ -61,7 +61,8 @@
         </div>
     </div>
 
-    {{-- Valor Total (amber) --}}
+    {{-- Valor Total (amber) — solo visible para administradores --}}
+    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
     <div class="stat-card stat-card--warning">
         <div class="stat-card-icon">
             <i class="fas fa-dollar-sign"></i>
@@ -79,6 +80,7 @@
             </span>
         </div>
     </div>
+    @endif
 
     {{-- Entidades (slate) --}}
     <div class="stat-card stat-card--slate">
@@ -153,14 +155,16 @@
                             </div>
                             <div class="recent-project-meta">
                                 <x-estado-badge :estado="$proyecto->estado" />
-                                @if(($proyecto->valor_total ?? 0) == 0)
-                                    <span class="recent-project-value recent-project-value--zero"
-                                          title="Sin presupuesto registrado">Sin presupuesto</span>
-                                @else
-                                    <span
-                                        class="recent-project-value"
-                                        title="{{ formatCOPFull($proyecto->valor_total) }}"
-                                    >{{ formatCOP($proyecto->valor_total) }}</span>
+                                @if(auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
+                                    @if(($proyecto->valor_total ?? 0) == 0)
+                                        <span class="recent-project-value recent-project-value--zero"
+                                              title="Sin presupuesto registrado">Sin presupuesto</span>
+                                    @else
+                                        <span
+                                            class="recent-project-value"
+                                            title="{{ formatCOPFull($proyecto->valor_total) }}"
+                                        >{{ formatCOP($proyecto->valor_total) }}</span>
+                                    @endif
                                 @endif
                                 <span class="recent-project-time">
                                     {{ $proyecto->updated_at?->diffForHumans() ?? $proyecto->created_at?->diffForHumans() }}
@@ -183,48 +187,80 @@
         </div>
     </div>
 
-    {{-- Quick Actions — contextual, no duplicates ────────────────── --}}
-    <div class="ds-card">
-        <div class="ds-card-header">
-            <h3 class="ds-card-title">Acciones Rápidas</h3>
-        </div>
-        <div class="ds-card-body">
-            <div class="quick-actions">
+    {{-- Right column: Quick Actions + Top Entidades ────────────────── --}}
+    <div class="dashboard-right-col">
 
-                {{-- Export Excel --}}
-                <a href="{{ route('proyectos.export.excel') }}" class="quick-action-item">
-                    <div class="quick-action-icon quick-action-icon--success">
-                        <i class="fas fa-file-excel"></i>
-                    </div>
-                    <span class="quick-action-label">Exportar Excel</span>
-                </a>
-
-                {{-- Statistics --}}
-                <a href="{{ route('estadistica') }}" class="quick-action-item">
-                    <div class="quick-action-icon quick-action-icon--info">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <span class="quick-action-label">Estadísticas</span>
-                </a>
-
-                {{-- TODO: add route 'proyectos.vencimiento' when feature is built --}}
-                <a href="{{ route('proyectos.index') }}" class="quick-action-item">
-                    <div class="quick-action-icon quick-action-icon--warning">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <span class="quick-action-label">Por vencer</span>
-                </a>
-
-                {{-- TODO: add route 'admin.usuarios' or use 'users.index' --}}
-                <a href="{{ route('users.index') }}" class="quick-action-item">
-                    <div class="quick-action-icon quick-action-icon--slate">
-                        <i class="fas fa-users-cog"></i>
-                    </div>
-                    <span class="quick-action-label quick-action-label--nowrap">Gestionar usuarios</span>
-                </a>
-
+        {{-- Quick Actions --}}
+        <div class="ds-card">
+            <div class="ds-card-header">
+                <h3 class="ds-card-title">Acciones Rápidas</h3>
+            </div>
+            <div class="ds-card-body">
+                <div class="quick-actions">
+                    <a href="{{ route('proyectos.export.excel') }}" class="quick-action-item">
+                        <div class="quick-action-icon quick-action-icon--success">
+                            <i class="fas fa-file-excel"></i>
+                        </div>
+                        <span class="quick-action-label">Exportar Excel</span>
+                    </a>
+                    <a href="{{ route('estadistica') }}" class="quick-action-item">
+                        <div class="quick-action-icon quick-action-icon--info">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <span class="quick-action-label">Estadísticas</span>
+                    </a>
+                    <a href="{{ route('proyectos.index') }}" class="quick-action-item">
+                        <div class="quick-action-icon quick-action-icon--warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <span class="quick-action-label">Por vencer</span>
+                    </a>
+                    <a href="{{ route('users.index') }}" class="quick-action-item">
+                        <div class="quick-action-icon quick-action-icon--slate">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <span class="quick-action-label quick-action-label--nowrap">Gestionar usuarios</span>
+                    </a>
+                </div>
             </div>
         </div>
+
+        {{-- Top Entidades --}}
+        @if($topEntidades->isNotEmpty())
+        <div class="ds-card">
+            <div class="ds-card-header">
+                <h3 class="ds-card-title">Top Entidades</h3>
+                <span class="ds-card-subtitle" style="font-size: var(--text-xs); color: var(--slate-400);">
+                    por proyectos
+                </span>
+            </div>
+            <div class="ds-card-body" style="padding-top: 0;">
+                @php $maxTotal = $topEntidades->max('total'); @endphp
+                <ul class="top-entidades-list">
+                    @foreach($topEntidades as $i => $ent)
+                    <li class="top-entidad-item">
+                        <div class="top-entidad-info">
+                            <span class="top-entidad-rank">{{ $i + 1 }}</span>
+                            <span class="top-entidad-nombre" title="{{ $ent['nombre'] }}">
+                                {{ \Illuminate\Support\Str::limit($ent['nombre'], 30) }}
+                            </span>
+                        </div>
+                        <div class="top-entidad-bar-wrap">
+                            <div class="top-entidad-bar">
+                                <div
+                                    class="top-entidad-bar-fill"
+                                    style="width: {{ $maxTotal > 0 ? round($ent['total'] / $maxTotal * 100) : 0 }}%"
+                                ></div>
+                            </div>
+                            <span class="top-entidad-count">{{ $ent['total'] }}</span>
+                        </div>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+        @endif
+
     </div>
 
 </div>

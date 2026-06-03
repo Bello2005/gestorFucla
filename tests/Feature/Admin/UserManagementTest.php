@@ -203,4 +203,80 @@ class UserManagementTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    // ── Validación de store ───────────────────────────────────────────────
+
+    public function test_store_rejects_short_password(): void
+    {
+        $roleId = Role::where('slug', 'user')->first()->id;
+
+        $response = $this->actingAsAdmin()->postJson('/users', [
+            'name'     => 'Weak Pass',
+            'email'    => 'weak@test.com',
+            'password' => '123',
+            'roles'    => [$roleId],
+        ]);
+
+        $response->assertStatus(422)->assertJsonValidationErrors('password');
+    }
+
+    public function test_store_rejects_invalid_email_format(): void
+    {
+        $roleId = Role::where('slug', 'user')->first()->id;
+
+        $response = $this->actingAsAdmin()->postJson('/users', [
+            'name'     => 'Bad Email',
+            'email'    => 'not-an-email',
+            'password' => 'SecurePass1!',
+            'roles'    => [$roleId],
+        ]);
+
+        $response->assertStatus(422)->assertJsonValidationErrors('email');
+    }
+
+    public function test_store_rejects_empty_roles_array(): void
+    {
+        $response = $this->actingAsAdmin()->postJson('/users', [
+            'name'     => 'No Role',
+            'email'    => 'norole@test.com',
+            'password' => 'SecurePass1!',
+            'roles'    => [],
+        ]);
+
+        $response->assertStatus(422)->assertJsonValidationErrors('roles');
+    }
+
+    // ── Validación de update ──────────────────────────────────────────────
+
+    public function test_update_can_change_password(): void
+    {
+        $target = $this->createUser(['email' => 'pwdchange@test.com']);
+        $roleId = Role::where('slug', 'user')->first()->id;
+
+        $this->actingAsAdmin()->putJson("/users/{$target->id}", [
+            'name'     => $target->name,
+            'email'    => $target->email,
+            'password' => 'BrandNewPass1!',
+            'roles'    => [$roleId],
+        ]);
+
+        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('BrandNewPass1!', $target->fresh()->password));
+    }
+
+    // ── Reset password flags ───────────────────────────────────────────────
+
+    public function test_reset_with_force_change_sets_temporary_flag(): void
+    {
+        $target = $this->createUser(['email' => 'forcechange@test.com']);
+
+        $response = $this->actingAsAdmin()->postJson("/users/{$target->id}/reset-password", [
+            'reset_type'          => 'temporal',
+            'motivo'              => 'Cambio forzado por política',
+            'force_change'        => '1',
+            'invalidate_sessions' => '0',
+        ]);
+
+        $response->assertOk();
+        $this->assertTrue((bool) $target->fresh()->is_temporary_password);
+    }
 }

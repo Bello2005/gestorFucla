@@ -25,6 +25,8 @@ class Proyecto extends Model
         'valor_total',
         'cargar_archivo_proyecto',
         'cargar_contrato_o_convenio',
+        'cargar_presupuesto',
+        'cargar_cronograma',
         'cargar_evidencias',
         'estado',
         'certificado_cumplimiento',

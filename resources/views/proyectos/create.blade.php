@@ -106,32 +106,56 @@
         <div class="ds-card-body">
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
                 <div class="form-group">
-                    <label class="ds-label" for="archivo_proyecto">Archivo del Proyecto</label>
+                    <label class="ds-label" for="archivo_proyecto">
+                        Archivo del Proyecto <span style="color:var(--danger);">*</span>
+                    </label>
                     <div class="ds-file-upload">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <span>Seleccionar archivo</span>
-                        <small>PDF, DOC, DOCX, XLS, XLSX (Max: 10MB)</small>
-                        <input type="file" id="archivo_proyecto" name="archivo_proyecto" accept=".pdf,.doc,.docx,.xlsx,.xls">
+                        <small>Propuesta, anteproyecto o documento principal (Max: 20MB)</small>
+                        <input type="file" id="archivo_proyecto" name="archivo_proyecto" accept=".pdf,.doc,.docx,.xlsx,.xls,.ppt,.pptx">
                     </div>
                     @error('archivo_proyecto')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
                 </div>
                 <div class="form-group">
-                    <label class="ds-label" for="archivo_contrato">Contrato o Convenio</label>
+                    <label class="ds-label" for="archivo_contrato">
+                        Contrato o Convenio <span style="color:var(--danger);">*</span>
+                    </label>
                     <div class="ds-file-upload">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <span>Seleccionar archivo</span>
-                        <small>PDF, DOC, DOCX (Max: 10MB)</small>
+                        <small>Contrato, convenio o acuerdo suscrito (Max: 20MB)</small>
                         <input type="file" id="archivo_contrato" name="archivo_contrato" accept=".pdf,.doc,.docx">
                     </div>
                     @error('archivo_contrato')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
                 </div>
                 <div class="form-group">
-                    <label class="ds-label" for="evidencias">Evidencias</label>
+                    <label class="ds-label" for="archivo_presupuesto">Presupuesto</label>
+                    <div class="ds-file-upload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Seleccionar archivo</span>
+                        <small>Presupuesto detallado o plan financiero (Max: 20MB)</small>
+                        <input type="file" id="archivo_presupuesto" name="archivo_presupuesto" accept=".pdf,.doc,.docx,.xlsx,.xls">
+                    </div>
+                    @error('archivo_presupuesto')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
+                </div>
+                <div class="form-group">
+                    <label class="ds-label" for="archivo_cronograma">Cronograma</label>
+                    <div class="ds-file-upload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Seleccionar archivo</span>
+                        <small>Cronograma de actividades o plan de trabajo (Max: 20MB)</small>
+                        <input type="file" id="archivo_cronograma" name="archivo_cronograma" accept=".pdf,.doc,.docx,.xlsx,.xls">
+                    </div>
+                    @error('archivo_cronograma')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
+                </div>
+                <div class="form-group">
+                    <label class="ds-label" for="evidencias">Evidencias y Soportes</label>
                     <div class="ds-file-upload">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <span>Seleccionar archivos</span>
-                        <small>PDF, DOC, JPG, PNG (Max: 10MB c/u)</small>
-                        <input type="file" id="evidencias" name="evidencias[]" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                        <small>Soportes, registros fotográficos u otros documentos (Max: 20MB c/u)</small>
+                        <input type="file" id="evidencias" name="evidencias[]" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls">
                     </div>
                     @error('evidencias.*')<p class="ds-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>@enderror
                 </div>

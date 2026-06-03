@@ -30,6 +30,16 @@ class ProyectoFileService
                 ->store('proyectos/contratos', 'public');
         }
 
+        if (isset($files['archivo_presupuesto'])) {
+            $data['cargar_presupuesto'] = $files['archivo_presupuesto']
+                ->store('proyectos/presupuestos', 'public');
+        }
+
+        if (isset($files['archivo_cronograma'])) {
+            $data['cargar_cronograma'] = $files['archivo_cronograma']
+                ->store('proyectos/cronogramas', 'public');
+        }
+
         if (isset($files['evidencias'])) {
             $data['cargar_evidencias'] = $this->almacenarEvidencias($files['evidencias']);
         }
@@ -60,6 +70,18 @@ class ProyectoFileService
             $this->eliminarSiExiste($proyecto->cargar_contrato_o_convenio);
             $data['cargar_contrato_o_convenio'] = $files['archivo_contrato']
                 ->store('proyectos/contratos', 'public');
+        }
+
+        if (isset($files['archivo_presupuesto'])) {
+            $this->eliminarSiExiste($proyecto->cargar_presupuesto);
+            $data['cargar_presupuesto'] = $files['archivo_presupuesto']
+                ->store('proyectos/presupuestos', 'public');
+        }
+
+        if (isset($files['archivo_cronograma'])) {
+            $this->eliminarSiExiste($proyecto->cargar_cronograma);
+            $data['cargar_cronograma'] = $files['archivo_cronograma']
+                ->store('proyectos/cronogramas', 'public');
         }
 
         if (isset($files['evidencias'])) {
@@ -118,6 +140,32 @@ class ProyectoFileService
         return true;
     }
 
+    public function eliminarPresupuesto(Proyecto $proyecto): bool
+    {
+        if (! $proyecto->cargar_presupuesto) {
+            return false;
+        }
+
+        $this->eliminarSiExiste($proyecto->cargar_presupuesto);
+        $proyecto->cargar_presupuesto = null;
+        $proyecto->save();
+
+        return true;
+    }
+
+    public function eliminarCronograma(Proyecto $proyecto): bool
+    {
+        if (! $proyecto->cargar_cronograma) {
+            return false;
+        }
+
+        $this->eliminarSiExiste($proyecto->cargar_cronograma);
+        $proyecto->cargar_cronograma = null;
+        $proyecto->save();
+
+        return true;
+    }
+
     /**
      * Elimina todos los archivos asociados a un proyecto (usado en destroy).
      */
@@ -125,6 +173,8 @@ class ProyectoFileService
     {
         $this->eliminarSiExiste($proyecto->cargar_archivo_proyecto);
         $this->eliminarSiExiste($proyecto->cargar_contrato_o_convenio);
+        $this->eliminarSiExiste($proyecto->cargar_presupuesto);
+        $this->eliminarSiExiste($proyecto->cargar_cronograma);
 
         foreach ($proyecto->cargar_evidencias ?? [] as $evidencia) {
             $this->eliminarSiExiste($evidencia);

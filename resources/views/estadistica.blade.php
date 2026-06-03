@@ -50,6 +50,7 @@
             <span class="stat-card-trend">{{ $porcentajeActivos }}% del total</span>
         </div>
     </div>
+    @if(auth()->check() && auth()->user()->roles->pluck('id')->intersect([1,2])->isNotEmpty())
     <div class="stat-card stat-card--warning">
         <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
         <div class="stat-card-content">
@@ -60,6 +61,7 @@
             </span>
         </div>
     </div>
+    @endif
     <div class="stat-card stat-card--info">
         <div class="stat-card-icon"><i class="fas fa-chart-bar"></i></div>
         <div class="stat-card-content">

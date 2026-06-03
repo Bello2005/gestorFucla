@@ -248,6 +248,36 @@ class ProyectoController extends Controller
         }
     }
 
+    public function deletePresupuestoArchivo(Proyecto $proyecto)
+    {
+        try {
+            $eliminado = $this->fileService->eliminarPresupuesto($proyecto);
+
+            if (! $eliminado) {
+                return response()->json(['success' => false, 'message' => 'No se encontró el archivo de presupuesto para eliminar.'], 404);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Archivo de presupuesto eliminado exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el archivo: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteCronogramaArchivo(Proyecto $proyecto)
+    {
+        try {
+            $eliminado = $this->fileService->eliminarCronograma($proyecto);
+
+            if (! $eliminado) {
+                return response()->json(['success' => false, 'message' => 'No se encontró el archivo de cronograma para eliminar.'], 404);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Archivo de cronograma eliminado exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el archivo: ' . $e->getMessage()], 500);
+        }
+    }
+
     public function deleteProyectoArchivo(Proyecto $proyecto)
     {
         try {
