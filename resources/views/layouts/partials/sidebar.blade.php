@@ -18,54 +18,76 @@
                     <span class="nav-text">Dashboard</span>
                 </a>
             </li>
+            @if(isset($sidebarUser) && $sidebarUser->canView('proyectos'))
             <li>
                 <a href="{{ route('proyectos.index') }}" class="nav-link {{ request()->routeIs('proyectos.*') ? 'active' : '' }}" @if(request()->routeIs('proyectos.*')) aria-current="page" @endif>
                     <x-uc.icon name="briefcase" />
                     <span class="nav-text">Proyectos Activos</span>
                 </a>
             </li>
+            @endif
+            @if(isset($sidebarUser) && $sidebarUser->canView('banco'))
             <li>
                 <a href="{{ route('banco.index') }}" class="nav-link {{ request()->routeIs('banco.*') ? 'active' : '' }}" @if(request()->routeIs('banco.*')) aria-current="page" @endif>
                     <x-uc.icon name="library-big" />
                     <span class="nav-text">Banco de Proyectos</span>
                 </a>
             </li>
+            @endif
+            @if(isset($sidebarUser) && $sidebarUser->canView('estadistica'))
             <li>
                 <a href="{{ route('estadistica') }}" class="nav-link {{ request()->routeIs('estadistica') ? 'active' : '' }}" @if(request()->routeIs('estadistica')) aria-current="page" @endif>
                     <x-uc.icon name="line-chart" />
                     <span class="nav-text">Estadísticas</span>
                 </a>
             </li>
+            @endif
         </ul>
 
-        @if(auth()->check() && auth()->user()->hasRole('admin'))
+        @if(isset($sidebarUser))
+        @php
+            $showAdminSection = $sidebarUser->canView('auditoria')
+                             || $sidebarUser->canView('usuarios')
+                             || $sidebarUser->canView('solicitudes')
+                             || $sidebarUser->canView('catalogos');
+        @endphp
+        @if($showAdminSection)
             <h2 class="nav-section-title" style="margin-top: 12px;">Administración</h2>
             <ul class="nav-items">
+                @if($sidebarUser->canView('auditoria'))
                 <li>
                     <a href="{{ route('audit.index') }}" class="nav-link {{ request()->routeIs('audit.*') ? 'active' : '' }}">
                         <x-uc.icon name="shield" />
                         <span class="nav-text">Auditoría</span>
                     </a>
                 </li>
+                @endif
+                @if($sidebarUser->canView('usuarios'))
                 <li>
                     <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
                         <x-uc.icon name="users" />
                         <span class="nav-text">Usuarios</span>
                     </a>
                 </li>
+                @endif
+                @if($sidebarUser->canView('solicitudes'))
                 <li>
                     <a href="{{ route('access-requests.index') }}" class="nav-link {{ request()->routeIs('access-requests.*') ? 'active' : '' }}">
                         <x-uc.icon name="inbox" />
                         <span class="nav-text">Solicitudes</span>
                     </a>
                 </li>
+                @endif
+                @if($sidebarUser->canView('catalogos'))
                 <li>
                     <a href="{{ route('catalogos.index') }}" class="nav-link {{ request()->routeIs('catalogos.*') ? 'active' : '' }}">
                         <x-uc.icon name="book-marked" />
                         <span class="nav-text">Catálogos</span>
                     </a>
                 </li>
+                @endif
             </ul>
+        @endif
         @endif
     </div>
 

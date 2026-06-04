@@ -48,23 +48,21 @@ class UserManagementTest extends TestCase
 
     public function test_admin_can_create_user(): void
     {
-        $roleId = Role::where('slug', 'user')->first()->id;
-
         $response = $this->actingAsAdmin()->postJson('/users', [
             'name'     => 'New User',
             'email'    => 'new@test.com',
             'password' => 'Secret12345',
-            'roles'    => [$roleId],
         ]);
 
         $response->assertOk()->assertJsonFragment(['message' => 'Usuario creado exitosamente']);
         $this->assertDatabaseHas('users', ['email' => 'new@test.com']);
     }
 
-    public function test_store_requires_name_email_password_roles(): void
+    public function test_store_requires_name_email_password(): void
     {
         $response = $this->actingAsAdmin()->postJson('/users', []);
-        $response->assertStatus(422)->assertJsonValidationErrors(['name', 'email', 'password', 'roles']);
+        // 'roles' ya no es requerido — el rol siempre es 'user' al crear
+        $response->assertStatus(422)->assertJsonValidationErrors(['name', 'email', 'password']);
     }
 
     public function test_store_rejects_duplicate_email(): void
@@ -82,19 +80,18 @@ class UserManagementTest extends TestCase
         $response->assertStatus(422)->assertJsonValidationErrors('email');
     }
 
-    public function test_store_assigns_roles(): void
+    public function test_store_assigns_user_role_by_default(): void
     {
-        $roleId = Role::where('slug', 'admin')->first()->id;
-
         $this->actingAsAdmin()->postJson('/users', [
             'name'     => 'Role Test',
             'email'    => 'roletest@test.com',
             'password' => 'Secret12345',
-            'roles'    => [$roleId],
         ]);
 
         $user = User::where('email', 'roletest@test.com')->first();
-        $this->assertTrue($user->hasRole('admin'));
+        // Los usuarios nuevos siempre se crean con rol 'user'
+        $this->assertTrue($user->hasRole('user'));
+        $this->assertFalse($user->isAdmin());
     }
 
     // =========================================================
@@ -104,12 +101,11 @@ class UserManagementTest extends TestCase
     public function test_admin_can_update_user(): void
     {
         $target = $this->createUser(['email' => 'upd@test.com']);
-        $roleId = Role::where('slug', 'user')->first()->id;
 
         $response = $this->actingAsAdmin()->putJson("/users/{$target->id}", [
-            'name'  => 'Updated Name',
-            'email' => 'upd@test.com',
-            'roles' => [$roleId],
+            'name'     => 'Updated Name',
+            'email'    => 'upd@test.com',
+            'is_admin' => false,
         ]);
 
         $response->assertOk()->assertJsonFragment(['message' => 'Usuario actualizado exitosamente']);
@@ -234,16 +230,18 @@ class UserManagementTest extends TestCase
         $response->assertStatus(422)->assertJsonValidationErrors('email');
     }
 
-    public function test_store_rejects_empty_roles_array(): void
+    public function test_update_admin_can_promote_user_to_admin(): void
     {
-        $response = $this->actingAsAdmin()->postJson('/users', [
-            'name'     => 'No Role',
-            'email'    => 'norole@test.com',
-            'password' => 'SecurePass1!',
-            'roles'    => [],
+        $target = $this->createUser(['email' => 'promote@test.com']);
+
+        $response = $this->actingAsAdmin()->putJson("/users/{$target->id}", [
+            'name'     => $target->name,
+            'email'    => $target->email,
+            'is_admin' => true,
         ]);
 
-        $response->assertStatus(422)->assertJsonValidationErrors('roles');
+        $response->assertOk();
+        $this->assertTrue($target->fresh()->isAdmin());
     }
 
     // ── Validación de update ──────────────────────────────────────────────
@@ -251,13 +249,12 @@ class UserManagementTest extends TestCase
     public function test_update_can_change_password(): void
     {
         $target = $this->createUser(['email' => 'pwdchange@test.com']);
-        $roleId = Role::where('slug', 'user')->first()->id;
 
         $this->actingAsAdmin()->putJson("/users/{$target->id}", [
             'name'     => $target->name,
             'email'    => $target->email,
             'password' => 'BrandNewPass1!',
-            'roles'    => [$roleId],
+            'is_admin' => false,
         ]);
 
         $this->assertTrue(\Illuminate\Support\Facades\Hash::check('BrandNewPass1!', $target->fresh()->password));

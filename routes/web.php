@@ -5,12 +5,14 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\BancoProyectoAnexoController;
 use App\Http\Controllers\BancoProyectoController;
 use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\ConvocatoriaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\EstadisticaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\UserController;
@@ -65,88 +67,146 @@ Route::middleware('auth')->group(function () {
     // Perfil de usuario
     Route::post('/perfil/actualizar', [ProfileController::class, 'update'])->name('profile.update');
 
-    // CRUD de proyectos
-    Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
-    Route::get('/proyectos/create', [ProyectoController::class, 'create'])->name('proyectos.create');
-    Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
-    Route::get('/proyectos/{proyecto}', [ProyectoController::class, 'show'])->name('proyectos.show');
-    Route::get('/proyectos/{proyecto}/edit', [ProyectoController::class, 'edit'])->name('proyectos.edit');
+    // CRUD de proyectos — lectura (requiere permiso de vista)
+    Route::get('/proyectos', [ProyectoController::class, 'index'])
+        ->middleware('module.permission:proyectos,view')->name('proyectos.index');
+    Route::get('/proyectos-export/excel', [ProyectoController::class, 'exportExcel'])
+        ->middleware('module.permission:proyectos,view')->name('proyectos.export.excel');
+    Route::get('/proyectos-export/pdf', [ProyectoController::class, 'exportPdf'])
+        ->middleware('module.permission:proyectos,view')->name('proyectos.export.pdf');
+    Route::get('/proyectos-export/word', [ProyectoController::class, 'exportWord'])
+        ->middleware('module.permission:proyectos,view')->name('proyectos.export.word');
+
+    // CRUD de proyectos — escritura (requiere permiso de edición)
+    // IMPORTANTE: las rutas estáticas deben ir ANTES de las paramétricas /{proyecto}
+    Route::get('/proyectos/create', [ProyectoController::class, 'create'])
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.create');
+    Route::post('/proyectos', [ProyectoController::class, 'store'])
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.store');
+    // Rutas paramétricas — van DESPUÉS de las estáticas para evitar que {proyecto} capture "create"
+    Route::get('/proyectos/{proyecto}', [ProyectoController::class, 'show'])
+        ->middleware('module.permission:proyectos,view')->name('proyectos.show');
+    Route::get('/proyectos/{proyecto}/edit', [ProyectoController::class, 'edit'])
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.edit');
     Route::match(['PUT', 'PATCH'], '/proyectos/{proyecto}', [ProyectoController::class, 'update'])
-        ->middleware(VerifyProjectEditRequest::class)
+        ->middleware(['module.permission:proyectos,edit', VerifyProjectEditRequest::class])
         ->name('proyectos.update');
-    Route::delete('/proyectos/{proyecto}', [ProyectoController::class, 'destroy'])->name('proyectos.destroy');
-
-    // Gestión de archivos de proyectos
+    Route::delete('/proyectos/{proyecto}', [ProyectoController::class, 'destroy'])
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.destroy');
+    Route::post('/proyectos/{proyecto}/certificado', [ProyectoController::class, 'subirCertificado'])
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.certificado.store');
+    Route::delete('/proyectos/{proyecto}/certificado', [ProyectoController::class, 'eliminarCertificado'])
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.certificado.destroy');
     Route::delete('/proyectos/{proyecto}/archivo', [ProyectoController::class, 'deleteProyectoArchivo'])
-        ->name('proyectos.delete.archivo');
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.delete.archivo');
     Route::delete('/proyectos/{proyecto}/contrato', [ProyectoController::class, 'deleteContratoArchivo'])
-        ->name('proyectos.delete.contrato');
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.delete.contrato');
     Route::delete('/proyectos/{proyecto}/presupuesto', [ProyectoController::class, 'deletePresupuestoArchivo'])
-        ->name('proyectos.delete.presupuesto');
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.delete.presupuesto');
     Route::delete('/proyectos/{proyecto}/cronograma', [ProyectoController::class, 'deleteCronogramaArchivo'])
-        ->name('proyectos.delete.cronograma');
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.delete.cronograma');
     Route::delete('/proyectos/{proyecto}/evidencia/{index}', [ProyectoController::class, 'deleteEvidenciaArchivo'])
-        ->name('proyectos.delete.evidencia');
+        ->middleware('module.permission:proyectos,edit')->name('proyectos.delete.evidencia');
 
-    // Exportación de proyectos
-    Route::get('/proyectos-export/excel', [ProyectoController::class, 'exportExcel'])->name('proyectos.export.excel');
-    Route::get('/proyectos-export/pdf', [ProyectoController::class, 'exportPdf'])->name('proyectos.export.pdf');
-    Route::get('/proyectos-export/word', [ProyectoController::class, 'exportWord'])->name('proyectos.export.word');
+    // Convocatorias (FGE-05) — accesible para quienes pueden ver proyectos
+    Route::get('/convocatorias', [ConvocatoriaController::class, 'index'])
+        ->middleware('module.permission:proyectos,view')->name('convocatorias.index');
+    Route::post('/convocatorias', [ConvocatoriaController::class, 'store'])
+        ->middleware('module.permission:proyectos,edit')->name('convocatorias.store');
+    Route::get('/convocatorias/{convocatoria}', [ConvocatoriaController::class, 'show'])
+        ->middleware('module.permission:proyectos,view')->name('convocatorias.show');
+    Route::put('/convocatorias/{convocatoria}', [ConvocatoriaController::class, 'update'])
+        ->middleware('module.permission:proyectos,edit')->name('convocatorias.update');
+    Route::delete('/convocatorias/{convocatoria}', [ConvocatoriaController::class, 'destroy'])
+        ->middleware('module.permission:proyectos,edit')->name('convocatorias.destroy');
 
     // Estadísticas
-    Route::get('/estadistica', [EstadisticaController::class, 'index'])->name('estadistica');
+    Route::get('/estadistica', [EstadisticaController::class, 'index'])
+        ->middleware('module.permission:estadistica,view')->name('estadistica');
 
-    // Certificado de cumplimiento (proyectos extensión)
-    Route::post('/proyectos/{proyecto}/certificado', [ProyectoController::class, 'subirCertificado'])->name('proyectos.certificado.store');
-    Route::delete('/proyectos/{proyecto}/certificado', [ProyectoController::class, 'eliminarCertificado'])->name('proyectos.certificado.destroy');
-
-    // Banco de Proyectos
+    // Banco de Proyectos — estáticas ANTES de paramétricas
     Route::prefix('banco-proyectos')->name('banco.')->group(function () {
-        Route::get('/export/excel', [BancoProyectoController::class, 'exportExcel'])->name('export.excel');
-        Route::get('/export/pdf', [BancoProyectoController::class, 'exportPdf'])->name('export.pdf');
-
-        Route::get('/', [BancoProyectoController::class, 'index'])->name('index');
-        Route::get('/create', [BancoProyectoController::class, 'create'])->name('create');
-        Route::post('/', [BancoProyectoController::class, 'store'])->name('store');
-        Route::get('/{bancoProyecto}/historial', [BancoProyectoController::class, 'historialJson'])->name('historial');
-        Route::get('/{bancoProyecto}/edit', [BancoProyectoController::class, 'edit'])->name('edit');
-
-        Route::post('/{bancoProyecto}/certificado', [BancoProyectoController::class, 'subirCertificado'])->name('certificado.store');
-        Route::delete('/{bancoProyecto}/certificado', [BancoProyectoController::class, 'eliminarCertificado'])->name('certificado.destroy');
-
-        Route::post('/{bancoProyecto}/anexos', [BancoProyectoAnexoController::class, 'store'])->name('anexos.store');
-        Route::delete('/{bancoProyecto}/anexos/{anexo}', [BancoProyectoAnexoController::class, 'destroy'])->name('anexos.destroy');
-        Route::get('/{bancoProyecto}/anexos/{anexo}/download', [BancoProyectoAnexoController::class, 'download'])->name('anexos.download');
-        Route::post('/{bancoProyecto}/anexos/{anexo}/restore', [BancoProyectoAnexoController::class, 'restore'])->name('anexos.restore');
-
-        Route::get('/{bancoProyecto}', [BancoProyectoController::class, 'show'])->name('show');
-        Route::put('/{bancoProyecto}', [BancoProyectoController::class, 'update'])->name('update');
-        Route::delete('/{bancoProyecto}', [BancoProyectoController::class, 'destroy'])->name('destroy');
-        Route::patch('/{bancoProyecto}/estado', [BancoProyectoController::class, 'cambiarEstado'])->name('estado');
+        Route::get('/export/excel', [BancoProyectoController::class, 'exportExcel'])
+            ->middleware('module.permission:banco,view')->name('export.excel');
+        Route::get('/export/pdf', [BancoProyectoController::class, 'exportPdf'])
+            ->middleware('module.permission:banco,view')->name('export.pdf');
+        Route::get('/', [BancoProyectoController::class, 'index'])
+            ->middleware('module.permission:banco,view')->name('index');
+        // create debe ir ANTES de /{bancoProyecto} para evitar que "create" sea capturado como ID
+        Route::get('/create', [BancoProyectoController::class, 'create'])
+            ->middleware('module.permission:banco,edit')->name('create');
+        Route::post('/', [BancoProyectoController::class, 'store'])
+            ->middleware('module.permission:banco,edit')->name('store');
+        // Paramétricas después de las estáticas
+        Route::get('/{bancoProyecto}/historial', [BancoProyectoController::class, 'historialJson'])
+            ->middleware('module.permission:banco,view')->name('historial');
+        Route::get('/{bancoProyecto}/anexos/{anexo}/download', [BancoProyectoAnexoController::class, 'download'])
+            ->middleware('module.permission:banco,view')->name('anexos.download');
+        Route::get('/{bancoProyecto}', [BancoProyectoController::class, 'show'])
+            ->middleware('module.permission:banco,view')->name('show');
+        Route::get('/{bancoProyecto}/edit', [BancoProyectoController::class, 'edit'])
+            ->middleware('module.permission:banco,edit')->name('edit');
+        Route::post('/{bancoProyecto}/certificado', [BancoProyectoController::class, 'subirCertificado'])
+            ->middleware('module.permission:banco,edit')->name('certificado.store');
+        Route::delete('/{bancoProyecto}/certificado', [BancoProyectoController::class, 'eliminarCertificado'])
+            ->middleware('module.permission:banco,edit')->name('certificado.destroy');
+        Route::post('/{bancoProyecto}/anexos', [BancoProyectoAnexoController::class, 'store'])
+            ->middleware('module.permission:banco,edit')->name('anexos.store');
+        Route::delete('/{bancoProyecto}/anexos/{anexo}', [BancoProyectoAnexoController::class, 'destroy'])
+            ->middleware('module.permission:banco,edit')->name('anexos.destroy');
+        Route::post('/{bancoProyecto}/anexos/{anexo}/restore', [BancoProyectoAnexoController::class, 'restore'])
+            ->middleware('module.permission:banco,edit')->name('anexos.restore');
+        Route::put('/{bancoProyecto}', [BancoProyectoController::class, 'update'])
+            ->middleware('module.permission:banco,edit')->name('update');
+        Route::delete('/{bancoProyecto}', [BancoProyectoController::class, 'destroy'])
+            ->middleware('module.permission:banco,edit')->name('destroy');
+        Route::patch('/{bancoProyecto}/estado', [BancoProyectoController::class, 'cambiarEstado'])
+            ->middleware('module.permission:banco,edit')->name('estado');
     });
 });
 
-// Rutas protegidas por autenticación y rol de administrador
-Route::middleware(['auth', 'admin'])->group(function () {
-    // Gestión de usuarios
-    Route::resource('users', UserController::class);
-    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
-
-    // Rutas de Auditoría
+// Rutas de lectura para módulos de administración — accesibles por permiso de matriz
+Route::middleware('auth')->group(function () {
+    // Auditoría — solo lectura
     Route::prefix('auditoria')->name('audit.')->group(function () {
-        Route::get('/', [AuditController::class, 'index'])->name('index');
-        Route::get('/exportar', [AuditController::class, 'export'])->name('export');
-        Route::get('/{audit}', [AuditController::class, 'show'])->name('show');
+        Route::get('/', [AuditController::class, 'index'])
+            ->middleware('module.permission:auditoria,view')->name('index');
+        Route::get('/exportar', [AuditController::class, 'export'])
+            ->middleware('module.permission:auditoria,view')->name('export');
+        Route::get('/{audit}', [AuditController::class, 'show'])
+            ->middleware('module.permission:auditoria,view')->name('show');
     });
 
-    // Solicitudes de acceso (admin)
-    Route::get('/access-requests', [AccessRequestController::class, 'index'])->name('access-requests.index');
+    // Solicitudes — ver lista
+    Route::get('/access-requests', [AccessRequestController::class, 'index'])
+        ->middleware('module.permission:solicitudes,view')->name('access-requests.index');
+
+    // Catálogos — ver
+    Route::get('/catalogos', [CatalogoController::class, 'index'])
+        ->middleware('module.permission:catalogos,view')->name('catalogos.index');
+
+    // Usuarios — ver lista y detalle (para mostrar en modal)
+    Route::get('/users', [UserController::class, 'index'])
+        ->middleware('module.permission:usuarios,view')->name('users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])
+        ->middleware('module.permission:usuarios,view')->name('users.show');
+});
+
+// Rutas de escritura de administración — solo admin
+Route::middleware(['auth', 'admin'])->group(function () {
+    // Gestión de usuarios (operaciones destructivas)
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+    Route::post('/users/{user}/permissions', [PermissionController::class, 'update'])->name('users.permissions.update');
+
+    // Solicitudes — aprobar/rechazar
     Route::put('/access-requests/{request}/approve', [AccessRequestController::class, 'approve'])->name('access-requests.approve');
     Route::put('/access-requests/{request}/reject', [AccessRequestController::class, 'reject'])->name('access-requests.reject');
 
-    // Catálogos (admin)
+    // Catálogos — escritura
     Route::prefix('catalogos')->name('catalogos.')->group(function () {
-        Route::get('/', [CatalogoController::class, 'index'])->name('index');
         Route::post('/programas', [CatalogoController::class, 'storePrograma'])->name('programas.store');
         Route::put('/programas/{programa}', [CatalogoController::class, 'updatePrograma'])->name('programas.update');
         Route::delete('/programas/{programa}', [CatalogoController::class, 'destroyPrograma'])->name('programas.destroy');

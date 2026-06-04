@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use App\Providers\CustomUserProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -39,5 +40,14 @@ class AppServiceProvider extends ServiceProvider
 
         // Habilitar Blade Stack
         \Illuminate\Support\Facades\Blade::withoutDoubleEncoding();
+
+        // Compartir datos del usuario (con permisos) al sidebar
+        View::composer('layouts.partials.sidebar', function ($view) {
+            if (Auth::check()) {
+                $user = Auth::user();
+                $user->loadMissing('permissions.module');
+                $view->with('sidebarUser', $user);
+            }
+        });
     }
 }

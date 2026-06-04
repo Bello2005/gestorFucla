@@ -22,7 +22,7 @@ class ProyectoExportTest extends TestCase
                 ->andReturn(response()->streamDownload(fn () => print('data'), 'export.xlsx'));
         });
 
-        $this->actingAsUser()->get(route('proyectos.export.excel'))->assertOk();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.excel'))->assertOk();
     }
 
     // ── exportPdf ─────────────────────────────────────────────────────────
@@ -40,7 +40,7 @@ class ProyectoExportTest extends TestCase
                 ->andReturn(response()->make('pdf-content', 200, ['Content-Type' => 'application/pdf']));
         });
 
-        $this->actingAsUser()->get(route('proyectos.export.pdf'))->assertOk();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.pdf'))->assertOk();
     }
 
     // ── exportWord ────────────────────────────────────────────────────────
@@ -58,7 +58,7 @@ class ProyectoExportTest extends TestCase
                 ->andReturn(response()->streamDownload(fn () => print('data'), 'export.docx'));
         });
 
-        $this->actingAsUser()->get(route('proyectos.export.word'))->assertOk();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.word'))->assertOk();
     }
 
     // ── Export por ID (single project) ────────────────────────────────────
@@ -73,7 +73,7 @@ class ProyectoExportTest extends TestCase
                 ->andReturn(response()->streamDownload(fn () => print('xlsx'), 'proyecto.xlsx'));
         });
 
-        $this->actingAsUser()->get(route('proyectos.export.excel', ['id' => $proyecto->id]))->assertOk();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.excel', ['id' => $proyecto->id]))->assertOk();
     }
 
     public function test_export_pdf_single_project_by_id(): void
@@ -86,7 +86,7 @@ class ProyectoExportTest extends TestCase
                 ->andReturn(response()->make('pdf', 200, ['Content-Type' => 'application/pdf']));
         });
 
-        $this->actingAsUser()->get(route('proyectos.export.pdf', ['id' => $proyecto->id]))->assertOk();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.pdf', ['id' => $proyecto->id]))->assertOk();
     }
 
     public function test_export_word_single_project_by_id(): void
@@ -99,22 +99,22 @@ class ProyectoExportTest extends TestCase
                 ->andReturn(response()->streamDownload(fn () => print('docx'), 'proyecto.docx'));
         });
 
-        $this->actingAsUser()->get(route('proyectos.export.word', ['id' => $proyecto->id]))->assertOk();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.word', ['id' => $proyecto->id]))->assertOk();
     }
 
     public function test_export_excel_redirects_with_error_for_nonexistent_project(): void
     {
         // Controller catches ModelNotFoundException and redirects with error
-        $this->actingAsUser()->get(route('proyectos.export.excel', ['id' => 99999]))->assertRedirect();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.excel', ['id' => 99999]))->assertRedirect();
     }
 
     public function test_export_pdf_redirects_with_error_for_nonexistent_project(): void
     {
-        $this->actingAsUser()->get(route('proyectos.export.pdf', ['id' => 99999]))->assertRedirect();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.pdf', ['id' => 99999]))->assertRedirect();
     }
 
     public function test_export_word_redirects_with_error_for_nonexistent_project(): void
     {
-        $this->actingAsUser()->get(route('proyectos.export.word', ['id' => 99999]))->assertRedirect();
+        $this->actingAsUserWith(['proyectos'])->get(route('proyectos.export.word', ['id' => 99999]))->assertRedirect();
     }
 }

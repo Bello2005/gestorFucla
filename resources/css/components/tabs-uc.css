@@ -34,3 +34,42 @@
 .tab-panel--hidden {
     display: none;
 }
+
+/* Override sidebar .nav-link globals when Bootstrap .nav-tabs is used inside modals/cards */
+.modal .nav-tabs,
+.ds-card .nav-tabs {
+    border-bottom: 1px solid var(--neutral-200);
+    margin-bottom: 0;
+}
+
+.modal .nav-tabs .nav-link,
+.ds-card .nav-tabs .nav-link {
+    color: var(--slate-500);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px 6px 0 0;
+    padding: 8px 16px;
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+}
+
+.modal .nav-tabs .nav-link:hover,
+.ds-card .nav-tabs .nav-link:hover {
+    color: var(--uni-navy);
+    background: var(--neutral-50);
+    border-color: transparent;
+}
+
+.modal .nav-tabs .nav-link.active,
+.ds-card .nav-tabs .nav-link.active {
+    color: var(--uni-navy);
+    background: #fff;
+    border-color: var(--neutral-200) var(--neutral-200) #fff;
+    font-weight: var(--font-semibold);
+}
+
+.modal .nav-tabs .nav-link.active::before,
+.ds-card .nav-tabs .nav-link.active::before {
+    display: none;
+}

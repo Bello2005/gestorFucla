@@ -21,43 +21,36 @@ class RolesSeeder extends Seeder
 
         DB::table('roles')->insert([
             [
-                'name' => 'admin',
-                'slug' => 'admin',
-                'description' => 'Administrador del sistema',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name'        => 'Administrador',
+                'slug'        => 'admin',
+                'description' => 'Acceso total al sistema',
+                'created_at'  => now(),
+                'updated_at'  => now(),
             ],
             [
-                'name' => 'supervisor',
-                'slug' => 'supervisor',
-                'description' => 'Supervisor de proyectos',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'usuario',
-                'slug' => 'usuario',
-                'description' => 'Usuario regular',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name'        => 'Usuario',
+                'slug'        => 'user',
+                'description' => 'Acceso configurado por matriz de permisos',
+                'created_at'  => now(),
+                'updated_at'  => now(),
             ],
         ]);
+
+        $ridAdmin = DB::table('roles')->where('slug', 'admin')->value('id');
+        $ridUser  = DB::table('roles')->where('slug', 'user')->value('id');
 
         $uid1 = DB::table('users')->where('email', 'test1@uniclaretiana.edu.co')->value('id');
         $uid2 = DB::table('users')->where('email', 'test2@uniclaretiana.edu.co')->value('id');
         $uid3 = DB::table('users')->where('email', 'test3@uniclaretiana.edu.co')->value('id');
-        $ridAdmin = DB::table('roles')->where('name', 'admin')->value('id');
-        $ridSuper = DB::table('roles')->where('name', 'supervisor')->value('id');
-        $ridUser = DB::table('roles')->where('name', 'usuario')->value('id');
 
         if ($uid1 && $ridAdmin) {
             DB::table('role_user')->insert([
                 ['user_id' => $uid1, 'role_id' => $ridAdmin, 'created_at' => now(), 'updated_at' => now()],
             ]);
         }
-        if ($uid2 && $ridSuper) {
+        if ($uid2 && $ridUser) {
             DB::table('role_user')->insert([
-                ['user_id' => $uid2, 'role_id' => $ridSuper, 'created_at' => now(), 'updated_at' => now()],
+                ['user_id' => $uid2, 'role_id' => $ridUser, 'created_at' => now(), 'updated_at' => now()],
             ]);
         }
         if ($uid3 && $ridUser) {

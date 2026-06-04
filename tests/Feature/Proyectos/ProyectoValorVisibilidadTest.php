@@ -33,7 +33,7 @@ class ProyectoValorVisibilidadTest extends TestCase
 
     public function test_creador_ve_valor_en_su_propio_proyecto(): void
     {
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create([
             'nombre_del_proyecto' => 'Mi Proyecto',
             'valor_total'         => 3_500_000,
@@ -48,8 +48,8 @@ class ProyectoValorVisibilidadTest extends TestCase
 
     public function test_usuario_no_ve_valor_en_proyecto_ajeno(): void
     {
-        $owner = $this->createUser(['email' => 'owner@test.com']);
-        $otro  = $this->createUser(['email' => 'otro@test.com']);
+        $owner = $this->createUserWithPermissions(['proyectos'], false, ['email' => 'owner@test.com']);
+        $otro  = $this->createUserWithPermissions(['proyectos'], false, ['email' => 'otro@test.com']);
 
         $proyecto = Proyecto::create([
             'nombre_del_proyecto' => 'Proyecto de Owner',
@@ -65,8 +65,8 @@ class ProyectoValorVisibilidadTest extends TestCase
 
     public function test_usuario_sin_proyecto_no_ve_ningún_valor(): void
     {
-        $owner = $this->createUser(['email' => 'owner@test.com']);
-        $otro  = $this->createUser(['email' => 'otro@test.com']);
+        $owner = $this->createUserWithPermissions(['proyectos'], false, ['email' => 'owner@test.com']);
+        $otro  = $this->createUserWithPermissions(['proyectos'], false, ['email' => 'otro@test.com']);
 
         Proyecto::create([
             'nombre_del_proyecto' => 'P1',
@@ -89,7 +89,7 @@ class ProyectoValorVisibilidadTest extends TestCase
 
     public function test_proyecto_sin_created_by_oculta_valor_a_usuarios_regulares(): void
     {
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['proyectos'], false);
         $proyecto = Proyecto::create([
             'nombre_del_proyecto' => 'Legado',
             'valor_total'         => 4_200_000,
@@ -121,7 +121,7 @@ class ProyectoValorVisibilidadTest extends TestCase
 
     public function test_creador_ve_su_valor_en_dashboard(): void
     {
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['proyectos']);
         Proyecto::create([
             'nombre_del_proyecto' => 'Mi P',
             'valor_total'         => 2_000_000,
@@ -163,7 +163,8 @@ class ProyectoValorVisibilidadTest extends TestCase
 
     public function test_usuario_regular_no_ve_columna_valor_en_index(): void
     {
-        $this->actingAsUser()
+        // Usuario con solo vista (sin edición) no debe ver columna financiera
+        $this->actingAsUserWith(['proyectos'], false)
             ->get(route('proyectos.index'))
             ->assertOk()
             ->assertDontSeeText('Valor Total');

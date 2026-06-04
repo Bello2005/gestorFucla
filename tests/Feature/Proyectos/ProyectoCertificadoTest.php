@@ -21,7 +21,7 @@ class ProyectoCertificadoTest extends TestCase
 
     public function test_subir_certificado_requires_file(): void
     {
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Test']);
 
         $response = $this->actingAs($user)->post(
@@ -35,7 +35,7 @@ class ProyectoCertificadoTest extends TestCase
     public function test_subir_certificado_rejects_non_pdf(): void
     {
         Storage::fake('public');
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Test']);
 
         $response = $this->actingAs($user)->post(
@@ -49,7 +49,7 @@ class ProyectoCertificadoTest extends TestCase
     public function test_subir_certificado_stores_pdf_and_updates_proyecto(): void
     {
         Storage::fake('public');
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Test']);
 
         $response = $this->actingAs($user)->post(
@@ -83,7 +83,7 @@ class ProyectoCertificadoTest extends TestCase
     public function test_eliminar_certificado_clears_all_certificate_fields(): void
     {
         Storage::fake('public');
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create([
             'nombre_del_proyecto'       => 'Test',
             'certificado_cumplimiento'  => 'proyectos/certificados/1/cert.pdf',

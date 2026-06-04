@@ -21,7 +21,7 @@ class ProyectoFileDeleteTest extends TestCase
     public function test_delete_evidencia_returns_404_when_index_missing(): void
     {
         Storage::fake('public');
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Test']);
 
         $response = $this->actingAs($user)->deleteJson(
@@ -34,7 +34,7 @@ class ProyectoFileDeleteTest extends TestCase
     public function test_delete_evidencia_removes_from_array(): void
     {
         Storage::fake('public');
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create([
             'nombre_del_proyecto' => 'Test',
             'cargar_evidencias'   => ['path/a.jpg', 'path/b.jpg'],
@@ -59,7 +59,7 @@ class ProyectoFileDeleteTest extends TestCase
 
     public function test_delete_contrato_returns_404_when_no_file(): void
     {
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Test']);
 
         $response = $this->actingAs($user)->deleteJson(
@@ -72,7 +72,7 @@ class ProyectoFileDeleteTest extends TestCase
     public function test_delete_contrato_clears_field(): void
     {
         Storage::fake('public');
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create([
             'nombre_del_proyecto'     => 'Test',
             'cargar_contrato_o_convenio' => 'path/contrato.pdf',
@@ -97,7 +97,7 @@ class ProyectoFileDeleteTest extends TestCase
 
     public function test_delete_proyecto_archivo_returns_404_when_no_file(): void
     {
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Test']);
 
         $response = $this->actingAs($user)->deleteJson(
@@ -110,7 +110,7 @@ class ProyectoFileDeleteTest extends TestCase
     public function test_delete_proyecto_archivo_clears_field(): void
     {
         Storage::fake('public');
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create([
             'nombre_del_proyecto'    => 'Test',
             'cargar_archivo_proyecto' => 'path/proyecto.pdf',

@@ -23,7 +23,7 @@ class BancoProyectoCertificadoTest extends TestCase
     public function test_subir_certificado_requires_file(): void
     {
         $bp   = $this->makeBanco();
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['banco']);
 
         $response = $this->actingAs($user)->post(route('banco.certificado.store', $bp), []);
 
@@ -34,7 +34,7 @@ class BancoProyectoCertificadoTest extends TestCase
     {
         Storage::fake('public');
         $bp   = $this->makeBanco();
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['banco']);
 
         $response = $this->actingAs($user)->post(
             route('banco.certificado.store', $bp),
@@ -48,7 +48,7 @@ class BancoProyectoCertificadoTest extends TestCase
     {
         Storage::fake('public');
         $bp   = $this->makeBanco();
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['banco']);
 
         $response = $this->actingAs($user)->post(
             route('banco.certificado.store', $bp),
@@ -72,7 +72,7 @@ class BancoProyectoCertificadoTest extends TestCase
     public function test_eliminar_certificado_clears_fields(): void
     {
         Storage::fake('public');
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['banco']);
         $bp   = BancoProyecto::create([
             'titulo'                    => 'With Cert',
             'estado'                    => 'aprobado',
@@ -97,7 +97,7 @@ class BancoProyectoCertificadoTest extends TestCase
 
     public function test_historial_json_returns_json_array(): void
     {
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['banco']);
         $bp   = BancoProyecto::create([
             'titulo'     => 'BP Historial',
             'estado'     => 'borrador',
@@ -112,7 +112,7 @@ class BancoProyectoCertificadoTest extends TestCase
 
     public function test_guest_cannot_access_historial(): void
     {
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['banco']);
         $bp   = BancoProyecto::create([
             'titulo'     => 'BP',
             'estado'     => 'borrador',
@@ -126,7 +126,7 @@ class BancoProyectoCertificadoTest extends TestCase
 
     public function test_export_excel_redirects_with_info_message(): void
     {
-        $response = $this->actingAsUser()->get(route('banco.export.excel'));
+        $response = $this->actingAsUserWith(['banco'])->get(route('banco.export.excel'));
 
         $response->assertRedirect(route('banco.index'));
         $response->assertSessionHas('info');
@@ -134,7 +134,7 @@ class BancoProyectoCertificadoTest extends TestCase
 
     public function test_export_pdf_redirects_with_info_message(): void
     {
-        $response = $this->actingAsUser()->get(route('banco.export.pdf'));
+        $response = $this->actingAsUserWith(['banco'])->get(route('banco.export.pdf'));
 
         $response->assertRedirect(route('banco.index'));
         $response->assertSessionHas('info');

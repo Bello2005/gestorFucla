@@ -49,7 +49,7 @@ class ProyectosValidacionTest extends TestCase
     {
         Storage::fake('public');
 
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData([
                 'objeto_contractual'  => 'Contrato de servicios especializados',
                 'lineas_de_accion'    => 'Línea A, Línea B',
@@ -71,7 +71,7 @@ class ProyectosValidacionTest extends TestCase
 
     public function test_store_nombre_max_255_chars_is_rejected(): void
     {
-        $response = $this->actingAsUser()->post('/proyectos', $this->validData([
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', $this->validData([
             'nombre_del_proyecto' => str_repeat('a', 256),
         ]));
 
@@ -82,7 +82,7 @@ class ProyectosValidacionTest extends TestCase
 
     public function test_store_rejects_invalid_fecha_de_ejecucion(): void
     {
-        $response = $this->actingAsUser()->post('/proyectos', $this->validData([
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', $this->validData([
             'fecha_de_ejecucion' => 'not-a-date',
         ]));
 
@@ -92,7 +92,7 @@ class ProyectosValidacionTest extends TestCase
     public function test_store_accepts_null_fecha_de_ejecucion(): void
     {
         Storage::fake('public');
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(['fecha_de_ejecucion' => null]),
             $this->requiredFiles()
         ));
@@ -103,7 +103,7 @@ class ProyectosValidacionTest extends TestCase
 
     public function test_store_rejects_negative_plazo(): void
     {
-        $response = $this->actingAsUser()->post('/proyectos', $this->validData([
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', $this->validData([
             'plazo' => -1,
         ]));
 
@@ -112,7 +112,7 @@ class ProyectosValidacionTest extends TestCase
 
     public function test_store_rejects_negative_valor_total(): void
     {
-        $response = $this->actingAsUser()->post('/proyectos', $this->validData([
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', $this->validData([
             'valor_total' => -100,
         ]));
 
@@ -121,7 +121,7 @@ class ProyectosValidacionTest extends TestCase
 
     public function test_store_rejects_non_numeric_plazo(): void
     {
-        $response = $this->actingAsUser()->post('/proyectos', $this->validData([
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', $this->validData([
             'plazo' => 'doce meses',
         ]));
 
@@ -130,7 +130,7 @@ class ProyectosValidacionTest extends TestCase
 
     public function test_store_rejects_non_numeric_valor_total(): void
     {
-        $response = $this->actingAsUser()->post('/proyectos', $this->validData([
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', $this->validData([
             'valor_total' => 'cien millones',
         ]));
 
@@ -140,7 +140,7 @@ class ProyectosValidacionTest extends TestCase
     public function test_store_accepts_zero_plazo(): void
     {
         Storage::fake('public');
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(['plazo' => 0]),
             $this->requiredFiles()
         ));
@@ -150,7 +150,7 @@ class ProyectosValidacionTest extends TestCase
     public function test_store_accepts_zero_valor_total(): void
     {
         Storage::fake('public');
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(['valor_total' => 0]),
             $this->requiredFiles()
         ));
@@ -166,7 +166,7 @@ class ProyectosValidacionTest extends TestCase
         // 20481 KB > 20480 KB (20 MB limit)
         $oversized = UploadedFile::fake()->create('big.pdf', 20481, 'application/pdf');
 
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(),
             ['archivo_proyecto' => $oversized]
         ));
@@ -184,7 +184,7 @@ class ProyectosValidacionTest extends TestCase
             UploadedFile::fake()->create('ev3.png', 30, 'image/png'),
         ];
 
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(),
             $this->requiredFiles(),
             ['evidencias' => $files]
@@ -201,7 +201,7 @@ class ProyectosValidacionTest extends TestCase
     {
         $proyecto = Proyecto::create($this->validData(['estado' => 'inactivo']));
 
-        $this->actingAsUser()->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
+        $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
             'estado' => 'activo',
         ]));
 
@@ -212,7 +212,7 @@ class ProyectosValidacionTest extends TestCase
     {
         $proyecto = Proyecto::create($this->validData(['estado' => 'activo']));
 
-        $this->actingAsUser()->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
+        $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
             'estado' => 'inactivo',
         ]));
 
@@ -223,7 +223,7 @@ class ProyectosValidacionTest extends TestCase
     {
         $proyecto = Proyecto::create($this->validData(['estado' => 'activo']));
 
-        $this->actingAsUser()->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
+        $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
             'estado' => 'cerrado',
         ]));
 
@@ -233,7 +233,7 @@ class ProyectosValidacionTest extends TestCase
     public function test_update_rejects_invalid_estado(): void
     {
         $proyecto  = Proyecto::create($this->validData());
-        $response  = $this->actingAsUser()->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
+        $response  = $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
             'estado' => 'pendiente',
         ]));
 
@@ -245,7 +245,7 @@ class ProyectosValidacionTest extends TestCase
     public function test_update_rejects_negative_plazo(): void
     {
         $proyecto = Proyecto::create($this->validData());
-        $response = $this->actingAsUser()->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
+        $response = $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
             'plazo' => -5,
         ]));
 
@@ -255,7 +255,7 @@ class ProyectosValidacionTest extends TestCase
     public function test_update_rejects_invalid_fecha(): void
     {
         $proyecto = Proyecto::create($this->validData());
-        $response = $this->actingAsUser()->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
+        $response = $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto, [
             'fecha_de_ejecucion' => 'invalid-date',
         ]));
 
@@ -270,7 +270,7 @@ class ProyectosValidacionTest extends TestCase
             'cargar_contrato_o_convenio' => 'proyectos/1/contrato.pdf',
         ]));
 
-        $this->actingAsUser()->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto));
+        $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", $this->updateData($proyecto));
 
         $fresh = $proyecto->fresh();
         $this->assertSame('proyectos/1/doc.pdf', $fresh->cargar_archivo_proyecto);

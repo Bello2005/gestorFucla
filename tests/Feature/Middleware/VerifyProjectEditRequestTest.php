@@ -11,7 +11,7 @@ class VerifyProjectEditRequestTest extends TestCase
 
     public function test_update_without_is_edit_does_not_persist_changes(): void
     {
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Original']);
 
         $this->actingAs($user)->put(
@@ -24,7 +24,7 @@ class VerifyProjectEditRequestTest extends TestCase
 
     public function test_update_without_is_edit_returns_redirect(): void
     {
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Test']);
 
         $response = $this->actingAs($user)->put(
@@ -39,7 +39,7 @@ class VerifyProjectEditRequestTest extends TestCase
 
     public function test_update_with_mismatched_proyecto_id_does_not_persist(): void
     {
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Original']);
 
         $this->actingAs($user)->put(
@@ -58,7 +58,7 @@ class VerifyProjectEditRequestTest extends TestCase
 
     public function test_update_with_matching_ids_passes_middleware_and_updates(): void
     {
-        $user     = $this->createUser();
+        $user     = $this->createUserWithPermissions(['proyectos']);
         $proyecto = Proyecto::create(['nombre_del_proyecto' => 'Original']);
 
         $this->actingAs($user)->put(

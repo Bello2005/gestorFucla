@@ -62,7 +62,7 @@
     </div>
 
     {{-- Valor Total (amber) — solo visible para administradores --}}
-    @if(auth()->check() && auth()->user()->hasRole('admin'))
+    @if(auth()->check() && auth()->user()->canEdit('proyectos'))
     <div class="stat-card stat-card--warning">
         <div class="stat-card-icon">
             <i class="fas fa-dollar-sign"></i>
@@ -155,7 +155,7 @@
                             </div>
                             <div class="recent-project-meta">
                                 <x-estado-badge :estado="$proyecto->estado" />
-                                @if(auth()->user()->hasRole('admin') || $proyecto->created_by === auth()->id())
+                                @if(auth()->user()->canEdit('proyectos'))
                                     @if(($proyecto->valor_total ?? 0) == 0)
                                         <span class="recent-project-value recent-project-value--zero"
                                               title="Sin presupuesto registrado">Sin presupuesto</span>

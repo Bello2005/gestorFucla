@@ -14,12 +14,12 @@ class EstadisticaTest extends TestCase
 
     public function test_authenticated_user_sees_statistics_page(): void
     {
-        $this->actingAsUser()->get(route('estadistica'))->assertOk()->assertViewIs('estadistica');
+        $this->actingAsUserWith(['estadistica'])->get(route('estadistica'))->assertOk()->assertViewIs('estadistica');
     }
 
     public function test_view_receives_all_required_variables(): void
     {
-        $response = $this->actingAsUser()->get(route('estadistica'));
+        $response = $this->actingAsUserWith(['estadistica'])->get(route('estadistica'));
 
         $response->assertViewHasAll([
             'proyectosPorEstado',
@@ -40,7 +40,7 @@ class EstadisticaTest extends TestCase
         Proyecto::create(['nombre_del_proyecto' => 'C', 'estado' => 'inactivo']);
         Proyecto::create(['nombre_del_proyecto' => 'D', 'estado' => 'cerrado']);
 
-        $response = $this->actingAsUser()->get(route('estadistica'));
+        $response = $this->actingAsUserWith(['estadistica'])->get(route('estadistica'));
 
         $response->assertViewHas('totalProyectos', 4);
         $response->assertViewHas('proyectosActivos', 2);
@@ -53,14 +53,14 @@ class EstadisticaTest extends TestCase
         Proyecto::create(['nombre_del_proyecto' => 'A', 'estado' => 'activo']);
         Proyecto::create(['nombre_del_proyecto' => 'B', 'estado' => 'inactivo']);
 
-        $response = $this->actingAsUser()->get(route('estadistica'));
+        $response = $this->actingAsUserWith(['estadistica'])->get(route('estadistica'));
 
         $response->assertViewHas('porcentajeActivos', 50.0);
     }
 
     public function test_porcentaje_activos_is_zero_when_no_projects(): void
     {
-        $response = $this->actingAsUser()->get(route('estadistica'));
+        $response = $this->actingAsUserWith(['estadistica'])->get(route('estadistica'));
 
         $response->assertViewHas('totalProyectos', 0);
         $response->assertViewHas('porcentajeActivos', 0);
@@ -73,7 +73,7 @@ class EstadisticaTest extends TestCase
         Proyecto::create(['nombre_del_proyecto' => 'C', 'estado' => 'cerrado']);
         Proyecto::create(['nombre_del_proyecto' => 'D', 'estado' => 'cerrado']);
 
-        $response = $this->actingAsUser()->get(route('estadistica'));
+        $response = $this->actingAsUserWith(['estadistica'])->get(route('estadistica'));
 
         $response->assertViewHas('tasaExito', 50.0);
     }
@@ -84,7 +84,7 @@ class EstadisticaTest extends TestCase
         Proyecto::create(['nombre_del_proyecto' => 'P2', 'valor_total' => 2_500_000]);
         Proyecto::create(['nombre_del_proyecto' => 'P3', 'valor_total' => 500_000]);
 
-        $response = $this->actingAsUser()->get(route('estadistica'));
+        $response = $this->actingAsUserWith(['estadistica'])->get(route('estadistica'));
 
         $response->assertViewHas('valorTotal', fn ($v) => (float) $v === 4_000_000.0);
     }

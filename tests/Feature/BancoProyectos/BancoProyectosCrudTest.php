@@ -41,12 +41,12 @@ class BancoProyectosCrudTest extends TestCase
 
     public function test_authenticated_user_can_access_index(): void
     {
-        $this->actingAsUser()->get('/banco-proyectos')->assertStatus(200);
+        $this->actingAsUserWith(['banco'])->get('/banco-proyectos')->assertStatus(200);
     }
 
     public function test_authenticated_user_can_access_create(): void
     {
-        $this->actingAsUser()->get('/banco-proyectos/create')->assertStatus(200);
+        $this->actingAsUserWith(['banco'])->get('/banco-proyectos/create')->assertStatus(200);
     }
 
     // =========================================================
@@ -55,7 +55,7 @@ class BancoProyectosCrudTest extends TestCase
 
     public function test_user_can_create_banco_proyecto(): void
     {
-        $response = $this->actingAsUser()->post('/banco-proyectos', $this->validData());
+        $response = $this->actingAsUserWith(['banco'])->post('/banco-proyectos', $this->validData());
 
         $response->assertRedirect();
         $this->assertDatabaseHas('banco_proyectos', ['titulo' => 'Banco Proyecto de Prueba']);
@@ -63,13 +63,13 @@ class BancoProyectosCrudTest extends TestCase
 
     public function test_store_requires_titulo(): void
     {
-        $response = $this->actingAsUser()->post('/banco-proyectos', []);
+        $response = $this->actingAsUserWith(['banco'])->post('/banco-proyectos', []);
         $response->assertSessionHasErrors('titulo');
     }
 
     public function test_store_auto_generates_codigo(): void
     {
-        $this->actingAsUser()->post('/banco-proyectos', $this->validData());
+        $this->actingAsUserWith(['banco'])->post('/banco-proyectos', $this->validData());
         $bp = BancoProyecto::where('titulo', 'Banco Proyecto de Prueba')->first();
 
         $this->assertNotNull($bp->codigo);
@@ -78,7 +78,7 @@ class BancoProyectosCrudTest extends TestCase
 
     public function test_store_sets_estado_borrador(): void
     {
-        $this->actingAsUser()->post('/banco-proyectos', $this->validData());
+        $this->actingAsUserWith(['banco'])->post('/banco-proyectos', $this->validData());
         $bp = BancoProyecto::where('titulo', 'Banco Proyecto de Prueba')->first();
 
         $this->assertEquals('borrador', $bp->estado);
@@ -91,7 +91,7 @@ class BancoProyectosCrudTest extends TestCase
     public function test_user_can_view_banco_proyecto(): void
     {
         $bp = $this->createBancoProyecto();
-        $this->actingAsUser()->get("/banco-proyectos/{$bp->id}")->assertStatus(200);
+        $this->actingAsUserWith(['banco'])->get("/banco-proyectos/{$bp->id}")->assertStatus(200);
     }
 
     // =========================================================
@@ -101,7 +101,7 @@ class BancoProyectosCrudTest extends TestCase
     public function test_user_can_access_edit_form(): void
     {
         $bp = $this->createBancoProyecto();
-        $this->actingAsUser()->get("/banco-proyectos/{$bp->id}/edit")->assertStatus(200);
+        $this->actingAsUserWith(['banco'])->get("/banco-proyectos/{$bp->id}/edit")->assertStatus(200);
     }
 
     // =========================================================
@@ -112,7 +112,7 @@ class BancoProyectosCrudTest extends TestCase
     {
         $bp = $this->createBancoProyecto();
 
-        $response = $this->actingAsUser()->put("/banco-proyectos/{$bp->id}",
+        $response = $this->actingAsUserWith(['banco'])->put("/banco-proyectos/{$bp->id}",
             $this->validData(['titulo' => 'Título Actualizado'])
         );
 
@@ -128,7 +128,7 @@ class BancoProyectosCrudTest extends TestCase
     {
         $bp = $this->createBancoProyecto();
 
-        $response = $this->actingAsUser()->patch("/banco-proyectos/{$bp->id}/estado", [
+        $response = $this->actingAsUserWith(['banco'])->patch("/banco-proyectos/{$bp->id}/estado", [
             'estado' => 'en_evaluacion',
         ]);
 
@@ -140,7 +140,7 @@ class BancoProyectosCrudTest extends TestCase
     {
         $bp = $this->createBancoProyecto();
 
-        $response = $this->actingAsUser()->patch("/banco-proyectos/{$bp->id}/estado", [
+        $response = $this->actingAsUserWith(['banco'])->patch("/banco-proyectos/{$bp->id}/estado", [
             'estado' => 'invalid_estado',
         ]);
 
@@ -155,7 +155,7 @@ class BancoProyectosCrudTest extends TestCase
     {
         $bp = $this->createBancoProyecto(['estado' => 'borrador']);
 
-        $response = $this->actingAsUser()->delete("/banco-proyectos/{$bp->id}");
+        $response = $this->actingAsUserWith(['banco'])->delete("/banco-proyectos/{$bp->id}");
 
         $response->assertRedirect(route('banco.index'));
         $this->assertSoftDeleted('banco_proyectos', ['id' => $bp->id]);
@@ -181,7 +181,7 @@ class BancoProyectosCrudTest extends TestCase
         $bp = $this->createBancoProyecto();
         $file = UploadedFile::fake()->create('documento.pdf', 200, 'application/pdf');
 
-        $response = $this->actingAsUser()->post("/banco-proyectos/{$bp->id}/anexos", [
+        $response = $this->actingAsUserWith(['banco'])->post("/banco-proyectos/{$bp->id}/anexos", [
             'archivo'    => $file,
             'tipo_anexo' => 'documento_proyecto',
             'notas'      => 'Documento adjunto de prueba',
@@ -194,7 +194,7 @@ class BancoProyectosCrudTest extends TestCase
     public function test_user_can_delete_anexo(): void
     {
         Storage::fake('public');
-        $user = $this->createUser(['email' => 'anx@test.com']);
+        $user = $this->createUserWithPermissions(['banco'], true, ['email' => 'anx@test.com']);
         $bp   = BancoProyecto::create(['titulo' => 'AX BP', 'estado' => 'borrador', 'created_by' => $user->id]);
         $file = UploadedFile::fake()->create('doc.pdf', 50, 'application/pdf');
         $path = $file->store("banco-proyectos/{$bp->id}/anexos", 'public');
@@ -226,7 +226,7 @@ class BancoProyectosCrudTest extends TestCase
     {
         $bp = $this->createBancoProyecto();
 
-        $response = $this->actingAsUser()->getJson("/banco-proyectos/{$bp->id}/historial");
+        $response = $this->actingAsUserWith(['banco'])->getJson("/banco-proyectos/{$bp->id}/historial");
 
         $response->assertOk()->assertJsonIsArray();
     }

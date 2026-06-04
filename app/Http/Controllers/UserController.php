@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $usuarios = User::with('roles')
+        $usuarios = User::with(['roles', 'permissions.module'])
             ->addSelect(['last_password_reset' => DB::table('password_reset_tokens')
                 ->select('created_at')
                 ->whereColumn('email', 'users.email')
@@ -26,52 +26,78 @@ class UserController extends Controller
                 ->limit(1)
             ])
             ->paginate(10);
-        $roles = Role::all();
 
-        return view('users.index', compact('usuarios', 'roles'));
+        $modules = \App\Models\Module::orderBy('sort_order')->get();
+
+        return view('users.index', compact('usuarios', 'modules'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'roles' => 'required|array'
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_temporary_password' => false
+            'name'                   => $request->name,
+            'email'                  => $request->email,
+            'password'               => Hash::make($request->password),
+            'is_temporary_password'  => false,
         ]);
 
-        $user->roles()->sync($request->roles);
+        // Los usuarios nuevos siempre empiezan con rol 'user' y sin permisos
+        $user->assignRole('user');
 
         return response()->json(['message' => 'Usuario creado exitosamente']);
     }
 
     public function show(User $user)
     {
+        $user->load(['roles', 'permissions.module']);
+
         return response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'roles' => $user->roles
+            'id'             => $user->id,
+            'name'           => $user->name,
+            'email'          => $user->email,
+            'is_admin'       => $user->isAdmin(),
+            'effective_role' => $user->effectiveRoleLabel(),
+            'permissions'    => $user->permissions->keyBy('module_id'),
         ]);
     }
 
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'name'     => 'required|string|max:255',
+            'email'    => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
-            'roles' => 'required|array'
+            'is_admin' => 'required|boolean',
         ]);
 
-        $user->name = $request->name;
+        $currentUser = auth()->user();
+
+        // No puedes cambiar tu propio rol
+        if ($user->id === $currentUser->id && $request->boolean('is_admin') !== $user->isAdmin()) {
+            return response()->json(['message' => 'No puedes cambiar tu propio rol.'], 403);
+        }
+
+        // No puede quedar el sistema sin ningún administrador
+        if ($user->isAdmin() && !$request->boolean('is_admin')) {
+            $adminCount = \App\Models\Role::where('slug', 'admin')
+                ->firstOrFail()
+                ->users()
+                ->count();
+
+            if ($adminCount <= 1) {
+                return response()->json([
+                    'message' => 'No es posible degradar al único administrador del sistema. Asigna otro administrador primero.'
+                ], 403);
+            }
+        }
+
+        $user->name  = $request->name;
         $user->email = $request->email;
 
         if ($request->filled('password')) {
@@ -80,7 +106,10 @@ class UserController extends Controller
         }
 
         $user->save();
-        $user->roles()->sync($request->roles);
+
+        $targetSlug = $request->boolean('is_admin') ? 'admin' : 'user';
+        $targetRole = Role::where('slug', $targetSlug)->firstOrFail();
+        $user->roles()->sync([$targetRole->id]);
 
         return response()->json(['message' => 'Usuario actualizado exitosamente']);
     }

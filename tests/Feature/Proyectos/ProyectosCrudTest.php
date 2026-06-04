@@ -33,12 +33,12 @@ class ProyectosCrudTest extends TestCase
 
     public function test_authenticated_user_can_access_index(): void
     {
-        $this->actingAsUser()->get('/proyectos')->assertStatus(200);
+        $this->actingAsUserWith(['proyectos'])->get('/proyectos')->assertStatus(200);
     }
 
     public function test_authenticated_user_can_access_create(): void
     {
-        $this->actingAsUser()->get('/proyectos/create')->assertStatus(200);
+        $this->actingAsUserWith(['proyectos'])->get('/proyectos/create')->assertStatus(200);
     }
 
     // =========================================================
@@ -57,7 +57,7 @@ class ProyectosCrudTest extends TestCase
     {
         Storage::fake('public');
 
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(),
             $this->requiredFiles()
         ));
@@ -71,7 +71,7 @@ class ProyectosCrudTest extends TestCase
         Storage::fake('public');
 
         $data = array_merge($this->validData(['nombre_del_proyecto' => '']), $this->requiredFiles());
-        $response = $this->actingAsUser()->post('/proyectos', $data);
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', $data);
 
         $response->assertSessionHasErrors('nombre_del_proyecto');
     }
@@ -80,7 +80,7 @@ class ProyectosCrudTest extends TestCase
     {
         Storage::fake('public');
 
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(),
             ['archivo_contrato' => UploadedFile::fake()->create('contrato.pdf', 100, 'application/pdf')]
         ));
@@ -92,7 +92,7 @@ class ProyectosCrudTest extends TestCase
     {
         Storage::fake('public');
 
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(),
             ['archivo_proyecto' => UploadedFile::fake()->create('proyecto.pdf', 100, 'application/pdf')]
         ));
@@ -104,7 +104,7 @@ class ProyectosCrudTest extends TestCase
     {
         Storage::fake('public');
 
-        $response = $this->actingAsUser()->post('/proyectos', array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->post('/proyectos', array_merge(
             $this->validData(),
             $this->requiredFiles(),
             ['evidencias' => [UploadedFile::fake()->create('ev.jpg', 50, 'image/jpeg')]]
@@ -122,7 +122,7 @@ class ProyectosCrudTest extends TestCase
     {
         $proyecto = Proyecto::create($this->validData());
 
-        $this->actingAsUser()->get("/proyectos/{$proyecto->id}")->assertStatus(200);
+        $this->actingAsUserWith(['proyectos'])->get("/proyectos/{$proyecto->id}")->assertStatus(200);
     }
 
     // =========================================================
@@ -133,7 +133,7 @@ class ProyectosCrudTest extends TestCase
     {
         $proyecto = Proyecto::create($this->validData());
 
-        $this->actingAsUser()->get("/proyectos/{$proyecto->id}/edit")->assertStatus(200);
+        $this->actingAsUserWith(['proyectos'])->get("/proyectos/{$proyecto->id}/edit")->assertStatus(200);
     }
 
     // =========================================================
@@ -144,7 +144,7 @@ class ProyectosCrudTest extends TestCase
     {
         $proyecto = Proyecto::create($this->validData());
 
-        $response = $this->actingAsUser()->put("/proyectos/{$proyecto->id}", array_merge(
+        $response = $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}", array_merge(
             $this->validData(['nombre_del_proyecto' => 'Nombre Actualizado']),
             [
                 '_method'    => 'PUT',
@@ -162,7 +162,7 @@ class ProyectosCrudTest extends TestCase
         $proyecto = Proyecto::create($this->validData());
 
         // Missing is_edit — the middleware should reject
-        $response = $this->actingAsUser()->put("/proyectos/{$proyecto->id}",
+        $response = $this->actingAsUserWith(['proyectos'])->put("/proyectos/{$proyecto->id}",
             $this->validData(['nombre_del_proyecto' => 'Should Not Update'])
         );
 
@@ -180,7 +180,7 @@ class ProyectosCrudTest extends TestCase
         Storage::fake('public');
         $proyecto = Proyecto::create($this->validData());
 
-        $response = $this->actingAsUser()->delete("/proyectos/{$proyecto->id}");
+        $response = $this->actingAsUserWith(['proyectos'])->delete("/proyectos/{$proyecto->id}");
 
         $response->assertRedirect(route('proyectos.index'));
         $this->assertDatabaseMissing('proyectos', ['id' => $proyecto->id]);
@@ -192,7 +192,7 @@ class ProyectosCrudTest extends TestCase
 
     public function test_show_returns_404_for_missing_proyecto(): void
     {
-        $this->actingAsUser()->get('/proyectos/99999')->assertStatus(404);
+        $this->actingAsUserWith(['proyectos'])->get('/proyectos/99999')->assertStatus(404);
     }
 
     // =========================================================
@@ -202,7 +202,7 @@ class ProyectosCrudTest extends TestCase
     public function test_store_saves_created_by_as_authenticated_user(): void
     {
         Storage::fake('public');
-        $user = $this->createUser();
+        $user = $this->createUserWithPermissions(['proyectos']);
 
         $this->actingAs($user)->post('/proyectos', array_merge(
             $this->validData(),
@@ -218,8 +218,8 @@ class ProyectosCrudTest extends TestCase
     public function test_store_different_users_save_their_own_created_by(): void
     {
         Storage::fake('public');
-        $userA = $this->createUser(['email' => 'usera@test.com']);
-        $userB = $this->createUser(['email' => 'userb@test.com']);
+        $userA = $this->createUserWithPermissions(['proyectos'], true, ['email' => 'usera@test.com']);
+        $userB = $this->createUserWithPermissions(['proyectos'], true, ['email' => 'userb@test.com']);
 
         $this->actingAs($userA)->post('/proyectos', array_merge(
             $this->validData(['nombre_del_proyecto' => 'Proyecto A']),

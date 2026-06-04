@@ -2,8 +2,10 @@
 
 namespace Tests;
 
+use App\Models\Module;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Hash;
@@ -123,5 +125,45 @@ abstract class TestCase extends BaseTestCase
     protected function actingAsUser(array $attrs = []): static
     {
         return $this->actingAs($this->createUser($attrs));
+    }
+
+    /**
+     * Grant module permissions to a user.
+     *
+     * @param string[] $slugs   Module slugs to grant
+     * @param bool     $canEdit Also grant edit permission (ignored for read_only modules)
+     */
+    protected function grantPermissions(User $user, array $slugs, bool $canEdit = true): void
+    {
+        $modules = Module::whereIn('slug', $slugs)->get();
+        foreach ($modules as $module) {
+            UserPermission::updateOrCreate(
+                ['user_id' => $user->id, 'module_id' => $module->id],
+                ['can_view' => true, 'can_edit' => $canEdit && !$module->read_only]
+            );
+        }
+    }
+
+    /**
+     * Create a regular user and immediately grant module permissions.
+     *
+     * @param string[] $slugs
+     */
+    protected function createUserWithPermissions(array $slugs, bool $canEdit = true, array $attrs = []): User
+    {
+        $user = $this->createUser($attrs);
+        $this->grantPermissions($user, $slugs, $canEdit);
+        return $user->fresh(['roles', 'permissions.module']);
+    }
+
+    /**
+     * Authenticate as a user who already has the given module permissions.
+     * Use this instead of actingAsUser() when the route requires module.permission middleware.
+     *
+     * @param string[] $slugs
+     */
+    protected function actingAsUserWith(array $slugs, bool $canEdit = true, array $attrs = []): static
+    {
+        return $this->actingAs($this->createUserWithPermissions($slugs, $canEdit, $attrs));
     }
 }

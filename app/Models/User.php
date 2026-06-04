@@ -111,4 +111,69 @@ class User extends Authenticatable
             ->whereIn('name', (array) $roleNames)
             ->exists();
     }
+
+    // ── Sistema de permisos por módulo ──────────────────────────────────────
+
+    public function permissions()
+    {
+        return $this->hasMany(UserPermission::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->roles->contains('slug', 'admin');
+    }
+
+    public function canView(string $moduleSlug): bool
+    {
+        if ($this->isAdmin()) return true;
+
+        // Usar colección cacheada si ya fue eager-loaded
+        if ($this->relationLoaded('permissions')) {
+            return $this->permissions->contains(function ($p) use ($moduleSlug) {
+                return $p->can_view
+                    && $p->relationLoaded('module')
+                    && $p->module->slug === $moduleSlug;
+            });
+        }
+
+        return $this->permissions()
+            ->whereHas('module', fn($q) => $q->where('slug', $moduleSlug))
+            ->where('can_view', true)
+            ->exists();
+    }
+
+    public function canEdit(string $moduleSlug): bool
+    {
+        if ($this->isAdmin()) return true;
+
+        if ($this->relationLoaded('permissions')) {
+            return $this->permissions->contains(function ($p) use ($moduleSlug) {
+                return $p->can_edit
+                    && $p->relationLoaded('module')
+                    && $p->module->slug === $moduleSlug;
+            });
+        }
+
+        return $this->permissions()
+            ->whereHas('module', fn($q) => $q->where('slug', $moduleSlug))
+            ->where('can_edit', true)
+            ->exists();
+    }
+
+    public function effectiveRoleLabel(): string
+    {
+        if ($this->isAdmin()) return 'admin';
+
+        // Usar colección cacheada si fue eager-loaded, sino consultar
+        $perms = $this->relationLoaded('permissions')
+            ? $this->permissions
+            : $this->permissions()->get();
+
+        if ($perms->isEmpty()) return 'sin acceso';
+        if ($perms->every(fn($p) => $p->can_edit)) return 'editor';
+        if ($perms->every(fn($p) => $p->can_view && !$p->can_edit)) return 'lector';
+
+        return 'personalizado';
+    }
 }

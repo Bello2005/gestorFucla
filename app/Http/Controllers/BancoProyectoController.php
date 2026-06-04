@@ -104,7 +104,7 @@ class BancoProyectoController extends Controller
 
     public function destroy(BancoProyecto $bancoProyecto)
     {
-        if (! in_array($bancoProyecto->estado, ['borrador', 'rechazado'], true) && ! Auth::user()->hasRole('admin')) {
+        if (! in_array($bancoProyecto->estado, ['borrador', 'rechazado'], true) && ! Auth::user()->isAdmin()) {
             return back()->withErrors(['error' => 'No se puede eliminar en este estado.']);
         }
         $bancoProyecto->delete();

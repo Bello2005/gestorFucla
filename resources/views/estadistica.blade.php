@@ -50,7 +50,7 @@
             <span class="stat-card-trend">{{ $porcentajeActivos }}% del total</span>
         </div>
     </div>
-    @if(auth()->check() && auth()->user()->hasRole('admin'))
+    @if(auth()->check() && auth()->user()->canEdit('proyectos'))
     <div class="stat-card stat-card--warning">
         <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
         <div class="stat-card-content">
