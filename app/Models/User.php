@@ -165,14 +165,16 @@ class User extends Authenticatable
     {
         if ($this->isAdmin()) return 'admin';
 
-        // Usar colección cacheada si fue eager-loaded, sino consultar
         $perms = $this->relationLoaded('permissions')
             ? $this->permissions
             : $this->permissions()->get();
 
-        if ($perms->isEmpty()) return 'sin acceso';
-        if ($perms->every(fn($p) => $p->can_edit)) return 'editor';
-        if ($perms->every(fn($p) => $p->can_view && !$p->can_edit)) return 'lector';
+        // Solo considerar permisos donde el usuario realmente puede ver algo
+        $active = $perms->filter(fn($p) => $p->can_view);
+
+        if ($active->isEmpty()) return 'sin acceso';
+        if ($active->every(fn($p) => $p->can_edit)) return 'editor';
+        if ($active->every(fn($p) => !$p->can_edit)) return 'lector';
 
         return 'personalizado';
     }
