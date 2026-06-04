@@ -17,28 +17,17 @@ class PermissionController extends Controller
             'permissions.*.can_edit'    => 'required|boolean',
         ]);
 
-        $now = now();
-        $rows = collect($validated['permissions'])->map(function ($p) use ($user, $now) {
-            // can_edit implica can_view
+        collect($validated['permissions'])->each(function ($p) use ($user) {
             if ($p['can_edit']) {
                 $p['can_view'] = true;
             }
 
-            return [
-                'user_id'    => $user->id,
-                'module_id'  => $p['module_id'],
-                'can_view'   => $p['can_view'],
-                'can_edit'   => $p['can_edit'],
-                'created_at' => $now,
-                'updated_at' => $now,
-            ];
-        })->toArray();
-
-        UserPermission::upsert(
-            $rows,
-            ['user_id', 'module_id'],
-            ['can_view', 'can_edit', 'updated_at']
-        );
+            // updateOrCreate dispara eventos Eloquent → la auditoría queda registrada
+            UserPermission::updateOrCreate(
+                ['user_id' => $user->id, 'module_id' => $p['module_id']],
+                ['can_view' => $p['can_view'], 'can_edit'  => $p['can_edit']]
+            );
+        });
 
         return response()->json([
             'message'        => 'Permisos actualizados correctamente.',
