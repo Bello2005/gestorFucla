@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AccessRequestApproved;
 
@@ -49,14 +50,15 @@ class AccessRequestController extends Controller
         }
 
         try {
-            $user = DB::transaction(function () use ($request) {
-            // Crear el usuario
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make('password123'), // Contraseña temporal
-                'is_temporary_password' => true
-            ]);
+            $temporalPassword = Str::random(14);
+
+            $user = DB::transaction(function () use ($request, $temporalPassword) {
+                $user = User::create([
+                    'name'                   => $request->name,
+                    'email'                  => $request->email,
+                    'password'               => Hash::make($temporalPassword),
+                    'is_temporary_password'  => true,
+                ]);
                 // Asignar rol de usuario normal (lookup por slug para evitar IDs hardcodeados)
                 $roleId = \App\Models\Role::where('slug', 'user')->value('id');
                 if ($roleId) {
@@ -76,10 +78,9 @@ class AccessRequestController extends Controller
                 return $user;
             });
 
-            // Enviar email con las credenciales
             try {
-                Mail::to($user->email)->send(new AccessRequestApproved($user, 'password123'));
-                Log::info("Email de bienvenida enviado a {$user->email}");
+                Mail::to($user->email)->send(new AccessRequestApproved($user, $temporalPassword));
+                Log::info("Email de bienvenida enviado a: {$user->email}");
             } catch (\Exception $e) {
                 Log::error("Error al enviar email a {$user->email}: " . $e->getMessage());
                 report($e);
@@ -122,8 +123,7 @@ class AccessRequestController extends Controller
                 'admin_comment' => $validated['admin_comment']
             ]);
 
-            // TODO: Enviar email al usuario notificando el rechazo
-            Log::info("Solicitud de acceso rechazada para {$request->email}");
+            Log::info("Solicitud de acceso rechazada para: {$request->email}");
 
             return response()->json([
                 'success' => true,

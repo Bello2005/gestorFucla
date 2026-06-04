@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
 class LoginController extends Controller
@@ -26,36 +25,15 @@ class LoginController extends Controller
 
         $user = User::where("email", $credentials["email"])->first();
 
-        if (!$user) {
+        if (!$user || !Hash::check($credentials["password"], $user->password)) {
             return back()
                 ->withErrors(["email" => "Las credenciales proporcionadas no coinciden con nuestros registros."])
                 ->withInput();
         }
 
-        // Contraseña aún sin encriptar → migrar al vuelo
-        if ($user->password === $credentials["password"]) {
-            $user->password = Hash::make($credentials["password"]);
-            $user->save();
-
-            Auth::login($user, $remember);
-            $request->session()->regenerate();
-            return redirect()->intended("dashboard");
-        }
-
-        // Contraseña encriptada normal
-        try {
-            if (Hash::check($credentials["password"], $user->password)) {
-                Auth::login($user, $remember);
-                $request->session()->regenerate();
-                return redirect()->intended("dashboard");
-            }
-        } catch (\RuntimeException $e) {
-            Log::warning("Contraseña en formato inválido para usuario: " . $user->email);
-        }
-
-        return back()
-            ->withErrors(["email" => "Las credenciales proporcionadas no coinciden con nuestros registros."])
-            ->withInput();
+        Auth::login($user, $remember);
+        $request->session()->regenerate();
+        return redirect()->intended("dashboard");
     }
 
     public function logout(Request $request)

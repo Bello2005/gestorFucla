@@ -109,10 +109,19 @@
         </div>
         <div class="table-toolbar-filters">
             <span class="table-toolbar-filters__label">Certificado:</span>
-            <div class="table-toolbar-filters__row">
-                <a href="{{ request()->fullUrlWithQuery(['cert' => null]) }}" class="ds-btn ds-btn--sm {{ !request('cert') ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Todos</a>
-                <a href="{{ request()->fullUrlWithQuery(['cert' => 'con']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='con' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Con certificado</a>
-                <a href="{{ request()->fullUrlWithQuery(['cert' => 'sin']) }}" class="ds-btn ds-btn--sm {{ request('cert')==='sin' ? 'ds-btn--primary' : 'ds-btn--ghost' }}">Sin certificado</a>
+            <div class="filter-pill-group">
+                <a href="{{ request()->fullUrlWithQuery(['cert' => null]) }}"
+                   class="filter-pill {{ !request('cert') ? 'filter-pill--active' : '' }}">
+                    Todos
+                </a>
+                <a href="{{ request()->fullUrlWithQuery(['cert' => 'con']) }}"
+                   class="filter-pill {{ request('cert')==='con' ? 'filter-pill--active' : '' }}">
+                    <i class="fas fa-certificate" style="font-size:10px;"></i> Con certificado
+                </a>
+                <a href="{{ request()->fullUrlWithQuery(['cert' => 'sin']) }}"
+                   class="filter-pill {{ request('cert')==='sin' ? 'filter-pill--active' : '' }}">
+                    Sin certificado
+                </a>
             </div>
         </div>
     </div>

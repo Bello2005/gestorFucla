@@ -219,14 +219,3 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 });
 
-// temporal — borra después
-Route::get('/__envcheck', function () {
-    return response()->json([
-        'getenv_APP_KEY' => getenv('APP_KEY'),
-        '_ENV_APP_KEY' => $_ENV['APP_KEY'] ?? null,
-        '_SERVER_APP_KEY' => $_SERVER['APP_KEY'] ?? null,
-        'config_app_key' => config('app.key'),
-        'php_sapi' => php_sapi_name(),
-        'loaded_ini' => php_ini_loaded_file(),
-    ]);
-});

@@ -127,8 +127,6 @@ class UserController extends Controller
     public function resetPassword(Request $request, User $user)
     {
         try {
-            \Log::info('Reset password request received:', $request->all());
-            
             $validated = $request->validate([
                 'reset_type' => 'required|in:email,temporal',
                 'motivo' => 'required_if:reset_type,temporal|nullable|string',
