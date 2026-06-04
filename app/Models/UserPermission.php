@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class UserPermission extends Model
 {
+    use Auditable;
     protected $fillable = ['user_id', 'module_id', 'can_view', 'can_edit'];
 
     protected $casts = [

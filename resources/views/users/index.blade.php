@@ -105,7 +105,7 @@
 <div class="ds-card">
     <div class="table-toolbar">
         <div class="table-search">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-search search-icon" aria-hidden="true"></i>
             <input type="text" placeholder="Buscar usuarios..." id="searchInput" autocomplete="off">
         </div>
     </div>

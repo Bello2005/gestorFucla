@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class BancoProyecto extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, \App\Traits\Auditable;
 
     protected $table = 'banco_proyectos';
 

@@ -60,14 +60,18 @@ class AuditAuthentication
      */
     protected function isAuthenticationRoute(Request $request): bool
     {
+        // Solo auditar eventos de escritura — excluir GET del formulario de login
+        if ($request->isMethod('GET')) {
+            return false;
+        }
+
         $authRoutes = [
-            'login',
+            'login.submit',   // POST — autenticación real
             'logout',
             'password.email',
             'password.reset',
             'password.update',
             'register',
-            'email/verify'
         ];
 
         return in_array($request->route()->getName(), $authRoutes);
@@ -82,13 +86,14 @@ class AuditAuthentication
 
         // Mapeamos todas las operaciones a los valores permitidos del ENUM ('INSERT', 'UPDATE', 'DELETE')
         $operations = [
-            'login' => 'INSERT',
-            'logout' => 'UPDATE',
+            'login'          => 'INSERT', // GET formulario — no relevante, pero harmless
+            'login.submit'   => 'INSERT', // POST — evento real de autenticación
+            'logout'         => 'UPDATE',
             'password.email' => 'UPDATE',
             'password.reset' => 'UPDATE',
-            'password.update' => 'UPDATE',
-            'register' => 'INSERT',
-            'email/verify' => 'UPDATE'
+            'password.update'=> 'UPDATE',
+            'register'       => 'INSERT',
+            'email/verify'   => 'UPDATE',
         ];
 
         return $operations[$route] ?? 'UPDATE';

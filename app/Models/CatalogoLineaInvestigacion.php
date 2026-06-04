@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class CatalogoLineaInvestigacion extends Model
 {
+    use Auditable;
     protected $table = 'catalogo_lineas_investigacion';
 
     protected $fillable = ['nombre', 'area', 'activo', 'orden'];
