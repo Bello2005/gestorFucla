@@ -545,7 +545,6 @@ $(document).ready(function() {
     $('#createUserForm').on('submit', function(e) {
         e.preventDefault();
         var form = $(this);
-        resetForm('#createUserForm');
         $.ajax({
             url: '/users', type: 'POST',
             data: new FormData(this), processData: false, contentType: false,
