@@ -50,6 +50,35 @@ class BancoProyectosCrudTest extends TestCase
     }
 
     // =========================================================
+    //  show: autores guardados como texto o como {nombre, rol}
+    // =========================================================
+
+    public function test_show_muestra_autores_guardados_como_texto(): void
+    {
+        $bp = $this->createBancoProyecto(['autores' => ['Ana Pérez', 'Luis Gómez']]);
+
+        $this->actingAsUserWith(['banco'])
+            ->get("/banco-proyectos/{$bp->id}")
+            ->assertStatus(200)
+            ->assertSee('Ana Pérez')
+            ->assertSee('Luis Gómez');
+    }
+
+    public function test_show_muestra_autores_guardados_como_nombre_y_rol(): void
+    {
+        $bp = $this->createBancoProyecto(['autores' => [
+            ['nombre' => 'Dra. María Palacios', 'rol' => 'Investigadora Principal'],
+            ['nombre' => 'Mg. Carlos Andrade'],
+        ]]);
+
+        $this->actingAsUserWith(['banco'])
+            ->get("/banco-proyectos/{$bp->id}")
+            ->assertStatus(200)
+            ->assertSee('Dra. María Palacios — Investigadora Principal')
+            ->assertSee('Mg. Carlos Andrade');
+    }
+
+    // =========================================================
     //  store
     // =========================================================
 

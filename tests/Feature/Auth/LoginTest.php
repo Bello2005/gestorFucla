@@ -13,6 +13,19 @@ class LoginTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_login_page_no_muestra_credenciales_de_prueba(): void
+    {
+        foreach (['local', 'production', 'testing'] as $entorno) {
+            $this->app['env'] = $entorno;
+
+            $this->get('/')
+                ->assertStatus(200)
+                ->assertDontSee('Credenciales de prueba')
+                ->assertDontSee('test1@uniclaretiana.edu.co')
+                ->assertDontSee('data-password', false);
+        }
+    }
+
     public function test_login_page_at_login_route_is_accessible(): void
     {
         $response = $this->get('/login');

@@ -1,51 +1,62 @@
 <div align="center">
 
-# 🔷 Gestor de Archivos FUCLA
+<img src="docs/brand/banner.png" alt="Gestor de Archivos FUCLA — Fundación Universitaria Claretiana" width="100%">
 
-**Plataforma web para gestionar los proyectos, contratos y convenios de la institución, con su documentación, un banco de proyectos, convocatorias, permisos por módulo y auditoría completa.**
+<br>
 
-Desarrollada para la **Fundación Universitaria Claretiana (FUCLA)**.
+![Laravel](https://img.shields.io/badge/Laravel-12-3C3C3B?style=for-the-badge&logo=laravel&logoColor=FDC901)
+![PHP](https://img.shields.io/badge/PHP-8.2%20%E2%80%93%208.4-3C3C3B?style=for-the-badge&logo=php&logoColor=FDC901)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-3C3C3B?style=for-the-badge&logo=postgresql&logoColor=FDC901)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-3C3C3B?style=for-the-badge&logo=tailwindcss&logoColor=FDC901)
+![Docker](https://img.shields.io/badge/Docker-listo-3C3C3B?style=for-the-badge&logo=docker&logoColor=FDC901)
+![Pruebas](https://img.shields.io/badge/pruebas-434%20pasando-3E8E07?style=for-the-badge)
 
-![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-8.2%20%E2%80%93%208.4-777BB4?logo=php&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
-![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-listo-2496ED?logo=docker&logoColor=white)
-![Tests](https://img.shields.io/badge/pruebas-431%20pasando-2EA44F)
+**[Funcionalidades](#-funcionalidades) · [Capturas](#-un-vistazo) · [Instalación](#-instalación-local) · [Docker](#-despliegue-con-docker) · [Identidad visual](#-identidad-visual)**
 
 </div>
 
 ---
 
-## 📑 Contenido
+## 💛 ¿Qué es el Gestor de Archivos FUCLA?
 
-1. [¿Qué es el Gestor de Archivos FUCLA?](#-qué-es-el-gestor-de-archivos-fucla)
-2. [Funcionalidades](#-funcionalidades)
-3. [Roles y permisos por módulo](#-roles-y-permisos-por-módulo)
-4. [Stack tecnológico](#-stack-tecnológico)
-5. [Instalación local](#-instalación-local)
-6. [Variables de entorno](#-variables-de-entorno)
-7. [Despliegue con Docker](#-despliegue-con-docker)
-8. [Estructura del proyecto](#-estructura-del-proyecto)
-9. [Pruebas automáticas](#-pruebas-automáticas)
-10. [Comandos útiles](#-comandos-útiles)
-11. [Seguridad antes de producción](#-seguridad-antes-de-producción)
-12. [Autoría](#-autoría)
-
----
-
-## 💡 ¿Qué es el Gestor de Archivos FUCLA?
-
-Es el lugar único donde la institución guarda y consulta **todo lo relacionado con sus proyectos**: quién los ejecuta, con qué entidad, por cuánto valor, en qué plazo, y con qué documentos de respaldo (proyecto, contrato, presupuesto, cronograma, evidencias y certificado de cumplimiento).
+Es el lugar único donde la **Fundación Universitaria Claretiana** guarda y consulta **todo lo relacionado con sus proyectos**: quién los ejecuta, con qué entidad, por cuánto valor, en qué plazo y con qué documentos de respaldo (proyecto, contrato, presupuesto, cronograma, evidencias y certificado de cumplimiento).
 
 Se organiza en tres frentes:
 
 | Frente | Para qué sirve |
 |--------|----------------|
-| 📁 **Proyectos activos** | Registro y seguimiento de proyectos y contratos en ejecución, con sus archivos y exportación de reportes. |
-| 🏦 **Banco de proyectos** | Ideas y propuestas que pasan por un flujo de evaluación, con anexos versionados e historial de cambios. |
+| 📁 **Proyectos activos** | Registro y seguimiento de proyectos y contratos en ejecución, con sus archivos y reportes exportables. |
+| 🏦 **Banco de proyectos** | Propuestas que pasan por un flujo de evaluación, con anexos versionados e historial de cambios. |
 | 🛡️ **Administración** | Usuarios, permisos por módulo, solicitudes de acceso, catálogos y auditoría de todo lo que ocurre. |
+
+---
+
+## 📸 Un vistazo
+
+> Capturas tomadas del sistema real con datos de demostración.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/capturas/login.jpg" alt="Inicio de sesión"><br><sub><b>Inicio de sesión</b> · con el logotipo y la imagen institucional</sub></td>
+    <td width="50%"><img src="docs/capturas/dashboard.png" alt="Dashboard"><br><sub><b>Dashboard</b> · indicadores, proyectos recientes y accesos rápidos</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/capturas/proyectos.png" alt="Gestión de proyectos"><br><sub><b>Proyectos activos</b> · filtros, búsqueda, certificados y exportación</sub></td>
+    <td width="50%"><img src="docs/capturas/proyecto-detalle.png" alt="Detalle de un proyecto"><br><sub><b>Detalle del proyecto</b> · documentos, evidencias y certificado</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/capturas/banco-proyectos.png" alt="Banco de proyectos"><br><sub><b>Banco de proyectos</b> · propuestas por estado</sub></td>
+    <td width="50%"><img src="docs/capturas/banco-detalle.png" alt="Ficha técnica de una propuesta"><br><sub><b>Ficha técnica</b> · anexos, certificado e historial</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/capturas/estadisticas.png" alt="Estadísticas"><br><sub><b>Estadísticas</b> · gráficos en tiempo real</sub></td>
+    <td width="50%"><img src="docs/capturas/auditoria.png" alt="Auditoría"><br><sub><b>Auditoría</b> · quién hizo qué, desde dónde y cuándo</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/capturas/catalogos.png" alt="Catálogos"><br><sub><b>Catálogos</b> · programas, tipos de proyecto y líneas</sub></td>
+    <td width="50%" align="center"><img src="docs/capturas/movil-dashboard.png" alt="Versión móvil" width="260"><br><sub><b>Versión móvil</b> · se adapta a cualquier pantalla</sub></td>
+  </tr>
+</table>
 
 ---
 
@@ -61,30 +72,30 @@ Se organiza en tres frentes:
 - Las actualizaciones solo se aceptan desde el formulario de edición, lo que evita cambios por peticiones directas.
 
 ### 🏦 Banco de proyectos
-- Ficha completa de cada propuesta: código, título, línea de investigación, área o facultad, tipo de proyecto, convocatoria, resumen ejecutivo, problema o necesidad, objetivo general, justificación, alcance, población objetivo, cobertura geográfica, presupuesto estimado, fuente de financiación, cofinanciación, duración, autores, tutor o director, programa o departamento, entidad aliada y evaluador asignado.
+- Ficha completa de cada propuesta: código, título, línea de investigación, área o facultad, tipo de proyecto, convocatoria, resumen ejecutivo, problema o necesidad, objetivo general, justificación, alcance, población objetivo, cobertura geográfica, presupuesto estimado, fuente de financiación, cofinanciación, duración, autores (con su rol), tutor o director, programa o departamento, entidad aliada y evaluador asignado.
 - **Flujo de estados**: `borrador` → `en evaluación` → `aprobado` / `rechazado` → `en ejecución` → `cerrado` (o `suspendido`).
-- **Anexos versionados** de siete tipos: documento del proyecto, presupuesto, carta de aval, cronograma, imagen o plano, soporte adicional y certificado de cumplimiento. Se acepta PDF, Word, Excel, JPG y PNG (hasta 10 MB), con descarga y **restauración de versiones anteriores**.
+- **Anexos versionados** de siete tipos: documento del proyecto, presupuesto, carta de aval, cronograma, imagen o plano, soporte adicional y certificado de cumplimiento. Acepta PDF, Word, Excel, JPG y PNG (hasta 10 MB), con descarga y **restauración de versiones anteriores**.
 - **Historial de cambios** de cada propuesta: qué campo cambió, valor anterior y nuevo, quién y cuándo.
-- Un proyecto en borrador o rechazado puede eliminarse; en otros estados solo un administrador.
+- Un proyecto en borrador o rechazado puede eliminarse; en otros estados, solo un administrador.
 - Exportación a Excel y PDF.
 
 ### 📣 Convocatorias
 - Registro de convocatorias con entidad, descripción, fechas de **inicio, cierre y resultados**, responsable, enlace y correo de contacto.
 
 ### 📊 Dashboard y estadísticas
-- **Dashboard** con indicadores: total de proyectos, activos, inactivos y cerrados, valor total, número de entidades, comparación con el periodo anterior y entidades con más proyectos.
-- **Estadísticas** con distribución de proyectos por estado y crecimiento.
+- **Dashboard** con total de proyectos, activos, inactivos y cerrados, valor total, número de entidades, comparación con el periodo anterior y entidades con más proyectos.
+- **Estadísticas** con distribución de proyectos por estado y crecimiento, en gráficos de barras u otros tipos.
 
 ### 👥 Usuarios y acceso
-- Gestión de usuarios (crear, editar, eliminar, restablecer contraseña) y **matriz de permisos por módulo** para cada usuario.
-- **Solicitud de acceso pública**: cualquier persona puede pedir una cuenta; un administrador la aprueba o rechaza. Al aprobar, se crea el usuario con una **contraseña temporal** y se le envía por correo.
+- Gestión de usuarios (crear, editar, eliminar, restablecer contraseña) y **matriz de permisos por módulo** para cada persona.
+- **Solicitud de acceso pública**: cualquier persona puede pedir una cuenta; un administrador la aprueba o rechaza. Al aprobar, se crea el usuario con una **contraseña temporal** que se envía por correo.
 - Cambio obligatorio de la contraseña temporal, **recuperación de contraseña por correo** y **verificación de cambio de correo** mediante enlace.
 - Perfil personal.
 - Protección del **último administrador** y contra la auto-promoción de roles.
 
 ### 🧾 Auditoría
-- Registro automático de creación, actualización y eliminación de registros y de eventos de autenticación.
-- Consulta con filtros, vista de detalle y **exportación**.
+- Registro automático de creación, actualización y eliminación de registros, y de eventos de autenticación.
+- Consulta con filtros por tabla, operación y fechas, vista de detalle y **exportación**.
 
 ### 🗂️ Catálogos
 - Administración de **programas** (con su facultad), **tipos de proyecto** y **líneas de investigación**, que alimentan los formularios.
@@ -114,7 +125,42 @@ Hay **dos roles** y los permisos finos se asignan por **módulo**, con dos nivel
 
 ---
 
-## 🏗️ Stack tecnológico
+## 🎨 Identidad visual
+
+La aplicación y esta documentación siguen la imagen de la **Uniclaretiana**: el **amarillo claretiano** y el **carbón** del logotipo, con los colores de apoyo que usa su sitio web.
+
+<div align="center">
+<img src="docs/brand/identidad.png" alt="Paleta de colores y tipografías de la Uniclaretiana" width="100%">
+</div>
+
+### Colores institucionales
+
+| | Color | Hex | Uso |
+|:-:|-------|-----|-----|
+| ![#FDC901](https://img.shields.io/badge/%20%20%20%20%20%20-FDC901?style=flat-square&labelColor=FDC901) | **Amarillo Claretiano** | `#FDC901` | Color principal, acentos y botones |
+| ![#3C3C3B](https://img.shields.io/badge/%20%20%20%20%20%20-3C3C3B?style=flat-square&labelColor=3C3C3B) | **Carbón** | `#3C3C3B` | Fondos oscuros y títulos |
+| ![#E57701](https://img.shields.io/badge/%20%20%20%20%20%20-E57701?style=flat-square&labelColor=E57701) | **Naranja** | `#E57701` | Énfasis y subrayados |
+| ![#3E8E07](https://img.shields.io/badge/%20%20%20%20%20%20-3E8E07?style=flat-square&labelColor=3E8E07) | **Verde** | `#3E8E07` | Estados positivos y secciones |
+| ![#B4116E](https://img.shields.io/badge/%20%20%20%20%20%20-B4116E?style=flat-square&labelColor=B4116E) | **Magenta** | `#B4116E` | Secciones y destacados |
+| ![#515151](https://img.shields.io/badge/%20%20%20%20%20%20-515151?style=flat-square&labelColor=515151) | **Gris texto** | `#515151` | Texto secundario |
+| ![#F1F1F1](https://img.shields.io/badge/%20%20%20%20%20%20-F1F1F1?style=flat-square&labelColor=F1F1F1) | **Gris claro** | `#F1F1F1` | Fondos de página |
+
+La interfaz de la aplicación usa además el **oro Uniclaretiana** `#C6922A` para botones y elementos activos, y el **azul marino** `#1B2A4A` para la barra lateral y los encabezados. Todos los colores viven como variables en `resources/css/design-tokens.css`.
+
+### Tipografías
+
+| Familia | Uso |
+|---------|-----|
+| **Plus Jakarta Sans** | Títulos y encabezados de la aplicación |
+| **DM Sans** | Texto general de la aplicación |
+| **JetBrains Mono** | Cifras, códigos y valores |
+| **Visby CF** | Tipografía institucional del sitio web y del logotipo de la Uniclaretiana |
+
+> **Visby CF** es una fuente comercial, por eso no se incluye en este repositorio. La aplicación usa las tres familias abiertas de la tabla (se cargan desde Google Fonts), de líneas geométricas similares.
+
+---
+
+## 🏗️ Arquitectura y stack
 
 ```mermaid
 flowchart TB
@@ -272,9 +318,12 @@ Al iniciar, `docker/start.sh` hace esto automáticamente:
 ├── database/
 │   ├── migrations/            # 32 migraciones
 │   └── seeders/               # Roles, módulos, catálogos y datos de demostración
-├── resources/views/           # Blade: dashboard, proyectos, banco, catálogos, auditoría, usuarios…
+├── resources/
+│   ├── css/                   # Sistema de diseño (design-tokens.css, componentes, páginas)
+│   └── views/                 # Blade: dashboard, proyectos, banco, catálogos, auditoría, usuarios…
 ├── routes/web.php             # Rutas públicas, autenticadas y de administrador
 ├── docker/                    # Nginx, Supervisor y script de arranque
+├── docs/                      # Banner, identidad visual y capturas de este README
 ├── tests/                     # 42 archivos de pruebas (Unit y Feature)
 └── Dockerfile
 ```
@@ -283,7 +332,7 @@ Al iniciar, `docker/start.sh` hace esto automáticamente:
 
 ## 🧪 Pruebas automáticas
 
-El proyecto incluye **42 archivos de pruebas con 431 pruebas y 773 verificaciones, todas pasando** que cubren autenticación, proyectos, banco de proyectos, convocatorias, catálogos, permisos, auditoría, exportaciones y manejo de errores.
+El proyecto incluye **42 archivos de pruebas con 434 pruebas y 791 verificaciones, todas pasando**. Cubren autenticación, proyectos, banco de proyectos, convocatorias, catálogos, permisos, auditoría, exportaciones y manejo de errores.
 
 ```bash
 php artisan test
@@ -323,12 +372,12 @@ Si encuentras una vulnerabilidad, repórtala de forma privada al autor en lugar 
 
 Desarrollado por **Luis Delascar Valencia**.
 
-Proyecto desarrollado para la Fundación Universitaria Claretiana (FUCLA).
+Proyecto desarrollado para la **Fundación Universitaria Claretiana (FUCLA)**.
 
 ---
 
 <div align="center">
 
-**Gestor de Archivos FUCLA** · Proyectos, documentos y trazabilidad en un solo lugar.
+💛 **Gestor de Archivos FUCLA** · Proyectos, documentos y trazabilidad en un solo lugar.
 
 </div>

@@ -226,7 +226,12 @@
                     @if(!empty($bancoProyecto->autores))
                         <ul style="margin:0;padding-left:var(--space-4);display:flex;flex-direction:column;gap:4px;">
                             @foreach($bancoProyecto->autores as $autor)
-                                <li style="font-size:var(--text-sm);color:var(--neutral-800);">{{ $autor }}</li>
+                                @php
+                                    $autorTexto = is_array($autor)
+                                        ? trim(($autor['nombre'] ?? '') . (isset($autor['rol']) && $autor['rol'] !== '' ? ' — ' . $autor['rol'] : ''))
+                                        : (string) $autor;
+                                @endphp
+                                <li style="font-size:var(--text-sm);color:var(--neutral-800);">{{ $autorTexto }}</li>
                             @endforeach
                         </ul>
                     @else

@@ -33,7 +33,6 @@ Thumbs.db
 /storage/
 /bootstrap/cache/
 .env.*
-backup_critical_files/*.bak
 *.sql
 php.ini
 *.bak
