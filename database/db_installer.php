@@ -645,10 +645,7 @@ function installDatabase($config = [])
     $db->close();
     
     echo "\n🎉 ¡Base de datos instalada exitosamente!\n";
-    echo "📝 Credenciales de acceso:\n";
-    echo "   • Admin: admin@uniclaretiana.edu.co / 123456\n";
-    echo "   • Editor: editor@uniclaretiana.edu.co / 123456\n";
-    echo "   • Viewer: viewer@uniclaretiana.edu.co / 123456\n\n";
+    echo "\n";
     
     return true;
 }
